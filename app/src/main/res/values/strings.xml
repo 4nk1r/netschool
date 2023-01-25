@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Сетевой город</string>
+
+    <string name="bn_journal">Дневник</string>
+    <string name="bn_reports">Отчеты</string>
+    <string name="bn_mail">Почта</string>
+    <string name="bn_schedule">Расписание</string>
+    <string name="auth_title">Войдите в свой аккаунт</string>
+    <string name="auth_login_placeholder">Логин</string>
+    <string name="auth_password_placeholder">Пароль</string>
+    <string name="auth_hint_show_password">Показать пароль</string>
+    <string name="auth_hint_hide_password">Скрыть пароль</string>
+    <string name="auth_login_hint">Войти в аккаунт</string>
+    <string name="auth_login_action">Войти</string>
+    <string name="auth_login_error">Что-то пошло не так. Проверьте корректность введенных данных или попробуйте позже.</string>
+</resources>

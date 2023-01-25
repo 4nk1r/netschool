@@ -1,0 +1,61 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+android {
+    namespace 'io.fournkoner.netschool.data'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        def apikeyProperties = new Properties()
+        apikeyProperties.load(new FileInputStream(rootProject.file("private_const.properties")))
+
+        buildConfigField 'String', 'NETSCHOOL_BASE_URL', apikeyProperties['NETSCHOOL_BASE_URL']
+        buildConfigField 'String', 'SCHOOL_NAME', apikeyProperties['SCHOOL_NAME']
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    // Project
+    implementation(project(":domain"))
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    // Retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:3.2.0"
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.15.3'
+    // Gson
+    implementation 'com.google.code.gson:gson:2.10'
+}
+
+kapt {
+    correctErrorTypes true
+}
