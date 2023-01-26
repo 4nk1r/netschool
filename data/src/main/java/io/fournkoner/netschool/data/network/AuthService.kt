@@ -10,7 +10,7 @@ import retrofit2.http.POST
 internal interface AuthService {
 
     @POST("webapi/auth/getdata")
-    suspend fun getAuthData(): GsonAuthDataResponse
+    suspend fun getAuthData(): AuthDataResponse
 
     @GET("webapi/schools/search")
     suspend fun findSchool(): List<SchoolsSearchResponse>
@@ -19,10 +19,10 @@ internal interface AuthService {
     suspend fun signIn(
         @Body body: String,
         @Header("Content-Type") contentType: String = ContentType.FORM_URL_ENCODED.string,
-    ): GsonAuthResponse
+    ): AuthResponse
 
     @GET("webapi/student/diary/init")
-    suspend fun initDiary(): GsonDiaryInitResponse
+    suspend fun initDiary(): DiaryInitResponse
 
     @GET("webapi/years/current")
     suspend fun getCurrentYear(): CurrentYearResponse
