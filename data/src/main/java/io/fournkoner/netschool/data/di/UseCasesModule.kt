@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.fournkoner.netschool.domain.repositories.AccountRepository
+import io.fournkoner.netschool.domain.usecases.account.GetAccountDataUseCase
 import io.fournkoner.netschool.domain.usecases.account.LogoutUseCase
 import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
 import javax.inject.Singleton
@@ -23,5 +24,11 @@ internal object UseCasesModule {
     @Provides
     fun provideLogOutUseCase(repository: AccountRepository): LogoutUseCase {
         return LogoutUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetAccountDataUseCase(repository: AccountRepository): GetAccountDataUseCase {
+        return GetAccountDataUseCase(repository)
     }
 }

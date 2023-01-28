@@ -13,4 +13,6 @@
     <string name="auth_login_hint">Войти в аккаунт</string>
     <string name="auth_login_action">Войти</string>
     <string name="auth_login_error">Что-то пошло не так. Проверьте корректность введенных данных или попробуйте позже.</string>
+    <string name="auth_logging_in_wait">Входим в аккаунт. Подожди немного.</string>
+    <string name="auth_greeting">Привет, %s!</string>
 </resources>

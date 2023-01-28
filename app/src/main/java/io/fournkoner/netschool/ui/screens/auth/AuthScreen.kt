@@ -70,6 +70,17 @@ fun AuthScreen(
 
         var isLoading by rememberSaveable { mutableStateOf(false) }
 
+        fun onLoginResult(isSuccess: Boolean) {
+            if (isSuccess) {
+                navController.navigate(Screen.Journal.route) {
+                    popUpTo(Screen.Journal.route) { inclusive = true }
+                }
+            } else {
+                isLoading = false
+                toast(context.getString(R.string.auth_login_error))
+            }
+        }
+
         fun login() {
             if (login.isBlank()) {
                 loginFocusRequester.requestFocus()
@@ -82,37 +93,30 @@ fun AuthScreen(
 
             keyboardController?.hide()
             isLoading = true
-            viewModel.login(login, password) { isSuccess ->
-                if (isSuccess) {
-                    navController.navigate(Screen.Journal.route) {
-                        popUpTo(Screen.Journal.route) { inclusive = true }
-                    }
-                } else {
-                    isLoading = false
-                    toast(context.getString(R.string.auth_login_error))
-                }
-            }
+            viewModel.login(login, password, ::onLoginResult)
         }
+
+        val isFirstLogin by rememberSaveable { mutableStateOf(viewModel.checkIfFirstLogin(::onLoginResult)) }
+        val name = viewModel.name.collectAsState()
 
         AppIcon()
         VSpace(24.dp)
-        EnterDataCard(
-            login = login,
-            onLoginChanged = { login = it },
-            password = password,
-            onPasswordChanged = { password = it },
-            loginFocusRequester = loginFocusRequester,
-            passwordFocusRequester = passwordFocusRequester,
-            passwordShown = passwordShown,
-            onTogglePasswordVisibility = { passwordShown = !passwordShown },
-            onLogin = ::login
-        )
-        VSpace(4.dp)
-        AuthButton(
-            isActive = login.isNotBlank() && password.isNotBlank(),
-            isLoading = isLoading,
-            onClick = ::login
-        )
+        if (isFirstLogin) {
+            EnterDataCardContent(
+                login = login,
+                onLoginChanged = { login = it },
+                password = password,
+                onPasswordChanged = { password = it },
+                loginFocusRequester = loginFocusRequester,
+                passwordFocusRequester = passwordFocusRequester,
+                passwordShown = passwordShown,
+                onTogglePasswordVisibility = { passwordShown = !passwordShown },
+                isLoading = isLoading,
+                onLogin = ::login
+            )
+        } else {
+            GreetingCardContent(name = name.value)
+        }
     }
 }
 
@@ -179,22 +183,15 @@ private fun AuthButton(
 }
 
 @Composable
-private fun EnterDataCard(
-    login: String,
-    onLoginChanged: (String) -> Unit,
-    password: String,
-    onPasswordChanged: (String) -> Unit,
-    loginFocusRequester: FocusRequester,
-    passwordFocusRequester: FocusRequester,
-    passwordShown: Boolean,
-    onTogglePasswordVisibility: () -> Unit,
-    onLogin: () -> Unit,
+private fun MainCard(
+    bottomCornersRadius: CornerSize = Shapes.medium.topEnd,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val shape = RoundedCornerShape(
         topStart = Shapes.medium.topStart,
         topEnd = Shapes.medium.topEnd,
-        bottomStart = CornerSize(2.dp),
-        bottomEnd = CornerSize(2.dp)
+        bottomStart = bottomCornersRadius,
+        bottomEnd = bottomCornersRadius
     )
 
     Column(
@@ -210,28 +207,80 @@ private fun EnterDataCard(
                 shape = shape
             )
             .padding(16.dp),
-    ) {
+        content = content
+    )
+}
+
+@Composable
+private fun EnterDataCardContent(
+    login: String,
+    onLoginChanged: (String) -> Unit,
+    password: String,
+    onPasswordChanged: (String) -> Unit,
+    loginFocusRequester: FocusRequester,
+    passwordFocusRequester: FocusRequester,
+    passwordShown: Boolean,
+    onTogglePasswordVisibility: () -> Unit,
+    isLoading: Boolean,
+    onLogin: () -> Unit,
+) {
+    Column {
+        MainCard(bottomCornersRadius = CornerSize(2.dp)) {
+            Text(
+                text = stringResource(R.string.auth_title),
+                style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            VSpace(16.dp)
+            LoginTextField(
+                login = login,
+                onLoginChanged = onLoginChanged,
+                loginFocusRequester = loginFocusRequester,
+                passwordFocusRequester = passwordFocusRequester
+            )
+            VSpace(8.dp)
+            PasswordTextField(
+                password = password,
+                onPasswordChanged = onPasswordChanged,
+                passwordFocusRequester = passwordFocusRequester,
+                onLogin = onLogin,
+                onTogglePasswordVisibility = onTogglePasswordVisibility,
+                passwordShown = passwordShown
+            )
+        }
+        VSpace(4.dp)
+        AuthButton(
+            isActive = login.isNotBlank() && password.isNotBlank(),
+            isLoading = isLoading,
+            onClick = onLogin
+        )
+    }
+}
+
+@Composable
+private fun GreetingCardContent(name: String) {
+    MainCard {
         Text(
-            text = stringResource(R.string.auth_title),
+            text = stringResource(R.string.auth_greeting, name),
             style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        VSpace(16.dp)
-        LoginTextField(
-            login = login,
-            onLoginChanged = onLoginChanged,
-            loginFocusRequester = loginFocusRequester,
-            passwordFocusRequester = passwordFocusRequester
+        VSpace(12.dp)
+        Text(
+            text = stringResource(R.string.auth_logging_in_wait),
+            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
-        VSpace(8.dp)
-        PasswordTextField(
-            password = password,
-            onPasswordChanged = onPasswordChanged,
-            passwordFocusRequester = passwordFocusRequester,
-            onLogin = onLogin,
-            onTogglePasswordVisibility = onTogglePasswordVisibility,
-            passwordShown = passwordShown
+        VSpace(16.dp)
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(32.dp)
+                .align(Alignment.CenterHorizontally),
+            strokeWidth = 2.dp,
+            color = LocalNetSchoolColors.current.accentMain
         )
     }
 }

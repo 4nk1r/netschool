@@ -1,5 +1,6 @@
 package io.fournkoner.netschool.data.di
 
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +16,10 @@ internal object RepositoriesModule {
 
     @Singleton
     @Provides
-    fun provideAccountRepository(authService: AuthService): AccountRepository {
-        return AccountRepositoryImpl(authService)
+    fun provideAccountRepository(
+        authService: AuthService,
+        @EncryptedPreferences encryptedPreferences: SharedPreferences
+    ): AccountRepository {
+        return AccountRepositoryImpl(authService, encryptedPreferences)
     }
 }

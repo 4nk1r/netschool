@@ -6,7 +6,7 @@ internal fun <K, V> Map<K, V>.toFormDataBodyString(): String {
     return map { "${it.key}=${it.value}" }.joinToString("&")
 }
 
-fun Request.insertHeaders(): Request {
+internal fun Request.insertHeaders(): Request {
     return newBuilder()
         .header("Accept", "application/json, text/javascript, */*; q=0.01")
         .header("Accept-Language", "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3")
