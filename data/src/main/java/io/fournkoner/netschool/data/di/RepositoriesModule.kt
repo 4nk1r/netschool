@@ -6,20 +6,29 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.fournkoner.netschool.data.network.AuthService
+import io.fournkoner.netschool.data.network.JournalService
 import io.fournkoner.netschool.data.repositories.AccountRepositoryImpl
+import io.fournkoner.netschool.data.repositories.JournalRepositoryImpl
 import io.fournkoner.netschool.domain.repositories.AccountRepository
+import io.fournkoner.netschool.domain.repositories.JournalRepository
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object RepositoriesModule {
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideAccountRepository(
         authService: AuthService,
         @EncryptedPreferences encryptedPreferences: SharedPreferences
     ): AccountRepository {
         return AccountRepositoryImpl(authService, encryptedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideJournalRepository(journalService: JournalService): JournalRepository {
+        return JournalRepositoryImpl(journalService)
     }
 }

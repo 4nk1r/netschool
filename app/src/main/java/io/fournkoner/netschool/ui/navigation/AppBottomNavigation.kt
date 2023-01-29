@@ -35,11 +35,11 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import io.fournkoner.netschool.R
-import io.fournkoner.netschool.ui.screens.JournalScreen
 import io.fournkoner.netschool.ui.screens.MailScreen
 import io.fournkoner.netschool.ui.screens.ReportsScreen
 import io.fournkoner.netschool.ui.screens.ScheduleScreen
 import io.fournkoner.netschool.ui.screens.auth.AuthScreen
+import io.fournkoner.netschool.ui.screens.journal.JournalScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import soup.compose.material.motion.animation.materialSharedAxisXIn
 import soup.compose.material.motion.animation.materialSharedAxisXOut
@@ -61,7 +61,7 @@ fun AppBottomNavigation() {
         modifier = Modifier.fillMaxWidth(),
         bottomBar = {
             AnimatedVisibility(
-                visible = currentDestination?.route != Screen.Auth.route,
+                visible = currentDestination?.route != Screen.Auth.route && currentDestination != null,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut()
             ) {
@@ -199,6 +199,6 @@ private fun AppNavHost(navController: NavHostController) {
         composable(Screen.Journal.route) { JournalScreen(navController) }
         composable(Screen.Reports.route) { ReportsScreen(navController) }
         composable(Screen.Mail.route) { MailScreen(navController) }
-        composable(Screen.Schedule.route) { ScheduleScreen(navController) }
+        composable(Screen.Schedule.route) { ScheduleScreen() }
     }
 }

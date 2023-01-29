@@ -21,6 +21,7 @@ internal class AccountRepositoryImpl(
                             "Check your private_const.properties file"
                 )
             val authData = authService.getAuthData()
+            Const.ver = authData.ver
             val passwordHash = hexMD5(authData.salt + hexMD5(password, "windows-1251"))
 
             val signInRequestBody = mapOf(

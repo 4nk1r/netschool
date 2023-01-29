@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 data class NetSchoolColors(
     val backgroundMain: Color,
     val backgroundCard: Color,
+    val shimmer: Color,
 
     val accentMain: Color,
     val accentInactive: Color,
@@ -29,6 +30,7 @@ data class NetSchoolColors(
             get() = NetSchoolColors(
                 backgroundMain = Color(0xFFFFFFFF),
                 backgroundCard = Color(0xFFF9F9F9),
+                shimmer = Color(0x10000000),
 
                 accentMain = Color(0xFF3E95E5),
                 accentInactive = Color(0xFF637484),
@@ -50,6 +52,7 @@ data class NetSchoolColors(
             get() = NetSchoolColors(
                 backgroundMain = Color(0xFF1A1A1A),
                 backgroundCard = Color(0xFF212121),
+                shimmer = Color(0x10FFFFFF),
 
                 accentMain = Color(0xFF68AFF0),
                 accentInactive = Color(0xFF6D7378),

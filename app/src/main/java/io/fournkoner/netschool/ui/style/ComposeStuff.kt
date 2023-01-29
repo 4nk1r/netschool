@@ -51,6 +51,11 @@ val Typography = Typography(
         fontFamily = manropeFontFamily,
         fontWeight = FontWeight.SemiBold
     ),
+    subtitle2 = TextStyle(
+        fontSize = 16.sp,
+        fontFamily = interFontFamily,
+        fontWeight = FontWeight.Medium
+    ),
     body1 = TextStyle(
         fontSize = 16.sp,
         fontFamily = interFontFamily,
