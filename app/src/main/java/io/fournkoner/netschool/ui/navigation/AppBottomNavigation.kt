@@ -113,7 +113,8 @@ fun AppBottomNavigation() {
             ) {
                 AppNavHost(navController)
             }
-        }
+        },
+        backgroundColor = LocalNetSchoolColors.current.backgroundMain
     )
 }
 

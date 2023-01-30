@@ -2,6 +2,7 @@ package io.fournkoner.netschool.ui.screens.journal
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -36,6 +37,7 @@ import io.fournkoner.netschool.ui.components.loading
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getFormattedTime
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import splitties.collections.forEachWithIndex
 import java.util.*
@@ -52,12 +54,17 @@ fun JournalScreen(
     val scope = rememberCoroutineScope()
     val state = rememberLazyListState()
 
+    val fadeAnimDuration = 300
+
     Scaffold(
         topBar = { Toolbar(state) },
         content = { paddingValues ->
             AnimatedContent(
                 targetState = journal.value,
-                transitionSpec = { fadeIn() with fadeOut() }
+                transitionSpec = {
+                    fadeIn(tween(durationMillis = fadeAnimDuration, delayMillis = fadeAnimDuration)) with
+                            fadeOut(tween(durationMillis = fadeAnimDuration))
+                }
             ) { list ->
                 LazyColumn(
                     modifier = Modifier
@@ -80,15 +87,22 @@ fun JournalScreen(
             WeekSelector(
                 currentWeek = week.value,
                 onPreviousClicked = {
-                    scope.launch { state.animateScrollToItem(0) }
                     viewModel.previousWeek()
+                    scope.launch {
+                        delay(fadeAnimDuration.toLong())
+                        state.scrollToItem(0)
+                    }
                 },
                 onNextClick = {
-                    scope.launch { state.animateScrollToItem(0) }
                     viewModel.nextWeek()
+                    scope.launch {
+                        delay(fadeAnimDuration.toLong())
+                        state.scrollToItem(0)
+                    }
                 }
             )
-        }
+        },
+        backgroundColor = LocalNetSchoolColors.current.backgroundMain
     )
 }
 
@@ -326,7 +340,8 @@ private fun WeekSelector(
             AnimatedContent(
                 targetState = currentWeek,
                 transitionSpec = {
-                    (slideInVertically() + fadeIn() with slideOutVertically() + fadeOut())
+                    (slideInVertically { -it / 2 } + fadeIn() with
+                            slideOutVertically { it / 2 } + fadeOut())
                         .using(SizeTransform(clip = false))
                 },
                 modifier = Modifier.weight(1f)

@@ -10,13 +10,19 @@ val currentWeekStart: String
     get() = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString()
 
 val currentWeekEnd: String
-    get() = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).toString()
+    get() = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).toString()
 
 fun getWeekStartFromCurrent(offset: Int): String {
     if (offset == 0) return currentWeekStart
 
     return LocalDate.now()
-        .apply { if (offset > 0) plusWeeks(offset.toLong()) else minusWeeks(-offset.toLong()) }
+        .run {
+            if (offset > 0) {
+                plusWeeks(offset.toLong())
+            } else {
+                minusWeeks(-offset.toLong())
+            }
+        }
         .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
         .toString()
 }
@@ -25,8 +31,14 @@ fun getWeekEndFromCurrent(offset: Int): String {
     if (offset == 0) return currentWeekEnd
 
     return LocalDate.now()
-        .apply { if (offset > 0) plusWeeks(offset.toLong()) else minusWeeks(-offset.toLong()) }
-        .with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+        .run {
+            if (offset > 0) {
+                plusWeeks(offset.toLong())
+            } else {
+                minusWeeks(-offset.toLong())
+            }
+        }
+        .with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         .toString()
 }
 
