@@ -3,6 +3,7 @@ package io.fournkoner.netschool.data.repositories
 import com.google.gson.Gson
 import io.fournkoner.netschool.data.models.journal.JournalAttachmentsRequest
 import io.fournkoner.netschool.data.network.JournalService
+import io.fournkoner.netschool.data.network.NetSchoolCookieJar
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.bringToFirst
 import io.fournkoner.netschool.data.utils.debugValue
@@ -86,7 +87,7 @@ internal class JournalRepositoryImpl(
     }
 
     override suspend fun getDetailedAssignments(
-        assignments: List<Journal.Class.Assignment>
+        assignments: List<Journal.Class.Assignment>,
     ): Result<List<AssignmentDetailed>> {
         return runCatching {
             assignments.map { assignment ->
@@ -107,5 +108,12 @@ internal class JournalRepositoryImpl(
                 ).debugValue()
             }
         }
+    }
+
+    override fun getHeadersForDownloader(): Map<String, String> {
+        return mapOf(
+            "Cookie" to NetSchoolCookieJar.cookies.joinToString(";") { "${it.name()}=${it.value()}" },
+            "AT" to Const.at!!
+        )
     }
 }

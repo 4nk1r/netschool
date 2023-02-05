@@ -10,4 +10,6 @@ interface JournalRepository {
     suspend fun getDetailedAssignments(
         assignments: List<Journal.Class.Assignment>
     ): Result<List<AssignmentDetailed>>
+
+    fun getHeadersForDownloader(): Map<String, String>
 }

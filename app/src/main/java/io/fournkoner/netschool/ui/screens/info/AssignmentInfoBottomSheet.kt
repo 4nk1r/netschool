@@ -1,8 +1,5 @@
 package io.fournkoner.netschool.ui.screens.info
 
-import android.app.DownloadManager
-import android.content.Context
-import android.os.Environment
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -26,7 +23,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.fournkoner.netschool.R
@@ -74,8 +70,12 @@ fun AssignmentInfoBottomSheet(
                         )
                     }
                     if (!assignment?.attachments.isNullOrEmpty()) {
+                        val context = LocalContext.current
+
                         VSpace(12.dp)
-                        TitledFiles(assignment!!.attachments)
+                        TitledFiles(assignment!!.attachments) { file ->
+                            viewModel.downloadFile(file, context)
+                        }
                     }
                     if (index < list.size - 1) {
                         Divider(
@@ -107,10 +107,13 @@ fun AssignmentInfoBottomSheet(
 }
 
 @Composable
-private fun TitledFiles(attachments: List<AssignmentDetailed.Attachment>) {
+private fun TitledFiles(
+    attachments: List<AssignmentDetailed.Attachment>,
+    download: (AssignmentDetailed.Attachment) -> Unit
+) {
     TitleText(stringResource(R.string.assignment_attachments))
     VSpace(12.dp)
-    Files(files = attachments)
+    Files(files = attachments, download = download)
 }
 
 @Composable
@@ -179,7 +182,10 @@ private fun RowScope.ContentText(
 }
 
 @Composable
-private fun Files(files: List<AssignmentDetailed.Attachment>) {
+private fun Files(
+    files: List<AssignmentDetailed.Attachment>,
+    download: (AssignmentDetailed.Attachment) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -195,12 +201,11 @@ private fun Files(files: List<AssignmentDetailed.Attachment>) {
             )
     ) {
         files.forEachIndexed { index, file ->
-            val context = LocalContext.current
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .clickable { file.download(context) }
+                    .clickable { download(file) }
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -262,14 +267,4 @@ private fun Journal.Class.Assignment.Type.getAssignmentTypeName() = when (this) 
     Journal.Class.Assignment.Type.Answer -> stringResource(R.string.assignment_answer)
     Journal.Class.Assignment.Type.PracticalWork -> stringResource(R.string.assignment_practical_word)
     Journal.Class.Assignment.Type.Unknown -> stringResource(R.string.assignment_unknown)
-}
-
-private fun AssignmentDetailed.Attachment.download(context: Context) {
-    val downloadManager = context.getSystemService(DownloadManager::class.java)
-    downloadManager.enqueue(
-        DownloadManager.Request(file.toUri())
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
-            .setTitle(name)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-    )
 }

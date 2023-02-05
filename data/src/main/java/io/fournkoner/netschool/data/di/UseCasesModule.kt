@@ -10,6 +10,7 @@ import io.fournkoner.netschool.domain.usecases.account.GetAccountDataUseCase
 import io.fournkoner.netschool.domain.usecases.account.LogoutUseCase
 import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
+import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import javax.inject.Singleton
 
@@ -53,5 +54,11 @@ internal object UseCasesModule {
     @Singleton
     fun provideGetDetailedAssignmentsUseCase(repository: JournalRepository): GetDetailedAssignmentsUseCase {
         return GetDetailedAssignmentsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCookiesForDownloaderUseCase(repository: JournalRepository): GetHeadersForDownloaderUseCase {
+        return GetHeadersForDownloaderUseCase(repository)
     }
 }
