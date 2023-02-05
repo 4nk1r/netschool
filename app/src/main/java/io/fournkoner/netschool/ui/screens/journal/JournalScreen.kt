@@ -2,7 +2,6 @@ package io.fournkoner.netschool.ui.screens.journal
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,17 +30,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.components.loading
+import io.fournkoner.netschool.ui.navigation.Screen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getFormattedTime
+import io.fournkoner.netschool.utils.getGradeColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import splitties.collections.forEachWithIndex
 import java.util.*
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun JournalScreen(
     navController: NavController,
@@ -59,12 +59,9 @@ fun JournalScreen(
     Scaffold(
         topBar = { Toolbar(state) },
         content = { paddingValues ->
-            AnimatedContent(
+            LoadingTransition(
                 targetState = journal.value,
-                transitionSpec = {
-                    fadeIn(tween(durationMillis = fadeAnimDuration, delayMillis = fadeAnimDuration)) with
-                            fadeOut(tween(durationMillis = fadeAnimDuration))
-                }
+                fadeAnimDuration = fadeAnimDuration
             ) { list ->
                 LazyColumn(
                     modifier = Modifier
@@ -77,7 +74,7 @@ fun JournalScreen(
                 ) {
                     items(list?.days ?: (0..4).map { null }) { day ->
                         Day(day = day) { clazz ->
-                            /*TODO*/
+                            navController.navigate(Screen.AssignmentInfo(clazz.assignments).route)
                         }
                     }
                 }
@@ -194,11 +191,12 @@ private fun Class(
             )
             if (clazz?.assignments?.isNotEmpty() == true || clazz == null) {
                 Text(
-                    text = clazz?.assignments?.firstOrNull { it.grade == null }?.name
-                        ?: clazz?.assignments?.firstOrNull()?.name
+                    text = clazz?.assignments?.firstOrNull()?.name
                         ?: if (clazz == null) "placeholder" else "",
                     style = Typography.body2.copy(color = LocalNetSchoolColors.current.textSecondary),
-                    modifier = Modifier.loading(clazz == null)
+                    modifier = Modifier.loading(clazz == null),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -370,17 +368,5 @@ private fun WeekSelector(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun Int?.getGradeColor(): Color {
-    return when (this) {
-        5 -> LocalNetSchoolColors.current.gradeGreat
-        4 -> LocalNetSchoolColors.current.grateGood
-        3 -> LocalNetSchoolColors.current.gradeSatisfactory
-        2 -> LocalNetSchoolColors.current.gradeBad
-        null -> LocalNetSchoolColors.current.gradeOnus
-        else -> error("Unknown grade mark: $this")
     }
 }

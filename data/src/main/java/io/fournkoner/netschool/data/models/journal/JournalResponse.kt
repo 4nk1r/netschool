@@ -27,7 +27,8 @@ internal data class JournalResponse(
         data class Assignment(
             @SerializedName("id") val id: Int,
             @SerializedName("assignmentName") val name: String,
-            @SerializedName("mark") val grade: Grade? = null
+            @SerializedName("mark") val grade: Grade? = null,
+            @SerializedName("typeId") val type: Int
         )
 
         @Keep

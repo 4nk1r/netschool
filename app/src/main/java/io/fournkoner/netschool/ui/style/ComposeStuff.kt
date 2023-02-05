@@ -20,6 +20,7 @@ val Shapes = Shapes(
     medium = RoundedCornerShape(12.dp),
     large = RoundedCornerShape(16.dp)
 )
+val Shapes.mediumDp get() = 8.dp
 
 private val interFontFamily = FontFamily(
     Font(R.font.inter_regular, FontWeight.Normal),

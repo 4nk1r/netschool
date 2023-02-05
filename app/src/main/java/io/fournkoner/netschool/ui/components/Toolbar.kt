@@ -19,10 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
+import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
+import io.fournkoner.netschool.ui.style.mediumDp
 
 @Composable
 fun SimpleToolbar(
@@ -30,21 +33,51 @@ fun SimpleToolbar(
     showDivider: Boolean = false,
     onBack: (() -> Unit)? = null,
 ) {
+    BaseToolbar(
+        title = title,
+        navigationIcon = painterResource(R.drawable.ic_arrow_back),
+        showDivider = showDivider,
+        topPadding = WindowInsets.statusBars
+            .asPaddingValues()
+            .calculateTopPadding(),
+        onBack = onBack,
+    )
+}
+
+@Composable
+fun SimpleBottomSheetToolbar(
+    title: String,
+    showDivider: Boolean = false,
+    onBack: (() -> Unit)? = null,
+) {
+    BaseToolbar(
+        title = title,
+        navigationIcon = painterResource(R.drawable.ic_close),
+        showDivider = showDivider,
+        topPadding = Shapes.mediumDp,
+        onBack = onBack,
+    )
+}
+
+@Composable
+private fun BaseToolbar(
+    title: String,
+    navigationIcon: Painter?,
+    showDivider: Boolean,
+    topPadding: Dp,
+    onBack: (() -> Unit)?,
+) {
     Column {
         TopAppBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(
-                    56.dp + WindowInsets.statusBars
-                        .asPaddingValues()
-                        .calculateTopPadding()
-                )
+                .height(56.dp + topPadding)
                 .background(LocalNetSchoolColors.current.backgroundMain)
-                .statusBarsPadding(),
-            navigationIcon = if (onBack != null) {
+                .padding(top = topPadding),
+            navigationIcon = if (onBack != null && navigationIcon != null) {
                 {
                     TopAppBarIcon(
-                        iconPainter = painterResource(R.drawable.ic_arrow_back),
+                        iconPainter = navigationIcon,
                         tint = LocalNetSchoolColors.current.accentMain,
                         onClick = onBack
                     )

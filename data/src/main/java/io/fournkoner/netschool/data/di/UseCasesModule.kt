@@ -9,6 +9,7 @@ import io.fournkoner.netschool.domain.repositories.JournalRepository
 import io.fournkoner.netschool.domain.usecases.account.GetAccountDataUseCase
 import io.fournkoner.netschool.domain.usecases.account.LogoutUseCase
 import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
+import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import javax.inject.Singleton
 
@@ -46,5 +47,11 @@ internal object UseCasesModule {
     @Singleton
     fun provideGetJournalUseCase(repository: JournalRepository): GetJournalUseCase {
         return GetJournalUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetDetailedAssignmentsUseCase(repository: JournalRepository): GetDetailedAssignmentsUseCase {
+        return GetDetailedAssignmentsUseCase(repository)
     }
 }

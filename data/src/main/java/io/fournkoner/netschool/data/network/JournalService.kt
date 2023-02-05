@@ -1,5 +1,6 @@
 package io.fournkoner.netschool.data.network
 
+import io.fournkoner.netschool.data.models.journal.JournalAssignmentDetailedResponse
 import io.fournkoner.netschool.data.models.journal.JournalAttachmentsResponse
 import io.fournkoner.netschool.data.models.journal.JournalResponse
 import io.fournkoner.netschool.data.utils.Const
@@ -24,4 +25,10 @@ internal interface JournalService {
         @Query("studentId") studentId: Int = Const.studentId!!,
         @Header("Content-Type") contentType: String = ContentType.JSON.string
     ): List<JournalAttachmentsResponse>
+
+    @GET("webapi/student/diary/assigns/{id}")
+    suspend fun getAttachmentDetailed(
+        @Path("id") id: Int,
+        @Query("studentId") studentId: Int = Const.studentId!!
+    ): JournalAssignmentDetailedResponse
 }

@@ -73,7 +73,8 @@ fun AuthScreen(
         fun onLoginResult(isSuccess: Boolean) {
             if (isSuccess) {
                 navController.navigate(Screen.Journal.route) {
-                    popUpTo(Screen.Journal.route) { inclusive = true }
+                    popUpTo(Screen.Auth.route) { inclusive = true }
+                    launchSingleTop = true
                 }
             } else {
                 isLoading = false
