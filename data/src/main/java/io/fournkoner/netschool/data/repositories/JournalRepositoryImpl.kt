@@ -31,6 +31,8 @@ internal class JournalRepositoryImpl(
             )).debugValue()
             val attachmentsResponse = journalService.getAttachments(assignmentIds).debugValue()
 
+            val overdueClassesResponse = journalService.getOverdueClasses(weekStart, weekEnd)
+
             Journal(
                 weekStart = journalResponse.weekStart,
                 weekEnd = journalResponse.weekEnd,
@@ -70,6 +72,13 @@ internal class JournalRepositoryImpl(
                                     .map { it.grade!!.mark }
                             )
                         }.sortedBy { it.position }
+                    )
+                },
+                overdueClasses = overdueClassesResponse.map { clazz ->
+                    Journal.OverdueClass(
+                        subject = clazz.subject,
+                        name = clazz.name,
+                        due = clazz.due
                     )
                 }
             )

@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 data class NetSchoolColors(
     val backgroundMain: Color,
     val backgroundCard: Color,
+    val backgroundCardNegative: Color,
     val shimmer: Color,
 
     val accentMain: Color,
@@ -16,6 +17,7 @@ data class NetSchoolColors(
     val textSecondary: Color,
 
     val divider: Color,
+    val dividerOnNegative: Color,
 
     val gradeGreat: Color, // 5
     val grateGood: Color, // 4
@@ -30,6 +32,7 @@ data class NetSchoolColors(
             get() = NetSchoolColors(
                 backgroundMain = Color(0xFFFFFFFF),
                 backgroundCard = Color(0xFFF9F9F9),
+                backgroundCardNegative = Color(0xFFFFF1F1),
                 shimmer = Color(0x10000000),
 
                 accentMain = Color(0xFF3E95E5),
@@ -40,6 +43,7 @@ data class NetSchoolColors(
                 textSecondary = Color(0x9A000000),
 
                 divider = Color(0xFFEEEEEE),
+                dividerOnNegative = Color(0xFFF4E2E2),
 
                 gradeGreat = Color(0xFF50C069),
                 grateGood = Color(0xFF508AC0),
@@ -52,6 +56,7 @@ data class NetSchoolColors(
             get() = NetSchoolColors(
                 backgroundMain = Color(0xFF1A1A1A),
                 backgroundCard = Color(0xFF212121),
+                backgroundCardNegative = Color(0xFF2D2525),
                 shimmer = Color(0x10FFFFFF),
 
                 accentMain = Color(0xFF68AFF0),
@@ -62,6 +67,7 @@ data class NetSchoolColors(
                 textSecondary = Color(0x9AFFFFFF),
 
                 divider = Color(0xFF2A2A2A),
+                dividerOnNegative = Color(0xFF383131),
 
                 gradeGreat = Color(0xFF5DCF76),
                 grateGood = Color(0xFF7BBAF4),

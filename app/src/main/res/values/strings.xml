@@ -19,6 +19,10 @@
 
     <string name="journal_previous_week_hint">Предыдущая неделя</string>
     <string name="journal_next_week_hint">Следующая неделя</string>
+    <string name="journal_overdue_classes">Просроченные задания</string>
+    <string name="journal_overdue_classes_expand">Развернуть</string>
+    <string name="journal_overdue_classes_collapse">Свернуть</string>
+    <string name="journal_due_date">Срок сдачи: %s</string>
 
     <string name="assignment_title">Информация о задании</string>
     <string name="assignment_homework">Домашняя работа</string>

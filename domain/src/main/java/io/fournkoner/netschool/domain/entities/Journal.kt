@@ -3,7 +3,8 @@ package io.fournkoner.netschool.domain.entities
 data class Journal(
     val days: List<Day>,
     val weekStart: String,
-    val weekEnd: String
+    val weekEnd: String,
+    val overdueClasses: List<OverdueClass>
 ) {
 
     data class Day(
@@ -40,4 +41,10 @@ data class Journal(
             )
         }
     }
+
+    data class OverdueClass(
+        val subject: String,
+        val name: String,
+        val due: String
+    )
 }

@@ -9,9 +9,11 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -66,6 +68,10 @@ fun JournalScreen(
                 userScrollEnabled = journal != null,
                 contentPadding = PaddingValues(vertical = 16.dp),
             ) {
+                if (!journal?.overdueClasses.isNullOrEmpty()) item {
+                    OverdueClasses(classes = journal!!.overdueClasses)
+                }
+
                 val list = (journal?.days ?: (0..4).map { null })
                 list.forEachWithIndex { index, day ->
                     Day(day = day) { clazz ->
@@ -138,15 +144,17 @@ private fun Class(
     clazz: Journal.Class?,
     onClick: (Journal.Class) -> Unit,
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .defaultMinSize(minHeight = 48.dp)
-        .background(LocalNetSchoolColors.current.backgroundCard)
-        .clickable(enabled = clazz != null && clazz.assignments.isNotEmpty(),
-            onClick = { onClick(clazz!!) })
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 48.dp)
+            .background(LocalNetSchoolColors.current.backgroundCard)
+            .clickable(enabled = clazz != null && clazz.assignments.isNotEmpty(),
+                onClick = { onClick(clazz!!) })
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
             text = (clazz?.position ?: 0).toString(),
             style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
@@ -313,8 +321,8 @@ private fun WeekSelector(
             AnimatedContent(
                 targetState = currentWeek, transitionSpec = {
                     (slideInVertically { -it / 2 } + fadeIn() with slideOutVertically { it / 2 } + fadeOut()).using(
-                            SizeTransform(clip = false)
-                        )
+                        SizeTransform(clip = false)
+                    )
                 }, modifier = Modifier.weight(1f)
             ) { week ->
                 Text(
@@ -341,5 +349,90 @@ private fun WeekSelector(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun OverdueClasses(classes: List<Journal.OverdueClass>) {
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .fillMaxWidth()
+            .background(LocalNetSchoolColors.current.backgroundCardNegative)
+    ) {
+        Divider(color = LocalNetSchoolColors.current.dividerOnNegative)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .clickable { isExpanded = !isExpanded }
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.journal_overdue_classes),
+                style = Typography.h6.copy(color = LocalNetSchoolColors.current.gradeOnus),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                painter = painterResource(R.drawable.ic_expand_collapse),
+                contentDescription = if (isExpanded) {
+                    stringResource(R.string.journal_overdue_classes_collapse)
+                } else {
+                    stringResource(R.string.journal_overdue_classes_expand)
+                },
+                modifier = Modifier.rotate(animateFloatAsState(if (isExpanded) 180f else 0f).value),
+                tint = LocalNetSchoolColors.current.gradeOnus
+            )
+        }
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                classes.forEachIndexed { index, clazz ->
+                    OverdueClass(clazz)
+                    if (index < classes.size - 1) {
+                        Divider(
+                            color = LocalNetSchoolColors.current.dividerOnNegative,
+                            modifier = Modifier.padding(
+                                horizontal = 16.dp,
+                                vertical = 12.dp
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        Divider(color = LocalNetSchoolColors.current.dividerOnNegative)
+    }
+}
+
+@Composable
+private fun OverdueClass(clazz: Journal.OverdueClass) {
+    Column {
+        Text(
+            text = clazz.subject,
+            style = Typography.h6.copy(color = LocalNetSchoolColors.current.textMain),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = stringResource(
+                R.string.journal_due_date,
+                clazz.due.getFormattedTime("dd.MM.yyyy")
+            ),
+            style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary),
+        )
+        VSpace(8.dp)
+        Text(
+            text = clazz.name,
+            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain),
+        )
     }
 }

@@ -2,6 +2,7 @@ package io.fournkoner.netschool.data.network
 
 import io.fournkoner.netschool.data.models.journal.JournalAssignmentDetailedResponse
 import io.fournkoner.netschool.data.models.journal.JournalAttachmentsResponse
+import io.fournkoner.netschool.data.models.journal.JournalOverdueClassesResponse
 import io.fournkoner.netschool.data.models.journal.JournalResponse
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.ContentType
@@ -25,6 +26,14 @@ internal interface JournalService {
         @Query("studentId") studentId: Int = Const.studentId!!,
         @Header("Content-Type") contentType: String = ContentType.JSON.string
     ): List<JournalAttachmentsResponse>
+
+    @GET("webapi/student/diary/pastMandatory")
+    suspend fun getOverdueClasses(
+        @Query("weekStart") weekStart: String,
+        @Query("weekEnd") weekEnd: String,
+        @Query("studentId") studentId: Int = Const.studentId!!,
+        @Query("yearId") yearId: Int = Const.yearId!!,
+    ): List<JournalOverdueClassesResponse>
 
     @GET("webapi/student/diary/assigns/{id}")
     suspend fun getAttachmentDetailed(
