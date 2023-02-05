@@ -5,10 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
@@ -32,6 +29,7 @@ import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.Journal
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleToolbar
+import io.fournkoner.netschool.ui.components.VSpace
 import io.fournkoner.netschool.ui.components.loading
 import io.fournkoner.netschool.ui.navigation.Screen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
@@ -56,101 +54,83 @@ fun JournalScreen(
 
     val fadeAnimDuration = 300
 
-    Scaffold(
-        topBar = { Toolbar(state) },
-        content = { paddingValues ->
-            LoadingTransition(
-                targetState = journal.value,
-                fadeAnimDuration = fadeAnimDuration
-            ) { list ->
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize(),
-                    state = state,
-                    userScrollEnabled = list != null,
-                    contentPadding = PaddingValues(vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(list?.days ?: (0..4).map { null }) { day ->
-                        Day(day = day) { clazz ->
-                            navController.navigate(Screen.AssignmentInfo(clazz.assignments).route)
-                        }
+    Scaffold(topBar = { Toolbar(state) }, content = { paddingValues ->
+        LoadingTransition(
+            targetState = journal.value, fadeAnimDuration = fadeAnimDuration
+        ) { journal ->
+            LazyColumn(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+                state = state,
+                userScrollEnabled = journal != null,
+                contentPadding = PaddingValues(vertical = 16.dp),
+            ) {
+                val list = (journal?.days ?: (0..4).map { null })
+                list.forEachWithIndex { index, day ->
+                    Day(day = day) { clazz ->
+                        navController.navigate(Screen.AssignmentInfo(clazz.assignments).route)
+                    }
+                    if (index < list.size - 1) item {
+                        VSpace(16.dp)
                     }
                 }
             }
-        },
-        bottomBar = {
-            WeekSelector(
-                currentWeek = week.value,
-                onPreviousClicked = {
-                    viewModel.previousWeek()
-                    scope.launch {
-                        delay(fadeAnimDuration.toLong())
-                        state.scrollToItem(0)
-                    }
-                },
-                onNextClick = {
-                    viewModel.nextWeek()
-                    scope.launch {
-                        delay(fadeAnimDuration.toLong())
-                        state.scrollToItem(0)
-                    }
-                }
-            )
-        },
-        backgroundColor = LocalNetSchoolColors.current.backgroundMain
+        }
+    }, bottomBar = {
+        WeekSelector(currentWeek = week.value, onPreviousClicked = {
+            viewModel.previousWeek()
+            scope.launch {
+                delay(fadeAnimDuration.toLong())
+                state.scrollToItem(0)
+            }
+        }, onNextClick = {
+            viewModel.nextWeek()
+            scope.launch {
+                delay(fadeAnimDuration.toLong())
+                state.scrollToItem(0)
+            }
+        })
+    }, backgroundColor = LocalNetSchoolColors.current.backgroundMain
     )
 }
 
-@Composable
-private fun Day(
+private fun LazyListScope.Day(
     day: Journal.Day?,
     onClickClass: (Journal.Class) -> Unit,
 ) {
-    val name by remember(day) { mutableStateOf(day?.date?.getFormattedTime("EEEE")) }
-    val date by remember(day) { mutableStateOf(day?.date?.getFormattedTime("d LLL yyyy г.")) }
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    item {
+        val name by remember(day) { mutableStateOf(day?.date?.getFormattedTime("EEEE")) }
+        val date by remember(day) { mutableStateOf(day?.date?.getFormattedTime("d LLL yyyy г.")) }
         DayName(
-            name = name,
-            date = date
-        )
-        DayClasses(
-            classes = day?.classes,
-            onClick = onClickClass
+            name = name, date = date
         )
     }
+    item { VSpace(8.dp) }
+    DayClasses(
+        classes = day?.classes, onClick = onClickClass
+    )
 }
 
-@Composable
-private fun DayClasses(
+private fun LazyListScope.DayClasses(
     classes: List<Journal.Class>?,
     onClick: (Journal.Class) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(LocalNetSchoolColors.current.backgroundCard)
-    ) {
-        Divider(color = LocalNetSchoolColors.current.divider)
-        (classes ?: (0..6).map { null }).forEachWithIndex { index, clazz ->
-            Class(
-                clazz = clazz,
-                onClick = onClick
+    item { Divider(color = LocalNetSchoolColors.current.divider) }
+    itemsIndexed(classes ?: (0..6).map { null }) { index, clazz ->
+        Class(
+            clazz = clazz, onClick = onClick
+        )
+        if (index < (classes?.size ?: 7) - 1) {
+            Divider(
+                color = LocalNetSchoolColors.current.divider,
+                startIndent = 70.dp,
+                modifier = Modifier.background(LocalNetSchoolColors.current.backgroundCard)
             )
-            if (index < (classes?.size ?: 7) - 1) {
-                Divider(
-                    color = LocalNetSchoolColors.current.divider,
-                    startIndent = 70.dp
-                )
-            }
         }
-        Divider(color = LocalNetSchoolColors.current.divider)
     }
+    item { Divider(color = LocalNetSchoolColors.current.divider) }
+
 }
 
 @Composable
@@ -158,18 +138,15 @@ private fun Class(
     clazz: Journal.Class?,
     onClick: (Journal.Class) -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 48.dp)
-            .clickable(
-                enabled = clazz != null && clazz.assignments.isNotEmpty(),
-                onClick = { onClick(clazz!!) }
-            )
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .defaultMinSize(minHeight = 48.dp)
+        .background(LocalNetSchoolColors.current.backgroundCard)
+        .clickable(enabled = clazz != null && clazz.assignments.isNotEmpty(),
+            onClick = { onClick(clazz!!) })
+        .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+        verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = (clazz?.position ?: 0).toString(),
             style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
@@ -251,8 +228,7 @@ private fun Toolbar(scrollState: LazyListState) {
         }
     }
     SimpleToolbar(
-        title = stringResource(R.string.bn_journal),
-        showDivider = showDivider.value
+        title = stringResource(R.string.bn_journal), showDivider = showDivider.value
     )
 }
 
@@ -307,8 +283,7 @@ private fun WeekSelector(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = rememberRipple(radius = 18.dp),
                                 onClick = onClick
-                            ),
-                        contentAlignment = Alignment.Center
+                            ), contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = icon,
@@ -336,13 +311,11 @@ private fun WeekSelector(
                 )
             }
             AnimatedContent(
-                targetState = currentWeek,
-                transitionSpec = {
-                    (slideInVertically { -it / 2 } + fadeIn() with
-                            slideOutVertically { it / 2 } + fadeOut())
-                        .using(SizeTransform(clip = false))
-                },
-                modifier = Modifier.weight(1f)
+                targetState = currentWeek, transitionSpec = {
+                    (slideInVertically { -it / 2 } + fadeIn() with slideOutVertically { it / 2 } + fadeOut()).using(
+                            SizeTransform(clip = false)
+                        )
+                }, modifier = Modifier.weight(1f)
             ) { week ->
                 Text(
                     text = week,
