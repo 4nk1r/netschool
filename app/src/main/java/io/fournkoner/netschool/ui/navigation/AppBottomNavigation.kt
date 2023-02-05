@@ -46,11 +46,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.screens.MailScreen
-import io.fournkoner.netschool.ui.screens.ReportsScreen
 import io.fournkoner.netschool.ui.screens.ScheduleScreen
 import io.fournkoner.netschool.ui.screens.auth.AuthScreen
 import io.fournkoner.netschool.ui.screens.info.AssignmentInfoBottomSheet
 import io.fournkoner.netschool.ui.screens.journal.JournalScreen
+import io.fournkoner.netschool.ui.screens.reports.ReportsScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import soup.compose.material.motion.animation.materialSharedAxisXIn
 import soup.compose.material.motion.animation.materialSharedAxisXOut

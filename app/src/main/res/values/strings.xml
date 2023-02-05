@@ -35,4 +35,13 @@
     <string name="assignment_attachments">Приложенные файлы</string>
     <string name="assignment_subject">Предмет</string>
     <string name="assignment_teacher">Учитель</string>
+
+    <string name="reports_short_name">Краткий отчет об успеваемости</string>
+    <string name="reports_short_description">Количество оценок и средний балл для каждого предмета</string>
+    <string name="reports_full_name">Полный отчет об успеваемости</string>
+    <string name="reports_full_description">Все оценки и средний балл для каждого предмета</string>
+    <string name="reports_subject_name">Оценки по предмету</string>
+    <string name="reports_subject_description">Список всех оценок и за что они поставлены для выбранного предмета</string>
+    <string name="reports_results_name">Итоговые отметки</string>
+    <string name="reports_result_description">Оценки, выставленные за полугодие или четверть и год</string>
 </resources>
