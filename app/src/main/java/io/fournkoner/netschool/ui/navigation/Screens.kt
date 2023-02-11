@@ -3,7 +3,7 @@ package io.fournkoner.netschool.ui.navigation
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import io.fournkoner.netschool.R
-import io.fournkoner.netschool.domain.entities.Journal.Class.Assignment
+import io.fournkoner.netschool.domain.entities.journal.Journal.Class.Assignment
 
 sealed class Screen(
     val route: String,
@@ -24,4 +24,6 @@ sealed class Screen(
             const val route = "info"
         }
     }
+
+    object ShortReport : Screen("short_report")
 }

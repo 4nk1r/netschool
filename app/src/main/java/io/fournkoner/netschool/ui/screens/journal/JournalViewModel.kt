@@ -3,7 +3,7 @@ package io.fournkoner.netschool.ui.screens.journal
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import io.fournkoner.netschool.utils.currentWeekEnd
 import io.fournkoner.netschool.utils.currentWeekStart

@@ -13,6 +13,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalAutofill
 import androidx.compose.ui.platform.LocalAutofillTree
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.autofill(
@@ -49,3 +50,6 @@ fun Int?.getGradeColor(): Color {
         else -> error("Unknown grade mark: $this")
     }
 }
+
+@Composable
+fun Float.getGradeColor() = roundToInt().getGradeColor()

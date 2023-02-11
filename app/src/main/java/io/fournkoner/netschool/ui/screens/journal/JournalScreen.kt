@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.fournkoner.netschool.R
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.components.VSpace

@@ -44,4 +44,20 @@
     <string name="reports_subject_description">Список всех оценок и за что они поставлены для выбранного предмета</string>
     <string name="reports_results_name">Итоговые отметки</string>
     <string name="reports_result_description">Оценки, выставленные за полугодие или четверть и год</string>
+
+    <string name="short_report_title">Краткий отчет</string>
+    <string name="short_report_period">Период</string>
+    <string name="short_report_selected">Выбрано</string>
+    <string name="short_report_generate">Сгенерировать</string>
+    <string name="short_report_overall">Всего</string>
+    <string name="short_report_average_grade">Средний балл</string>
+    <string name="short_report_no_grades">Нет оценок</string>
+    <plurals name="short_report_grades_count">
+        <item quantity="zero">%d оценок</item>
+        <item quantity="one">%d оценка</item>
+        <item quantity="two">%d оценки</item>
+        <item quantity="few">%d оценки</item>
+        <item quantity="many">%d оценок</item>
+        <item quantity="other">%d оценок</item>
+    </plurals>
 </resources>

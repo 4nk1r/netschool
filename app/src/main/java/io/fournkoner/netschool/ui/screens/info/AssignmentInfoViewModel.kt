@@ -7,8 +7,8 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.fournkoner.netschool.domain.entities.AssignmentDetailed
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.utils.debugValue

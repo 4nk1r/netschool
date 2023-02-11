@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import io.fournkoner.netschool.data.network.AuthService
 import io.fournkoner.netschool.data.network.JournalService
 import io.fournkoner.netschool.data.network.NetSchoolCookieJar
+import io.fournkoner.netschool.data.network.ReportsService
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.debugValue
 import io.fournkoner.netschool.data.utils.insertHeaders
@@ -48,6 +49,12 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun provideJournalService(retrofit: Retrofit): JournalService {
+        return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideReportsService(retrofit: Retrofit): ReportsService {
         return retrofit.create()
     }
 }

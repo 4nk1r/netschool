@@ -51,6 +51,7 @@ import io.fournkoner.netschool.ui.screens.auth.AuthScreen
 import io.fournkoner.netschool.ui.screens.info.AssignmentInfoBottomSheet
 import io.fournkoner.netschool.ui.screens.journal.JournalScreen
 import io.fournkoner.netschool.ui.screens.reports.ReportsScreen
+import io.fournkoner.netschool.ui.screens.short_report.ShortReportScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import soup.compose.material.motion.animation.materialSharedAxisXIn
 import soup.compose.material.motion.animation.materialSharedAxisXOut
@@ -144,6 +145,7 @@ private fun RowScope.BottomNavigationItem(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    // TODO fix the value when the screen isn't the root of the tab
     val isSelected by remember(currentDestination) {
         mutableStateOf(currentDestination?.hierarchy?.any { it.route == screen.route } == true)
     }
@@ -218,6 +220,7 @@ private fun AppNavHost(navController: NavHostController) {
         composable(Screen.Reports.route) { ReportsScreen(navController) }
         composable(Screen.Mail.route) { MailScreen(navController) }
         composable(Screen.Schedule.route) { ScheduleScreen() }
+        composable(Screen.ShortReport.route) { ShortReportScreen(navController) }
 
         bottomSheet(
             route = "${Screen.AssignmentInfo.route}?$NAV_ARG_ASSIGNMENT={$NAV_ARG_ASSIGNMENT}",

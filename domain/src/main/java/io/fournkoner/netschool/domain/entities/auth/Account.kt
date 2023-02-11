@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.domain.entities
+package io.fournkoner.netschool.domain.entities.auth
 
 data class Account(
     val name: String,

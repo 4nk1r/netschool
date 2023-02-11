@@ -7,4 +7,5 @@ import com.google.gson.annotations.SerializedName
 internal data class SchoolsSearchResponse(
     @SerializedName("id") val id: Int,
     @SerializedName("shortName") val name: String,
+    @SerializedName("name") val fullName: String,
 )

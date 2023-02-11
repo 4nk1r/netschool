@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.fournkoner.netschool.R
-import io.fournkoner.netschool.domain.entities.AssignmentDetailed
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.ui.components.*
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes

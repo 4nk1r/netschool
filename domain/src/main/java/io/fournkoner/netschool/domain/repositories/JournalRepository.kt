@@ -1,7 +1,7 @@
 package io.fournkoner.netschool.domain.repositories
 
-import io.fournkoner.netschool.domain.entities.AssignmentDetailed
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
+import io.fournkoner.netschool.domain.entities.journal.Journal
 
 interface JournalRepository {
 

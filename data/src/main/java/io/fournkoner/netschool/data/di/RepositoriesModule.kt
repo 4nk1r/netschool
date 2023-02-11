@@ -7,10 +7,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.fournkoner.netschool.data.network.AuthService
 import io.fournkoner.netschool.data.network.JournalService
+import io.fournkoner.netschool.data.network.ReportsService
 import io.fournkoner.netschool.data.repositories.AccountRepositoryImpl
 import io.fournkoner.netschool.data.repositories.JournalRepositoryImpl
+import io.fournkoner.netschool.data.repositories.ReportsRepositoryImpl
 import io.fournkoner.netschool.domain.repositories.AccountRepository
 import io.fournkoner.netschool.domain.repositories.JournalRepository
+import io.fournkoner.netschool.domain.repositories.ReportsRepository
 import javax.inject.Singleton
 
 @Module
@@ -30,5 +33,11 @@ internal object RepositoriesModule {
     @Singleton
     fun provideJournalRepository(journalService: JournalService): JournalRepository {
         return JournalRepositoryImpl(journalService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReportsRepository(reportsService: ReportsService): ReportsRepository {
+        return ReportsRepositoryImpl(reportsService)
     }
 }

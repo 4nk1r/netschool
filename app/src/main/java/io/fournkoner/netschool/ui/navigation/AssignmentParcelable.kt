@@ -1,7 +1,7 @@
 package io.fournkoner.netschool.ui.navigation
 
 import android.os.Parcelable
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

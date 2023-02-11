@@ -6,12 +6,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.fournkoner.netschool.domain.repositories.AccountRepository
 import io.fournkoner.netschool.domain.repositories.JournalRepository
+import io.fournkoner.netschool.domain.repositories.ReportsRepository
 import io.fournkoner.netschool.domain.usecases.account.GetAccountDataUseCase
 import io.fournkoner.netschool.domain.usecases.account.LogoutUseCase
 import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
 import javax.inject.Singleton
 
 @Module
@@ -60,5 +63,21 @@ internal object UseCasesModule {
     @Singleton
     fun provideGetCookiesForDownloaderUseCase(repository: JournalRepository): GetHeadersForDownloaderUseCase {
         return GetHeadersForDownloaderUseCase(repository)
+    }
+
+    ///////////////////////
+    // REPORTS USE CASES //
+    ///////////////////////
+
+    @Provides
+    @Singleton
+    fun provideGetShortReportRequestDataUseCase(repository: ReportsRepository): GetShortReportRequestDataUseCase {
+        return GetShortReportRequestDataUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGenerateShortReportUseCase(repository: ReportsRepository): GenerateShortReportUseCase {
+        return GenerateShortReportUseCase(repository)
     }
 }

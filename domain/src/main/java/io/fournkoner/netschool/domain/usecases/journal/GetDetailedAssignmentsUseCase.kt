@@ -1,6 +1,6 @@
 package io.fournkoner.netschool.domain.usecases.journal
 
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.repositories.JournalRepository
 
 class GetDetailedAssignmentsUseCase(private val repository: JournalRepository) {

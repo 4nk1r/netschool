@@ -11,4 +11,5 @@ internal object Const {
     var at: String? = null
     var studentId: Int? = null
     var yearId: Int? = null
+    var fullSchoolName: String? = null
 }

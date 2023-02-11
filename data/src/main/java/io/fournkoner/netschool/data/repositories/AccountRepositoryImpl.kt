@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import io.fournkoner.netschool.data.network.AuthService
 import io.fournkoner.netschool.data.utils.*
-import io.fournkoner.netschool.domain.entities.Account
+import io.fournkoner.netschool.domain.entities.auth.Account
 import io.fournkoner.netschool.domain.repositories.AccountRepository
 
 internal class AccountRepositoryImpl(
@@ -20,6 +20,7 @@ internal class AccountRepositoryImpl(
                     "${Const.SCHOOL_NAME} wasn't found on ${Const.HOST}. " +
                             "Check your private_const.properties file"
                 )
+            Const.fullSchoolName = school.fullName
             val authData = authService.getAuthData()
             Const.ver = authData.ver
             val passwordHash = hexMD5(authData.salt + hexMD5(password, "windows-1251"))

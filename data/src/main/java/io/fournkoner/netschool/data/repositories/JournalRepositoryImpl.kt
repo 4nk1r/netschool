@@ -7,8 +7,8 @@ import io.fournkoner.netschool.data.network.NetSchoolCookieJar
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.bringToFirst
 import io.fournkoner.netschool.data.utils.debugValue
-import io.fournkoner.netschool.domain.entities.AssignmentDetailed
-import io.fournkoner.netschool.domain.entities.Journal
+import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
+import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.repositories.JournalRepository
 
 internal class JournalRepositoryImpl(

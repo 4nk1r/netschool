@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.SimpleToolbar
+import io.fournkoner.netschool.ui.navigation.Screen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -54,7 +55,7 @@ fun ReportsScreen(navController: NavController) {
                         icon = painterResource(R.drawable.ic_report_short),
                         name = stringResource(R.string.reports_short_name),
                         description = stringResource(R.string.reports_short_description)
-                    ) { TODO() }
+                    ) { navController.navigate(Screen.ShortReport.route) }
                 }
                 item {
                     ReportCard(
@@ -78,7 +79,8 @@ fun ReportsScreen(navController: NavController) {
                     ) { TODO() }
                 }
             }
-        }
+        },
+        backgroundColor = LocalNetSchoolColors.current.backgroundMain
     )
 }
 

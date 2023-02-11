@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.domain.entities
+package io.fournkoner.netschool.domain.entities.journal
 
 data class Journal(
     val days: List<Day>,

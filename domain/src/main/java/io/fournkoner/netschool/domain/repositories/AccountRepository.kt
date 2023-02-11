@@ -1,6 +1,6 @@
 package io.fournkoner.netschool.domain.repositories
 
-import io.fournkoner.netschool.domain.entities.Account
+import io.fournkoner.netschool.domain.entities.auth.Account
 
 interface AccountRepository {
 
