@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import io.fournkoner.netschool.ui.navigation.AppBottomNavigation
+import io.fournkoner.netschool.ui.navigation.AppNavigation
 import io.fournkoner.netschool.ui.style.NetSchoolTheme
 
 @AndroidEntryPoint
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isDarkTheme = isSystemInDarkTheme()
             NetSchoolTheme(darkTheme = isDarkTheme) {
-                AppBottomNavigation()
+                AppNavigation()
 
                 val systemUiController = rememberSystemUiController()
                 SideEffect {

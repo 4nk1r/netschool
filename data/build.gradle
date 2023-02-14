@@ -53,7 +53,7 @@ dependencies {
     // Jsoup
     implementation 'org.jsoup:jsoup:1.15.3'
     // Gson
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.code.gson:gson:2.10.1'
     // Encrypted preferences
     implementation "androidx.security:security-crypto:1.1.0-alpha04"
 }

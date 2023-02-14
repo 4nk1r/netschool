@@ -34,8 +34,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
 import io.fournkoner.netschool.domain.entities.reports.ShortReport
@@ -47,52 +49,50 @@ import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getGradeColor
 import kotlinx.coroutines.delay
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun ShortReportScreen(
-    navController: NavController,
-    viewModel: ShortReportViewModel = hiltViewModel(),
-) {
-    val state = rememberLazyListState()
+class ShortReportScreen : AndroidScreen() {
 
-    val periods = viewModel.periods.collectAsState()
-    val report = viewModel.report.collectAsState()
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+    @Composable
+    override fun Content() {
+        val viewModel: ShortReportViewModel = getViewModel()
+        val navigator = LocalNavigator.currentOrThrow
+        val state = rememberLazyListState()
 
-    var isFullscreen by rememberSaveable { mutableStateOf(true) }
-    val showDivider by remember {
-        derivedStateOf {
-            (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0)
-                    && report.value != null
+        val periods = viewModel.periods.collectAsState()
+        val report = viewModel.report.collectAsState()
+
+        var isFullscreen by rememberSaveable { mutableStateOf(true) }
+        val showDivider by remember {
+            derivedStateOf {
+                (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0)
+                        && report.value != null
+            }
         }
-    }
 
-    Scaffold(
-        topBar = {
-            SimpleToolbar(title = stringResource(R.string.short_report_title)) {
-                navController.popBackStack()
-            }
-        },
-        content = {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                PeriodSelection(periods = periods.value, isFullscreen = isFullscreen) {
-                    isFullscreen = false
-                    viewModel.generate(it)
+        Scaffold(
+            topBar = { SimpleToolbar(title = stringResource(R.string.short_report_title)) { navigator.pop() } },
+            content = {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    PeriodSelection(periods = periods.value, isFullscreen = isFullscreen) {
+                        isFullscreen = false
+                        viewModel.generate(it)
+                    }
+                    Divider(
+                        color = LocalNetSchoolColors.current.divider,
+                        modifier = Modifier
+                            .height(animateDpAsState(if (showDivider) 1.dp else 0.dp).value)
+                    )
+                    AnimatedVisibility(visible = !isFullscreen) {
+                        ReportList(report.value, state)
+                    }
                 }
-                Divider(
-                    color = LocalNetSchoolColors.current.divider,
-                    modifier = Modifier
-                        .height(animateDpAsState(if (showDivider) 1.dp else 0.dp).value)
-                )
-                AnimatedVisibility(visible = !isFullscreen) {
-                    ReportList(report.value, state)
-                }
-            }
-        },
-        backgroundColor = LocalNetSchoolColors.current.backgroundMain
-    )
+            },
+            backgroundColor = LocalNetSchoolColors.current.backgroundMain
+        )
+    }
 }
 
 @Composable
@@ -203,7 +203,8 @@ private fun ReportOverallGrades(grades: ShortReport.Grades?) {
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.short_report_overall),

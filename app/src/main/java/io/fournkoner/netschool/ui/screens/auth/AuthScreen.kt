@@ -29,11 +29,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.VSpace
-import io.fournkoner.netschool.ui.navigation.Screen
+import io.fournkoner.netschool.ui.navigation.AppScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -41,84 +43,85 @@ import io.fournkoner.netschool.utils.autofill
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
 
-@OptIn(ExperimentalComposeUiApi::class, UnreliableToastApi::class)
-@Composable
-fun AuthScreen(
-    navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel(),
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LocalNetSchoolColors.current.backgroundMain)
-            .verticalScroll(rememberScrollState())
-            .systemBarsPadding()
-            .padding(16.dp)
-            .imePadding(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val context = LocalContext.current
+class AuthScreen : AndroidScreen() {
 
-        var login by rememberSaveable { mutableStateOf("") }
-        val loginFocusRequester = remember { FocusRequester() }
+    @OptIn(ExperimentalComposeUiApi::class, UnreliableToastApi::class)
+    @Composable
+    override fun Content() {
+        val viewModel: AuthViewModel = getViewModel()
+        val navigator = LocalNavigator.currentOrThrow
 
-        var password by rememberSaveable { mutableStateOf("") }
-        val passwordFocusRequester = remember { FocusRequester() }
-        var passwordShown by rememberSaveable { mutableStateOf(false) }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(LocalNetSchoolColors.current.backgroundMain)
+                .verticalScroll(rememberScrollState())
+                .systemBarsPadding()
+                .padding(16.dp)
+                .imePadding(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val context = LocalContext.current
 
-        var isLoading by rememberSaveable { mutableStateOf(false) }
+            var login by rememberSaveable { mutableStateOf("") }
+            val loginFocusRequester = remember { FocusRequester() }
 
-        fun onLoginResult(isSuccess: Boolean) {
-            if (isSuccess) {
-                navController.navigate(Screen.Journal.route) {
-                    popUpTo(Screen.Auth.route) { inclusive = true }
-                    launchSingleTop = true
+            var password by rememberSaveable { mutableStateOf("") }
+            val passwordFocusRequester = remember { FocusRequester() }
+            var passwordShown by rememberSaveable { mutableStateOf(false) }
+
+            var isLoading by rememberSaveable { mutableStateOf(false) }
+
+            fun onLoginResult(isSuccess: Boolean) {
+                if (isSuccess) {
+                    navigator.replace(AppScreen())
+                } else {
+                    isLoading = false
+                    toast(context.getString(R.string.auth_login_error))
                 }
+            }
+
+            fun login() {
+                if (login.isBlank()) {
+                    loginFocusRequester.requestFocus()
+                    return
+                }
+                if (password.isBlank()) {
+                    passwordFocusRequester.requestFocus()
+                    return
+                }
+
+                keyboardController?.hide()
+                isLoading = true
+                viewModel.login(login, password, ::onLoginResult)
+            }
+
+            val isFirstLogin by rememberSaveable { mutableStateOf(viewModel.checkIfFirstLogin(::onLoginResult)) }
+            val name = viewModel.name.collectAsState()
+
+            AppIcon()
+            VSpace(24.dp)
+            if (isFirstLogin) {
+                EnterDataCardContent(
+                    login = login,
+                    onLoginChanged = { login = it },
+                    password = password,
+                    onPasswordChanged = { password = it },
+                    loginFocusRequester = loginFocusRequester,
+                    passwordFocusRequester = passwordFocusRequester,
+                    passwordShown = passwordShown,
+                    onTogglePasswordVisibility = { passwordShown = !passwordShown },
+                    isLoading = isLoading,
+                    onLogin = ::login
+                )
             } else {
-                isLoading = false
-                toast(context.getString(R.string.auth_login_error))
+                GreetingCardContent(name = name.value)
             }
-        }
-
-        fun login() {
-            if (login.isBlank()) {
-                loginFocusRequester.requestFocus()
-                return
-            }
-            if (password.isBlank()) {
-                passwordFocusRequester.requestFocus()
-                return
-            }
-
-            keyboardController?.hide()
-            isLoading = true
-            viewModel.login(login, password, ::onLoginResult)
-        }
-
-        val isFirstLogin by rememberSaveable { mutableStateOf(viewModel.checkIfFirstLogin(::onLoginResult)) }
-        val name = viewModel.name.collectAsState()
-
-        AppIcon()
-        VSpace(24.dp)
-        if (isFirstLogin) {
-            EnterDataCardContent(
-                login = login,
-                onLoginChanged = { login = it },
-                password = password,
-                onPasswordChanged = { password = it },
-                loginFocusRequester = loginFocusRequester,
-                passwordFocusRequester = passwordFocusRequester,
-                passwordShown = passwordShown,
-                onTogglePasswordVisibility = { passwordShown = !passwordShown },
-                isLoading = isLoading,
-                onLogin = ::login
-            )
-        } else {
-            GreetingCardContent(name = name.value)
         }
     }
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)

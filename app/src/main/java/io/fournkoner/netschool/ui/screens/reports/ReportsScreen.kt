@@ -18,70 +18,77 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.SimpleToolbar
-import io.fournkoner.netschool.ui.navigation.Screen
+import io.fournkoner.netschool.ui.screens.HelloWorldScreen
+import io.fournkoner.netschool.ui.screens.short_report.ShortReportScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun ReportsScreen(navController: NavController) {
-    val state = rememberLazyListState()
-    val showDivider by remember {
-        derivedStateOf {
-            state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0
-        }
-    }
+class ReportsScreen : AndroidScreen() {
 
-    Scaffold(
-        topBar = {
-            SimpleToolbar(
-                title = "Отчеты",
-                showDivider = showDivider
-            )
-        },
-        content = {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                state = state
-            ) {
-                item {
-                    ReportCard(
-                        icon = painterResource(R.drawable.ic_report_short),
-                        name = stringResource(R.string.reports_short_name),
-                        description = stringResource(R.string.reports_short_description)
-                    ) { navController.navigate(Screen.ShortReport.route) }
-                }
-                item {
-                    ReportCard(
-                        icon = painterResource(R.drawable.ic_report_full),
-                        name = stringResource(R.string.reports_full_name),
-                        description = stringResource(R.string.reports_full_description)
-                    ) { TODO() }
-                }
-                item {
-                    ReportCard(
-                        icon = painterResource(R.drawable.ic_report_subject),
-                        name = stringResource(R.string.reports_subject_name),
-                        description = stringResource(R.string.reports_subject_description)
-                    ) { TODO() }
-                }
-                item {
-                    ReportCard(
-                        icon = painterResource(R.drawable.ic_report_results),
-                        name = stringResource(R.string.reports_results_name),
-                        description = stringResource(R.string.reports_result_description)
-                    ) { TODO() }
-                }
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+    @Composable
+    override fun Content() {
+        val state = rememberLazyListState()
+        val showDivider by remember {
+            derivedStateOf {
+                state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0
             }
-        },
-        backgroundColor = LocalNetSchoolColors.current.backgroundMain
-    )
+        }
+        val navigator = LocalNavigator.currentOrThrow
+
+        Scaffold(
+            topBar = {
+                SimpleToolbar(
+                    title = stringResource(R.string.bn_reports),
+                    showDivider = showDivider
+                )
+            },
+            content = {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    state = state
+                ) {
+                    item {
+                        ReportCard(
+                            icon = painterResource(R.drawable.ic_report_short),
+                            name = stringResource(R.string.reports_short_name),
+                            description = stringResource(R.string.reports_short_description)
+                        ) { navigator.push(ShortReportScreen()) }
+                    }
+                    item {
+                        ReportCard(
+                            icon = painterResource(R.drawable.ic_report_full),
+                            name = stringResource(R.string.reports_full_name),
+                            description = stringResource(R.string.reports_full_description)
+                        ) { navigator.push(HelloWorldScreen()) }
+                    }
+                    item {
+                        ReportCard(
+                            icon = painterResource(R.drawable.ic_report_subject),
+                            name = stringResource(R.string.reports_subject_name),
+                            description = stringResource(R.string.reports_subject_description)
+                        ) { navigator.push(HelloWorldScreen()) }
+                    }
+                    item {
+                        ReportCard(
+                            icon = painterResource(R.drawable.ic_report_results),
+                            name = stringResource(R.string.reports_results_name),
+                            description = stringResource(R.string.reports_result_description)
+                        ) { navigator.push(HelloWorldScreen()) }
+                    }
+                }
+            },
+            backgroundColor = LocalNetSchoolColors.current.backgroundMain
+        )
+    }
 }
 
 @Composable

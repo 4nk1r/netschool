@@ -4,9 +4,12 @@ import android.app.DownloadManager
 import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.hilt.ScreenModelFactory
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
 import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
@@ -15,19 +18,18 @@ import io.fournkoner.netschool.utils.debugValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AssignmentInfoViewModel @Inject constructor(
+class AssignmentInfoViewModel @AssistedInject constructor(
+    @Assisted assigns: List<Journal.Class.Assignment>,
     private val getDetailedAssignmentsUseCase: GetDetailedAssignmentsUseCase,
     private val getHeadersForDownloaderUseCase: GetHeadersForDownloaderUseCase
-) : ViewModel() {
+) : ScreenModel {
 
     private val _assignments = MutableStateFlow(emptyList<AssignmentDetailed>())
     val assignments: StateFlow<List<AssignmentDetailed>> get() = _assignments
 
-    fun init(assigns: List<Journal.Class.Assignment>) {
-        viewModelScope.launch {
+    init {
+        coroutineScope.launch {
             _assignments.value = getDetailedAssignmentsUseCase(assigns).getOrDefault(emptyList())
         }
     }
@@ -46,5 +48,10 @@ class AssignmentInfoViewModel @Inject constructor(
                     }
                 }
         )
+    }
+
+    @AssistedFactory
+    interface Factory : ScreenModelFactory {
+        fun create(assigns: List<Journal.Class.Assignment>): AssignmentInfoViewModel
     }
 }

@@ -25,15 +25,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.components.VSpace
 import io.fournkoner.netschool.ui.components.loading
-import io.fournkoner.netschool.ui.navigation.Screen
+import io.fournkoner.netschool.ui.navigation.toParcelable
+import io.fournkoner.netschool.ui.screens.info.AssignmentInfoBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getFormattedTime
@@ -43,62 +45,69 @@ import kotlinx.coroutines.launch
 import splitties.collections.forEachWithIndex
 import java.util.*
 
-@Composable
-fun JournalScreen(
-    navController: NavController,
-    viewModel: JournalViewModel = hiltViewModel(),
-) {
-    val journal = viewModel.journal.collectAsState()
-    val week = viewModel.week.collectAsState()
+class JournalScreen : AndroidScreen() {
 
-    val scope = rememberCoroutineScope()
-    val state = rememberLazyListState()
+    @Composable
+    override fun Content() {
+        val viewModel: JournalViewModel = getViewModel()
+        val sheetNavigator = LocalBottomSheetNavigator.current
 
-    val fadeAnimDuration = 300
+        val journal = viewModel.journal.collectAsState()
+        val week = viewModel.week.collectAsState()
 
-    Scaffold(topBar = { Toolbar(state) }, content = { paddingValues ->
-        LoadingTransition(
-            targetState = journal.value, fadeAnimDuration = fadeAnimDuration
-        ) { journal ->
-            LazyColumn(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize(),
-                state = state,
-                userScrollEnabled = journal != null,
-                contentPadding = PaddingValues(vertical = 16.dp),
-            ) {
-                if (!journal?.overdueClasses.isNullOrEmpty()) item {
-                    OverdueClasses(classes = journal!!.overdueClasses)
-                }
+        val scope = rememberCoroutineScope()
+        val state = rememberLazyListState()
 
-                val list = (journal?.days ?: (0..4).map { null })
-                list.forEachWithIndex { index, day ->
-                    Day(day = day) { clazz ->
-                        navController.navigate(Screen.AssignmentInfo(clazz.assignments).route)
+        val fadeAnimDuration = 300
+
+        Scaffold(
+            topBar = { Toolbar(state) },
+            content = { paddingValues ->
+                LoadingTransition(
+                    targetState = journal.value,
+                    fadeAnimDuration = fadeAnimDuration
+                ) { journal ->
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize(),
+                        state = state,
+                        userScrollEnabled = journal != null,
+                        contentPadding = PaddingValues(vertical = 16.dp),
+                    ) {
+                        if (!journal?.overdueClasses.isNullOrEmpty()) item {
+                            OverdueClasses(classes = journal!!.overdueClasses)
+                        }
+
+                        val list = (journal?.days ?: (0..4).map { null })
+                        list.forEachWithIndex { index, day ->
+                            Day(day = day) { clazz ->
+                                sheetNavigator.show(AssignmentInfoBottomSheet(clazz.assignments.map { it.toParcelable() }))
+                            }
+                            if (index < list.size - 1) item {
+                                VSpace(16.dp)
+                            }
+                        }
                     }
-                    if (index < list.size - 1) item {
-                        VSpace(16.dp)
-                    }
                 }
-            }
-        }
-    }, bottomBar = {
-        WeekSelector(currentWeek = week.value, onPreviousClicked = {
-            viewModel.previousWeek()
-            scope.launch {
-                delay(fadeAnimDuration.toLong())
-                state.scrollToItem(0)
-            }
-        }, onNextClick = {
-            viewModel.nextWeek()
-            scope.launch {
-                delay(fadeAnimDuration.toLong())
-                state.scrollToItem(0)
-            }
-        })
-    }, backgroundColor = LocalNetSchoolColors.current.backgroundMain
-    )
+            },
+            bottomBar = {
+                WeekSelector(currentWeek = week.value, onPreviousClicked = {
+                    viewModel.previousWeek()
+                    scope.launch {
+                        delay(fadeAnimDuration.toLong())
+                        state.scrollToItem(0)
+                    }
+                }, onNextClick = {
+                    viewModel.nextWeek()
+                    scope.launch {
+                        delay(fadeAnimDuration.toLong())
+                        state.scrollToItem(0)
+                    }
+                })
+            }, backgroundColor = LocalNetSchoolColors.current.backgroundMain
+        )
+    }
 }
 
 private fun LazyListScope.Day(
