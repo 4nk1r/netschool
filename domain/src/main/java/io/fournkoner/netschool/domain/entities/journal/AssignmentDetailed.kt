@@ -6,7 +6,7 @@ data class AssignmentDetailed(
     val attachments: List<Attachment>,
     val teacher: String,
     val subject: String,
-    val type: Journal.Class.Assignment.Type,
+    val type: String,
     val grade: Int?
 ) {
     data class Attachment(

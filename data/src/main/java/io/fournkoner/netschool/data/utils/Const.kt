@@ -12,4 +12,5 @@ internal object Const {
     var studentId: Int? = null
     var yearId: Int? = null
     var fullSchoolName: String? = null
+    var assignmentTitles: Map<Int, String>? = null
 }

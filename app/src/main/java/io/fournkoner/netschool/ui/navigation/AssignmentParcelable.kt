@@ -10,17 +10,8 @@ data class AssignmentParcelable(
     val name: String,
     val attachments: List<Attachment>,
     val grade: Int?,
-    val type: Type
+    val type: String
 ) : Parcelable {
-
-    @Parcelize
-    enum class Type: Parcelable {
-        Homework,
-        IndependentWork,
-        Answer,
-        PracticalWork,
-        Unknown
-    }
 
     @Parcelize
     data class Attachment(
@@ -38,13 +29,7 @@ data class AssignmentParcelable(
                 file = it.file
             )
         },
-        type = when(type) {
-            Type.Homework -> Journal.Class.Assignment.Type.Homework
-            Type.IndependentWork -> Journal.Class.Assignment.Type.IndependentWork
-            Type.Answer -> Journal.Class.Assignment.Type.Answer
-            Type.PracticalWork -> Journal.Class.Assignment.Type.PracticalWork
-            Type.Unknown -> Journal.Class.Assignment.Type.Unknown
-        }
+        type = type
     )
 }
 
@@ -58,11 +43,5 @@ fun Journal.Class.Assignment.toParcelable() = AssignmentParcelable(
             file = it.file
         )
     },
-    type = when(type) {
-        Journal.Class.Assignment.Type.Homework -> AssignmentParcelable.Type.Homework
-        Journal.Class.Assignment.Type.IndependentWork -> AssignmentParcelable.Type.IndependentWork
-        Journal.Class.Assignment.Type.Answer -> AssignmentParcelable.Type.Answer
-        Journal.Class.Assignment.Type.PracticalWork -> AssignmentParcelable.Type.PracticalWork
-        Journal.Class.Assignment.Type.Unknown -> AssignmentParcelable.Type.Unknown
-    }
+    type = type
 )

@@ -60,12 +60,7 @@ internal class JournalRepositoryImpl(
                                                     )
                                                 },
                                             grade = assignment.grade?.mark,
-                                            type = when (assignment.type) {
-                                                3 -> Journal.Class.Assignment.Type.Homework
-                                                5 -> Journal.Class.Assignment.Type.IndependentWork
-                                                10 -> Journal.Class.Assignment.Type.Answer
-                                                else -> Journal.Class.Assignment.Type.Unknown
-                                            }
+                                            type = Const.assignmentTitles!![assignment.type]!!
                                         )
                                     },
                                 grades = clazz.assignments.orEmpty()

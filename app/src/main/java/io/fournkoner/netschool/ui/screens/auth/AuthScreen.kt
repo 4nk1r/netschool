@@ -266,7 +266,11 @@ private fun EnterDataCardContent(
 private fun GreetingCardContent(name: String) {
     MainCard {
         Text(
-            text = stringResource(R.string.auth_greeting, name),
+            text = if (name == "Рамазан") {
+                stringResource(R.string.auth_greeting_alt, name)
+            } else {
+                stringResource(R.string.auth_greeting, name)
+            },
             style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()

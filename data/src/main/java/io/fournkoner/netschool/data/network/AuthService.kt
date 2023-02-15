@@ -2,10 +2,7 @@ package io.fournkoner.netschool.data.network
 
 import io.fournkoner.netschool.data.models.auth.*
 import io.fournkoner.netschool.data.utils.ContentType
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 internal interface AuthService {
 
@@ -26,6 +23,9 @@ internal interface AuthService {
 
     @GET("webapi/years/current")
     suspend fun getCurrentYear(): CurrentYearResponse
+
+    @GET("webapi/grade/assignment/types")
+    suspend fun getAssignmentTypes(@Query("all") all: Boolean = false): List<AssignmentTypesResponse>
 
     @POST("webapi/auth/logout")
     suspend fun logout()

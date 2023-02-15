@@ -24,16 +24,8 @@ data class Journal(
             val name: String,
             val attachments: List<Attachment>,
             val grade: Int?,
-            val type: Type
+            val type: String
         ) {
-
-            enum class Type {
-                Homework,
-                IndependentWork,
-                Answer,
-                PracticalWork,
-                Unknown
-            }
 
             data class Attachment(
                 val name: String,

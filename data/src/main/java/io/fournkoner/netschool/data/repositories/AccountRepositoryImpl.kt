@@ -43,6 +43,9 @@ internal class AccountRepositoryImpl(
             val currentYearResponse = authService.getCurrentYear().debugValue()
             Const.yearId = currentYearResponse.id
 
+            val assignmentTypes = authService.getAssignmentTypes()
+            Const.assignmentTitles = assignmentTypes.associate { it.id to it.name }
+
             encryptedPreferences.edit {
                 putString(
                     PrefsKeys.ACCOUNT_NAME,

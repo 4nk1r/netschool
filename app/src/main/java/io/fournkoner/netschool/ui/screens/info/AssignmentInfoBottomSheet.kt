@@ -28,7 +28,6 @@ import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
-import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.ui.components.*
 import io.fournkoner.netschool.ui.navigation.AssignmentParcelable
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
@@ -66,7 +65,7 @@ data class AssignmentInfoBottomSheet(
                 (list.takeIf { it.isNotEmpty() } ?: listOf(null))
                     .forEachWithIndex { index, assignment ->
                         TitledContent(
-                            title = assignment?.type?.getAssignmentTypeName(),
+                            title = assignment?.type,
                             content = assignment?.name,
                             grade = assignment?.grade,
                         )
@@ -263,13 +262,4 @@ private fun SecondaryContentText(text: String?) {
         style = Typography.body2.copy(color = LocalNetSchoolColors.current.textSecondary),
         modifier = Modifier.loading(text == null)
     )
-}
-
-@Composable
-private fun Journal.Class.Assignment.Type.getAssignmentTypeName() = when (this) {
-    Journal.Class.Assignment.Type.Homework -> stringResource(R.string.assignment_homework)
-    Journal.Class.Assignment.Type.IndependentWork -> stringResource(R.string.assignment_independent_work)
-    Journal.Class.Assignment.Type.Answer -> stringResource(R.string.assignment_answer)
-    Journal.Class.Assignment.Type.PracticalWork -> stringResource(R.string.assignment_practical_word)
-    Journal.Class.Assignment.Type.Unknown -> stringResource(R.string.assignment_unknown)
 }

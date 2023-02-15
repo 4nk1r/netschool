@@ -54,9 +54,9 @@ data class NetSchoolColors(
 
         val darkPalette: NetSchoolColors
             get() = NetSchoolColors(
-                backgroundMain = Color(0xFF1A1A1A),
-                backgroundCard = Color(0xFF212121),
-                backgroundCardNegative = Color(0xFF2D2525),
+                backgroundMain = Color(0xFF0F0F0F),
+                backgroundCard = Color(0xFF191919),
+                backgroundCardNegative = Color(0xFF251919),
                 shimmer = Color(0x10FFFFFF),
 
                 accentMain = Color(0xFF68AFF0),
@@ -66,8 +66,8 @@ data class NetSchoolColors(
                 textMain = Color(0xFFFFFFFF),
                 textSecondary = Color(0x9AFFFFFF),
 
-                divider = Color(0xFF2A2A2A),
-                dividerOnNegative = Color(0xFF383131),
+                divider = Color(0xFF222222),
+                dividerOnNegative = Color(0xFF2A2222),
 
                 gradeGreat = Color(0xFF5DCF76),
                 grateGood = Color(0xFF7BBAF4),

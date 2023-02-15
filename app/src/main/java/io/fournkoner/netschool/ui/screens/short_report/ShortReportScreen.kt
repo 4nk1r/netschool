@@ -245,7 +245,7 @@ private fun ReportOverallGrades(grades: ShortReport.Grades?) {
 private fun Grades(
     grades: ShortReport.Grades?,
     extraPadding: Boolean,
-    showAll: Boolean
+    showAll: Boolean,
 ) {
     if (grades?.greatCount == 0
         && grades.goodCount == 0
@@ -345,13 +345,18 @@ private fun PeriodSelection(
         }
         PeriodSelectionCard(periods) { list ->
             if (list.isNullOrEmpty()) {
-                CircularProgressIndicator(
+                Box(
                     modifier = Modifier
-                        .padding(32.dp)
-                        .size(28.dp),
-                    color = LocalNetSchoolColors.current.accentMain,
-                    strokeWidth = 2.dp
-                )
+                        .fillMaxWidth()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(28.dp),
+                        color = LocalNetSchoolColors.current.accentMain,
+                        strokeWidth = 2.dp
+                    )
+                }
             } else {
                 AnimatedContent(
                     targetState = isExpanded || isFullscreen,
