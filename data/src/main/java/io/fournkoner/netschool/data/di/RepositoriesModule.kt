@@ -7,12 +7,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.fournkoner.netschool.data.network.AuthService
 import io.fournkoner.netschool.data.network.JournalService
+import io.fournkoner.netschool.data.network.MailService
 import io.fournkoner.netschool.data.network.ReportsService
 import io.fournkoner.netschool.data.repositories.AccountRepositoryImpl
 import io.fournkoner.netschool.data.repositories.JournalRepositoryImpl
+import io.fournkoner.netschool.data.repositories.MailRepositoryImpl
 import io.fournkoner.netschool.data.repositories.ReportsRepositoryImpl
 import io.fournkoner.netschool.domain.repositories.AccountRepository
 import io.fournkoner.netschool.domain.repositories.JournalRepository
+import io.fournkoner.netschool.domain.repositories.MailRepository
 import io.fournkoner.netschool.domain.repositories.ReportsRepository
 import javax.inject.Singleton
 
@@ -39,5 +42,11 @@ internal object RepositoriesModule {
     @Provides
     fun provideReportsRepository(reportsService: ReportsService): ReportsRepository {
         return ReportsRepositoryImpl(reportsService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMailRepository(mailService: MailService): MailRepository {
+        return MailRepositoryImpl(mailService)
     }
 }

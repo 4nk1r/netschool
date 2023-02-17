@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -29,9 +30,12 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import io.fournkoner.netschool.R
+import io.fournkoner.netschool.ui.components.BadgedLayout
 import io.fournkoner.netschool.ui.navigation.tabs.*
 import io.fournkoner.netschool.ui.screens.auth.AuthScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
+import io.fournkoner.netschool.utils.Const
+import io.fournkoner.netschool.utils.formattedShortString
 
 @Composable
 fun AppNavigation() {
@@ -77,7 +81,10 @@ class AppScreen : AndroidScreen() {
                                         .animateContentSize()
                                 ) {
                                     listOf(JournalTab, ReportsTab, MailTab, ScheduleTab).forEach {
-                                        BottomNavigationItem(tab = it)
+                                        BottomNavigationItem(
+                                            tab = it,
+                                            unreadCount = if (it == MailTab) Const.mailUnreadMessages else 0
+                                        )
                                     }
                                 }
                             }
@@ -100,10 +107,28 @@ class AppScreen : AndroidScreen() {
 }
 
 @Composable
-private fun RowScope.BottomNavigationItem(tab: Tab) {
+private fun RowScope.BottomNavigationItem(
+    tab: Tab,
+    unreadCount: Int = 0,
+) {
     val tabNavigator = LocalTabNavigator.current
 
-    Column(
+    BadgedLayout(
+        badge = {
+            if (unreadCount > 0) Box(
+                modifier = Modifier
+                    .defaultMinSize(minWidth = 18.dp, minHeight = 18.dp)
+                    .background(LocalNetSchoolColors.current.badge, CircleShape)
+                    .padding(horizontal = 5.dp)
+            ) {
+                Text(
+                    text = unreadCount.formattedShortString,
+                    color = LocalNetSchoolColors.current.onBadge,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+        },
         modifier = Modifier
             .fillMaxHeight()
             .weight(1f)
@@ -115,33 +140,37 @@ private fun RowScope.BottomNavigationItem(tab: Tab) {
                     color = LocalNetSchoolColors.current.accentMain
                 ),
                 interactionSource = remember { MutableInteractionSource() }
-            ) { tabNavigator.current = tab },
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+            ) { tabNavigator.current = tab }
     ) {
-        val color by animateColorAsState(
-            if (tabNavigator.current == tab) {
-                LocalNetSchoolColors.current.accentMain
-            } else {
-                LocalNetSchoolColors.current.accentInactive
-            }
-        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val color by animateColorAsState(
+                if (tabNavigator.current == tab) {
+                    LocalNetSchoolColors.current.accentMain
+                } else {
+                    LocalNetSchoolColors.current.accentInactive
+                }
+            )
 
-        Icon(
-            painter = tab.options.icon!!,
-            contentDescription = tab.options.title,
-            modifier = Modifier.size(24.dp),
-            tint = color
-        )
-        Text(
-            text = tab.options.title.toUpperCase(Locale.current),
-            fontSize = 8.sp,
-            letterSpacing = 0.4.sp,
-            fontFamily = FontFamily(Font(R.font.inter_semi_bold, FontWeight.SemiBold)),
-            fontWeight = FontWeight.SemiBold,
-            color = color,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+            Icon(
+                painter = tab.options.icon!!,
+                contentDescription = tab.options.title,
+                modifier = Modifier.size(24.dp),
+                tint = color
+            )
+            Text(
+                text = tab.options.title.toUpperCase(Locale.current),
+                fontSize = 8.sp,
+                letterSpacing = 0.4.sp,
+                fontFamily = FontFamily(Font(R.font.inter_semi_bold, FontWeight.SemiBold)),
+                fontWeight = FontWeight.SemiBold,
+                color = color,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }

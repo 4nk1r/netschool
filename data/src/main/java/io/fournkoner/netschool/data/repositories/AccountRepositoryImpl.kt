@@ -32,7 +32,7 @@ internal class AccountRepositoryImpl(
                 "lt" to authData.lt,
                 "pw2" to passwordHash,
                 "ver" to authData.ver
-            ).toFormDataBodyString().debugValue()
+            ).toFormUrlEncodedString().debugValue()
 
             val authResponse = authService.signIn(signInRequestBody).debugValue()
             Const.at = authResponse.at

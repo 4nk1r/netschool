@@ -12,6 +12,8 @@ data class NetSchoolColors(
     val accentMain: Color,
     val accentInactive: Color,
     val onAccent: Color,
+    val badge: Color,
+    val onBadge: Color,
 
     val textMain: Color,
     val textSecondary: Color,
@@ -38,6 +40,8 @@ data class NetSchoolColors(
                 accentMain = Color(0xFF3E95E5),
                 accentInactive = Color(0xFF637484),
                 onAccent = Color(0xFFFFFFFF),
+                badge = Color(0xFFEC1111),
+                onBadge = Color(0xFFFFFFFF),
 
                 textMain = Color(0xFF000000),
                 textSecondary = Color(0x9A000000),
@@ -62,6 +66,8 @@ data class NetSchoolColors(
                 accentMain = Color(0xFF68AFF0),
                 accentInactive = Color(0xFF6D7378),
                 onAccent = Color(0xFFFFFFFF),
+                badge = Color(0xFFF04242),
+                onBadge = Color(0xFFFFFFFF),
 
                 textMain = Color(0xFFFFFFFF),
                 textSecondary = Color(0x9AFFFFFF),

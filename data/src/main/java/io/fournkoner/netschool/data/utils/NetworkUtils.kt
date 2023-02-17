@@ -2,7 +2,7 @@ package io.fournkoner.netschool.data.utils
 
 import okhttp3.Request
 
-internal fun <K, V> Map<K, V>.toFormDataBodyString(): String {
+internal fun <K, V> Map<K, V>.toFormUrlEncodedString(): String {
     return map { "${it.key}=${it.value}" }.joinToString("&")
 }
 
