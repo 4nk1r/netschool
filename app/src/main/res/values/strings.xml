@@ -61,4 +61,28 @@
         <item quantity="many">%d оценок</item>
         <item quantity="other">%d оценок</item>
     </plurals>
+
+    <string name="mail_just_now">только что</string>
+    <plurals name="mail_minutes">
+        <item quantity="zero">%d минут назад</item>
+        <item quantity="one">%d минута назад</item>
+        <item quantity="two">%d минуты назад</item>
+        <item quantity="few">%d минуты назад</item>
+        <item quantity="many">%d минут назад</item>
+        <item quantity="other">%d минут назад</item>
+    </plurals>
+    <plurals name="mail_hours">
+        <item quantity="zero">%d часов назад</item>
+        <item quantity="one">%d час назад</item>
+        <item quantity="two">%d часа назад</item>
+        <item quantity="few">%d часа назад</item>
+        <item quantity="many">%d часов назад</item>
+        <item quantity="other">%d часов назад</item>
+    </plurals>
+    <string name="mail_yesterday">Вчера</string>
+    <string name="mail_no_subject">Без темы</string>
+    <string name="mail_new_message">Новое письмо</string>
+    <string name="mail_inbox">Входящие</string>
+    <string name="mail_sent">Отправленные</string>
+    <string name="mail_expand_selection_desc">Изменить почтовый ящик</string>
 </resources>

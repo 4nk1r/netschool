@@ -13,4 +13,6 @@ internal object Const {
     var yearId: Int? = null
     var fullSchoolName: String? = null
     var assignmentTitles: Map<Int, String>? = null
+
+    const val MAILBOX_PAGE_SIZE = 50
 }

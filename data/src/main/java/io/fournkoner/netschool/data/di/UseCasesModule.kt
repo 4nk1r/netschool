@@ -14,6 +14,7 @@ import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
+import io.fournkoner.netschool.domain.usecases.mail.GetMailboxUseCase
 import io.fournkoner.netschool.domain.usecases.mail.GetUnreadMessagesCountUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
@@ -91,5 +92,11 @@ internal object UseCasesModule {
     @Singleton
     fun provideGetUnreadMessagesCountUseCase(repository: MailRepository): GetUnreadMessagesCountUseCase {
         return GetUnreadMessagesCountUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetMailboxUseCase(repository: MailRepository): GetMailboxUseCase {
+        return GetMailboxUseCase(repository)
     }
 }

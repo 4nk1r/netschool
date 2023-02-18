@@ -1,8 +1,16 @@
 package io.fournkoner.netschool.utils
 
+import android.content.res.Configuration
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import io.fournkoner.netschool.R
 import java.text.SimpleDateFormat
-import java.time.DayOfWeek
-import java.time.LocalDate
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.*
 
@@ -51,4 +59,46 @@ fun String.getFormattedTime(pattern: String): String {
             }.time
         )
         .run { "${this.first().uppercaseChar()}${this.drop(1)}" }
+}
+
+@Composable
+fun Long.getMessageFormattedDate(): String {
+    val today = LocalDateTime.now()
+    val messageDate = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
+
+    return when (ChronoUnit.DAYS.between(messageDate, today).toInt()) {
+        0 -> {
+            val configuration = LocalConfiguration.current
+            val context = LocalContext.current
+
+            val resources = remember(configuration, context) {
+                context.createConfigurationContext(
+                    Configuration(configuration).apply {
+                        setLocale(Locale("ru"))
+                    }
+                ).resources
+            }
+
+            val minutesDiff = ChronoUnit.MINUTES.between(messageDate, today).toInt()
+            val hoursDiff = ChronoUnit.HOURS.between(messageDate, today).toInt()
+
+            return when {
+                minutesDiff < 1 -> stringResource(R.string.mail_just_now)
+                minutesDiff < 60 -> resources.getQuantityString(
+                    R.plurals.mail_minutes,
+                    minutesDiff,
+                    minutesDiff
+                )
+                hoursDiff < 24 -> resources.getQuantityString(
+                    R.plurals.mail_hours,
+                    hoursDiff,
+                    hoursDiff
+                )
+                else -> messageDate.toString()
+            }
+        }
+        1 -> stringResource(R.string.mail_yesterday)
+        in 3..364 -> messageDate.format(DateTimeFormatter.ofPattern("dd.MM"))
+        else -> messageDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    }
 }
