@@ -105,7 +105,7 @@ private fun BaseToolbar(
 }
 
 @Composable
-private fun TopAppBarIcon(
+fun TopAppBarIcon(
     iconPainter: Painter,
     contentDescription: String? = null,
     tint: Color,

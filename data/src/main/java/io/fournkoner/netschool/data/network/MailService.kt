@@ -3,6 +3,7 @@ package io.fournkoner.netschool.data.network
 import io.fournkoner.netschool.data.models.mail.MailboxResponse
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.ContentType
+import okhttp3.ResponseBody
 import retrofit2.http.*
 
 internal interface MailService {
@@ -21,4 +22,13 @@ internal interface MailService {
         @Query("AT") at: String = Const.at!!,
         @Query("jtSorting") sortingMode: String = "Sent DESC",
     ): MailboxResponse
+
+    @GET("asp/Messages/readmessage.asp")
+    @Streaming
+    suspend fun getMailMessageDetailed(
+        @Query("MID") id: Int,
+        @Query("MBID") mbid: Int = 1,
+        @Query("ver") ver: String = Const.ver!!,
+        @Query("at") at: String = Const.at!!
+    ): ResponseBody
 }

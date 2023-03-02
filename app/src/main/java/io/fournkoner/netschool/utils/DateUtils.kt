@@ -61,6 +61,10 @@ fun String.getFormattedTime(pattern: String): String {
         .run { "${this.first().uppercaseChar()}${this.drop(1)}" }
 }
 
+fun Long.formatDate(): String {
+    return SimpleDateFormat("hh:mm dd.MM.yyyy", Locale.getDefault()).format(Date(this))
+}
+
 @Composable
 fun Long.getMessageFormattedDate(): String {
     val today = LocalDateTime.now()

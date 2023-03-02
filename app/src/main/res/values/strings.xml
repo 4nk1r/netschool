@@ -85,4 +85,14 @@
     <string name="mail_inbox">Входящие</string>
     <string name="mail_sent">Отправленные</string>
     <string name="mail_expand_selection_desc">Изменить почтовый ящик</string>
+    <string name="message_expand">Развернуть</string>
+    <string name="message_additional_info">Дополнительная информация</string>
+    <string name="message_when">Отправлено</string>
+    <string name="message_from">От кого</string>
+    <string name="message_sent">Кому</string>
+    <string name="message_attachments">Приложенные файлы</string>
+    <string name="message_body">Текст</string>
+    <string name="downloading_started">Загрузка началась</string>
+    <string name="message_reply">Ответить</string>
+    <string name="message_forward">Переслать</string>
 </resources>

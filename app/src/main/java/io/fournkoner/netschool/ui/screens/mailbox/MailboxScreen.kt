@@ -1,6 +1,5 @@
 package io.fournkoner.netschool.ui.screens.mailbox
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -20,6 +19,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -34,15 +34,16 @@ import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.loading
 import io.fournkoner.netschool.ui.screens.HelloWorldScreen
+import io.fournkoner.netschool.ui.screens.mail_message.MailMessageScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
+import io.fournkoner.netschool.utils.Const
 import io.fournkoner.netschool.utils.getMessageFormattedDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MailboxScreen : AndroidScreen() {
 
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
     override fun Content() {
         val viewModel: MailboxViewModel = getViewModel()
@@ -76,7 +77,8 @@ class MailboxScreen : AndroidScreen() {
                     current = current,
                     inboxMessages = inboxMessages,
                     sentMessages = sentMessages,
-                    state = state
+                    state = state,
+                    contentPaddingValues = it
                 )
             },
             floatingActionButton = {
@@ -92,7 +94,8 @@ class MailboxScreen : AndroidScreen() {
                         contentDescription = stringResource(R.string.mail_new_message)
                     )
                 }
-            }
+            },
+            backgroundColor = LocalNetSchoolColors.current.backgroundMain
         )
     }
 
@@ -102,6 +105,7 @@ class MailboxScreen : AndroidScreen() {
         inboxMessages: LazyPagingItems<MailMessageShort>,
         sentMessages: LazyPagingItems<MailMessageShort>,
         state: LazyListState,
+        contentPaddingValues: PaddingValues,
     ) {
         val navigator = LocalNavigator.currentOrThrow
 
@@ -110,14 +114,19 @@ class MailboxScreen : AndroidScreen() {
             LoadingTransition(targetState = list.itemCount == 0) { isEmpty ->
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp),
+                    contentPadding = PaddingValues(
+                        top = contentPaddingValues.calculateTopPadding(),
+                        start = contentPaddingValues.calculateStartPadding(LayoutDirection.Ltr),
+                        end = contentPaddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                        bottom = contentPaddingValues.calculateBottomPadding()
+                    ),
                     state = if (!isEmpty) state else LazyListState(),
                     userScrollEnabled = !isEmpty
                 ) {
                     if (!isEmpty) {
                         itemsIndexed(list) { index, message ->
                             Message(message) {
-                                navigator.push(HelloWorldScreen())
+                                navigator.push(MailMessageScreen(message!!.id))
                             }
                             if (index < inboxMessages.itemCount - 1) {
                                 Divider(color = LocalNetSchoolColors.current.divider)
@@ -138,19 +147,25 @@ class MailboxScreen : AndroidScreen() {
 
     @Composable
     private fun Message(message: MailMessageShort?, onClick: () -> Unit) {
+        var isUnread by rememberSaveable(message) { mutableStateOf(message?.unread == true) }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     animateColorAsState(
-                        if (message?.unread == true) LocalNetSchoolColors.current.accentMain.copy(
-                            alpha = 0.2f
-                        )
+                        if (isUnread) LocalNetSchoolColors.current.accentMain.copy(alpha = 0.2f)
                         else LocalNetSchoolColors.current.backgroundMain,
                         tween(100)
                     ).value
                 )
-                .clickable(onClick = onClick, enabled = message != null)
+                .clickable(enabled = message != null) {
+                    if (isUnread) {
+                        isUnread = false
+                        Const.mailUnreadMessages--
+                    }
+                    onClick()
+                }
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -257,7 +272,10 @@ class MailboxScreen : AndroidScreen() {
                                             isExpanded = false
                                         }
                                     ) {
-                                        Text(text = value.getName())
+                                        Text(
+                                            text = value.getName(),
+                                            color = LocalNetSchoolColors.current.textMain
+                                        )
                                     }
                                 }
                             }

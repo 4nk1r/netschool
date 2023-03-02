@@ -2,6 +2,7 @@ package io.fournkoner.netschool.ui.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
@@ -79,21 +80,39 @@ val Typography = Typography(
     ),
 )
 
+private val Colors
+    @Composable get() = Colors(
+        primary = LocalNetSchoolColors.current.accentMain,
+        primaryVariant = LocalNetSchoolColors.current.accentMain,
+        secondary = LocalNetSchoolColors.current.accentMain,
+        secondaryVariant = LocalNetSchoolColors.current.accentMain,
+        background = LocalNetSchoolColors.current.backgroundMain,
+        surface = LocalNetSchoolColors.current.backgroundCard,
+        error = LocalNetSchoolColors.current.gradeBad,
+        onPrimary = LocalNetSchoolColors.current.onAccent,
+        onSecondary = LocalNetSchoolColors.current.onAccent,
+        onBackground = LocalNetSchoolColors.current.textMain,
+        onSurface = LocalNetSchoolColors.current.textMain,
+        onError = LocalNetSchoolColors.current.onBadge,
+        isLight = !isSystemInDarkTheme()
+    )
+
 @Composable
 fun NetSchoolTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    MaterialTheme(
-        shapes = Shapes,
-        typography = Typography
+    CompositionLocalProvider(
+        LocalNetSchoolColors provides if (darkTheme) {
+            NetSchoolColors.darkPalette
+        } else {
+            NetSchoolColors.lightPalette
+        },
     ) {
-        CompositionLocalProvider(
-            LocalNetSchoolColors provides if (darkTheme) {
-                NetSchoolColors.darkPalette
-            } else {
-                NetSchoolColors.lightPalette
-            },
+        MaterialTheme(
+            shapes = Shapes,
+            typography = Typography,
+            colors = Colors,
             content = content
         )
     }

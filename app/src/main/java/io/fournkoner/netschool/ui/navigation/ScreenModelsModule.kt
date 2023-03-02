@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import io.fournkoner.netschool.ui.screens.info.AssignmentInfoViewModel
+import io.fournkoner.netschool.ui.screens.mail_message.MailMessageViewModel
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,5 +19,12 @@ abstract class ScreenModelsModule {
     @ScreenModelFactoryKey(AssignmentInfoViewModel.Factory::class)
     abstract fun provideAssignmentInfoViewModelFactory(
         factory: AssignmentInfoViewModel.Factory,
+    ): ScreenModelFactory
+
+    @Binds
+    @IntoMap
+    @ScreenModelFactoryKey(MailMessageViewModel.Factory::class)
+    abstract fun provideMailMessageViewModelFactory(
+        factory: MailMessageViewModel.Factory,
     ): ScreenModelFactory
 }

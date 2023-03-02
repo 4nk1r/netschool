@@ -2,24 +2,19 @@ package io.fournkoner.netschool.ui.screens.info
 
 import android.os.Parcelable
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,12 +31,15 @@ import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getGradeColor
 import kotlinx.parcelize.Parcelize
 import splitties.collections.forEachWithIndex
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 
 @Parcelize
 data class AssignmentInfoBottomSheet(
     private val assigns: List<AssignmentParcelable>
 ) : AndroidScreen(), Parcelable {
 
+    @OptIn(UnreliableToastApi::class)
     @Composable
     override fun Content() = BottomSheet {
         val viewModel = getScreenModel<AssignmentInfoViewModel, AssignmentInfoViewModel.Factory> {
@@ -81,6 +79,7 @@ data class AssignmentInfoBottomSheet(
 
                             VSpace(12.dp)
                             TitledFiles(assignment!!.attachments) { file ->
+                                toast(context.getString(R.string.downloading_started))
                                 viewModel.downloadFile(file, context)
                             }
                         }
@@ -157,32 +156,25 @@ private fun TitleText(text: String?) {
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RowScope.ContentText(
     text: String?,
     copyable: Boolean,
 ) {
-    val clipboardManager = LocalClipboardManager.current
-    val haptic = LocalHapticFeedback.current
+    @Composable
+    fun Text() {
+        Text(
+            text = text ?: "placeholder",
+            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
+            modifier = Modifier
+                .weight(1f)
+                .loading(text == null)
+        )
+    }
 
-    Text(
-        text = text ?: "placeholder",
-        style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
-        modifier = Modifier
-            .weight(1f)
-            .combinedClickable(
-                enabled = copyable && text != null,
-                onLongClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    clipboardManager.setText(buildAnnotatedString { append(text!!) })
-                },
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = {}
-            )
-            .loading(text == null)
-    )
+    if (copyable && text != null) SelectionContainer {
+        Text()
+    } else Text()
 }
 
 @Composable
