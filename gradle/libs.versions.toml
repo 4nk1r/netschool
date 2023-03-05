@@ -11,6 +11,7 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 androidxCore = "androidx.core:core-ktx:1.9.0"
 androidxLyfecycle = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 androidxActivity = "androidx.activity:activity-compose:1.6.1"
+androidxSplash = "androidx.core:core-splashscreen:1.0.0-beta02"
 androidxMaterial = "com.google.android.material:material:1.8.0"
 
 composeBom = "androidx.compose:compose-bom:2022.11.00"
@@ -52,7 +53,7 @@ pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha18"
 javaDesugar = "com.android.tools:desugar_jdk_libs:2.0.2"
 
 [bundles]
-androidx = ["androidxCore", "androidxLyfecycle", "androidxActivity", "androidxMaterial"]
+androidx = ["androidxCore", "androidxLyfecycle", "androidxActivity", "androidxMaterial", "androidxSplash"]
 compose = ["composeUi", "composeMaterial"]
 voyager = ["voyagerNavigator", "voyagerBottomSheet", "voyagerTab", "voyagerTransitions", "voyagerAndroidx", "voyagerHilt"]
 accompanist = ["accompanistSystemUi", "accompanistNavAnim", "accompanistNavMaterial", "accompanistPlaceholder"]

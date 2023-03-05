@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.NetSchool.Splash" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_app_icon</item>
+        <item name="android:windowSplashScreenBackground">@color/splash_bg</item>
+        <item name="android:windowSplashScreenAnimationDuration">700</item>
+    </style>
+</resources>
