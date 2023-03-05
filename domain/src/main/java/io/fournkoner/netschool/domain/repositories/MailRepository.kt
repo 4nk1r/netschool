@@ -11,4 +11,6 @@ interface MailRepository {
     suspend fun getMailbox(mailbox: Mailbox, page: Int): Result<List<MailMessageShort>>
 
     suspend fun getMailMessageDetailed(id: Int): Result<MailMessageDetailed>
+
+    suspend fun deleteMessages(ids: List<Int>, mailbox: Mailbox)
 }

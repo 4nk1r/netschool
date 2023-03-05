@@ -36,9 +36,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
+import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.loading
+import io.fournkoner.netschool.ui.screens.mailbox.MailboxScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -47,15 +49,19 @@ import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
 import java.util.*
 
-data class MailMessageScreen(private val id: Int) : AndroidScreen() {
+data class MailMessageScreen(
+    private val id: Int,
+    private val mailbox: Mailbox,
+) : AndroidScreen() {
 
     @OptIn(UnreliableToastApi::class)
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<MailMessageViewModel, MailMessageViewModel.Factory> {
-            it.create(id)
+            it.create(id, mailbox)
         }
         val state = rememberLazyListState()
+        val navigator = LocalNavigator.currentOrThrow
 
         val message = viewModel.message.collectAsState()
         val showDivider by remember { derivedStateOf { state.firstVisibleItemIndex > 0 } }
@@ -64,7 +70,14 @@ data class MailMessageScreen(private val id: Int) : AndroidScreen() {
             topBar = {
                 Toolbar(
                     title = message.value?.subject ?: "",
-                    showDivider = showDivider
+                    showDivider = showDivider,
+                    onDelete = {
+                        viewModel.deleteMessage()
+
+                        // shitty way to achieve the "start for result" behavior
+                        MailboxScreen.deletedMessages += id
+                        navigator.pop()
+                    }
                 )
             },
             content = {
@@ -322,6 +335,7 @@ data class MailMessageScreen(private val id: Int) : AndroidScreen() {
     private fun Toolbar(
         title: String,
         showDivider: Boolean,
+        onDelete: () -> Unit,
     ) {
         val navigator = LocalNavigator.currentOrThrow
         val topPadding = WindowInsets.statusBars
@@ -355,7 +369,7 @@ data class MailMessageScreen(private val id: Int) : AndroidScreen() {
                     TopAppBarIcon(
                         iconPainter = painterResource(R.drawable.ic_trash_bin),
                         tint = LocalNetSchoolColors.current.gradeBad,
-                        onClick = { TODO() }
+                        onClick = onDelete
                     )
                 },
                 modifier = Modifier

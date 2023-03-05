@@ -8,8 +8,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
+import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetMailMessageDetailedUseCase
+import io.fournkoner.netschool.domain.usecases.mail.DeleteMessagesUseCase
 import io.fournkoner.netschool.utils.debugValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +19,10 @@ import kotlinx.coroutines.launch
 
 class MailMessageViewModel @AssistedInject constructor(
     @Assisted private val id: Int,
+    @Assisted private val mailbox: Mailbox,
     private val getMailMessageDetailedUseCase: GetMailMessageDetailedUseCase,
-    private val getHeadersForDownloaderUseCase: GetHeadersForDownloaderUseCase
+    private val getHeadersForDownloaderUseCase: GetHeadersForDownloaderUseCase,
+    private val deleteMessagesUseCase: DeleteMessagesUseCase
 ) : ScreenModel {
 
     private val _message = MutableStateFlow<MailMessageDetailed?>(null)
@@ -43,9 +47,15 @@ class MailMessageViewModel @AssistedInject constructor(
         )
     }
 
+    fun deleteMessage() {
+        coroutineScope.launch {
+            deleteMessagesUseCase(listOf(id), mailbox)
+        }
+    }
+
     @AssistedFactory
     interface Factory : ScreenModelFactory {
 
-        fun create(id: Int): MailMessageViewModel
+        fun create(id: Int, mailbox: Mailbox): MailMessageViewModel
     }
 }

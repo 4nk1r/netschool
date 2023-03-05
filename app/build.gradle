@@ -24,7 +24,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            resValue "string", "app_name", "DaSchool"
+        }
         release {
+            resValue "string", "app_name", "NetSchool"
+
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -60,42 +66,24 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     // AndroidX Stuff
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    implementation 'androidx.activity:activity-compose:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation libs.bundles.androidx
     // Jetpack Compose
-    implementation platform('androidx.compose:compose-bom:2022.11.00')
-    implementation "androidx.compose.ui:ui:"
-    implementation 'androidx.compose.material:material'
-    // Navigation Component
-    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation platform(libs.composeBom)
+    implementation libs.bundles.compose
     // Voyager
-    def voyager_version = "1.0.0-rc03"
-    implementation "cafe.adriel.voyager:voyager-navigator:$voyager_version"
-    implementation "cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyager_version"
-    implementation "cafe.adriel.voyager:voyager-tab-navigator:$voyager_version"
-    implementation "cafe.adriel.voyager:voyager-transitions:$voyager_version"
-    implementation "cafe.adriel.voyager:voyager-androidx:$voyager_version"
-    implementation "cafe.adriel.voyager:voyager-hilt:$voyager_version"
+    implementation libs.bundles.voyager
     // Accompanist
-    def accompanist_version = "0.28.0"
-    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-navigation-material:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
+    implementation libs.bundles.accompanist
     // Splitties
-    implementation "com.louiscad.splitties:splitties-fun-pack-android-base:3.0.0"
+    implementation libs.splitties
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    // Gson
-    implementation "com.google.code.gson:gson:2.10.1"
+    implementation libs.hilt
+    implementation libs.hiltCompose
+    kapt libs.hiltCompiler
     // Paging
-    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
+    implementation libs.pagingCompose
     // Java Desugar
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
+    coreLibraryDesugaring libs.javaDesugar
 }
 
 kapt {

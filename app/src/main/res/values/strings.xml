@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">NetSchool</string>
-
     <string name="bn_journal">Дневник</string>
     <string name="bn_reports">Отчеты</string>
     <string name="bn_mail">Почта</string>

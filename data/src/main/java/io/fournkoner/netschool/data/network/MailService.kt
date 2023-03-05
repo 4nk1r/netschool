@@ -31,4 +31,10 @@ internal interface MailService {
         @Query("ver") ver: String = Const.ver!!,
         @Query("at") at: String = Const.at!!
     ): ResponseBody
+
+    @POST("asp/ajax/DeleteMessagesAjax.asp")
+    suspend fun deleteMessages(
+        @Body body: String,
+        @Header("Content-Type") contentType: String = ContentType.FORM_URL_ENCODED.string
+    )
 }

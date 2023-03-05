@@ -3,11 +3,13 @@ package io.fournkoner.netschool.ui.screens.mailbox
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
@@ -43,6 +45,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MailboxScreen : AndroidScreen() {
+
+    companion object {
+
+        // shitty way to achieve the "start for result" behavior
+        val deletedMessages = mutableListOf<Int>()
+    }
 
     @Composable
     override fun Content() {
@@ -99,6 +107,7 @@ class MailboxScreen : AndroidScreen() {
         )
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun MessagesList(
         current: Mailbox,
@@ -124,12 +133,17 @@ class MailboxScreen : AndroidScreen() {
                     userScrollEnabled = !isEmpty
                 ) {
                     if (!isEmpty) {
-                        itemsIndexed(list) { index, message ->
-                            Message(message) {
-                                navigator.push(MailMessageScreen(message!!.id))
-                            }
-                            if (index < inboxMessages.itemCount - 1) {
-                                Divider(color = LocalNetSchoolColors.current.divider)
+                        itemsIndexed(list, key = { _, item -> item.id }) { index, message ->
+                            if (!deletedMessages.contains(message?.id)) {
+                                Message(message) {
+                                    navigator.push(MailMessageScreen(message!!.id, mailbox))
+                                }
+                                if (index < list.itemCount - 1) {
+                                    Divider(
+                                        color = LocalNetSchoolColors.current.divider,
+                                        modifier = Modifier.animateItemPlacement()
+                                    )
+                                }
                             }
                         }
                     } else {
@@ -145,8 +159,9 @@ class MailboxScreen : AndroidScreen() {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    private fun Message(message: MailMessageShort?, onClick: () -> Unit) {
+    private fun LazyItemScope.Message(message: MailMessageShort?, onClick: () -> Unit) {
         var isUnread by rememberSaveable(message) { mutableStateOf(message?.unread == true) }
 
         Row(
@@ -166,7 +181,8 @@ class MailboxScreen : AndroidScreen() {
                     }
                     onClick()
                 }
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .animateItemPlacement(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {

@@ -41,23 +41,19 @@ android {
 dependencies {
     // Project
     implementation(project(":domain"))
-    // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    // Retrofit
-    def retrofit_version = "2.9.0"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:3.2.0"
-    // Jsoup
-    implementation 'org.jsoup:jsoup:1.15.3'
+    // Hilt (DI)
+    implementation libs.hilt
+    kapt libs.hiltCompiler
+    // Retrofit (Networking)
+    implementation libs.bundles.retrofit
+    // Jsoup (HTML parsing)
+    implementation libs.jsoup
     // Gson
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation libs.gson
     // Encrypted preferences
-    implementation "androidx.security:security-crypto:1.1.0-alpha04"
+    implementation libs.encryptedPreferences
     // Paging
-    implementation "androidx.paging:paging-runtime:3.1.1"
+    implementation libs.pagingRuntime
 }
 
 kapt {

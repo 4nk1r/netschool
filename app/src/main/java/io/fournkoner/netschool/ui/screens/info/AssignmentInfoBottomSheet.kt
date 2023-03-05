@@ -36,7 +36,7 @@ import splitties.toast.toast
 
 @Parcelize
 data class AssignmentInfoBottomSheet(
-    private val assigns: List<AssignmentParcelable>
+    private val assigns: List<AssignmentParcelable>,
 ) : AndroidScreen(), Parcelable {
 
     @OptIn(UnreliableToastApi::class)
@@ -112,7 +112,7 @@ data class AssignmentInfoBottomSheet(
 @Composable
 private fun TitledFiles(
     attachments: List<AssignmentDetailed.Attachment>,
-    download: (AssignmentDetailed.Attachment) -> Unit
+    download: (AssignmentDetailed.Attachment) -> Unit,
 ) {
     TitleText(stringResource(R.string.assignment_attachments))
     VSpace(12.dp)
@@ -172,15 +172,15 @@ private fun RowScope.ContentText(
         )
     }
 
-    if (copyable && text != null) SelectionContainer {
-        Text()
-    } else Text()
+    if (copyable && text != null) SelectionContainer(
+        modifier = Modifier.weight(1f)
+    ) { Text() } else Text()
 }
 
 @Composable
 private fun Files(
     files: List<AssignmentDetailed.Attachment>,
-    download: (AssignmentDetailed.Attachment) -> Unit
+    download: (AssignmentDetailed.Attachment) -> Unit,
 ) {
     Column(
         modifier = Modifier

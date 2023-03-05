@@ -1,0 +1,59 @@
+[versions]
+hilt = "2.44.2"
+retrofit = "2.9.0"
+voyager = "1.0.0-rc03"
+accompanist = "0.28.0"
+
+[plugins]
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+[libraries]
+androidxCore = "androidx.core:core-ktx:1.9.0"
+androidxLyfecycle = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+androidxActivity = "androidx.activity:activity-compose:1.6.1"
+androidxMaterial = "com.google.android.material:material:1.8.0"
+
+composeBom = "androidx.compose:compose-bom:2022.11.00"
+composeUi = { module = "androidx.compose.ui:ui" }
+composeMaterial = { module = "androidx.compose.material:material" }
+
+voyagerNavigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyagerBottomSheet = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
+voyagerTab = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyagerTransitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyagerAndroidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
+voyagerHilt = { module = "cafe.adriel.voyager:voyager-hilt", version.ref = "voyager" }
+
+accompanistSystemUi = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
+accompanistNavAnim = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
+accompanistNavMaterial = { module = "com.google.accompanist:accompanist-navigation-material", version.ref = "accompanist" }
+accompanistPlaceholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
+
+splitties = "com.louiscad.splitties:splitties-fun-pack-android-base:3.0.0"
+
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hiltCompiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hiltCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofitScalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
+retrofitGson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+retrofitUrlConnection = "com.squareup.okhttp3:okhttp-urlconnection:3.2.0"
+
+gson = "com.google.code.gson:gson:2.10.1"
+
+jsoup = "org.jsoup:jsoup:1.15.3"
+
+encryptedPreferences = "androidx.security:security-crypto:1.1.0-alpha05"
+
+pagingRuntime = "androidx.paging:paging-runtime:3.1.1"
+pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha18"
+
+javaDesugar = "com.android.tools:desugar_jdk_libs:2.0.2"
+
+[bundles]
+androidx = ["androidxCore", "androidxLyfecycle", "androidxActivity", "androidxMaterial"]
+compose = ["composeUi", "composeMaterial"]
+voyager = ["voyagerNavigator", "voyagerBottomSheet", "voyagerTab", "voyagerTransitions", "voyagerAndroidx", "voyagerHilt"]
+accompanist = ["accompanistSystemUi", "accompanistNavAnim", "accompanistNavMaterial", "accompanistPlaceholder"]
+retrofit = ["retrofit", "retrofitScalars", "retrofitGson", "retrofitUrlConnection"]

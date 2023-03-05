@@ -53,9 +53,23 @@ internal class MailRepositoryImpl(
 
         withContext(Dispatchers.IO) {
             val scanner = Scanner(stream.byteStream(), Charsets.UTF_8.name())
-            while (scanner.hasNext()) html += scanner.nextLine().debugValue()
+            while (scanner.hasNext()) html += scanner.nextLine()
         }
 
         MailParser.parseMailMessageDetailed(html)
+    }
+
+    override suspend fun deleteMessages(ids: List<Int>, mailbox: Mailbox) {
+        runCatching {
+            mailService.deleteMessages(
+                body = mapOf(
+                    "AT" to Const.at!!,
+                    "nBoxId" to mailbox.id
+                ).toList()
+                    .joinToString(separator = "&") { "${it.first}=${it.second}" }
+                    .plus("&")
+                    .plus(ids.joinToString(separator = "&") { "deletedMessages=$it" })
+            )
+        }
     }
 }
