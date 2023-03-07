@@ -1,8 +1,6 @@
 package io.fournkoner.netschool.domain.repositories
 
-import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
-import io.fournkoner.netschool.domain.entities.mail.MailMessageShort
-import io.fournkoner.netschool.domain.entities.mail.Mailbox
+import io.fournkoner.netschool.domain.entities.mail.*
 
 interface MailRepository {
 
@@ -13,4 +11,6 @@ interface MailRepository {
     suspend fun getMailMessageDetailed(id: Int): Result<MailMessageDetailed>
 
     suspend fun deleteMessages(ids: List<Int>, mailbox: Mailbox)
+
+    suspend fun getMessageReceivers(group: MailMessageReceiverGroup): Result<List<MailMessageReceiver>>
 }

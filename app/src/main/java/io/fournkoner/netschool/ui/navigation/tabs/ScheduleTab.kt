@@ -10,6 +10,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.screens.HelloWorldScreen
 
+// one day, but not this time
 object ScheduleTab : Tab {
 
     override val options: TabOptions

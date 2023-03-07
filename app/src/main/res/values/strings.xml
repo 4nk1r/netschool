@@ -93,4 +93,10 @@
     <string name="downloading_started">Загрузка началась</string>
     <string name="message_reply">Ответить</string>
     <string name="message_forward">Переслать</string>
+    <string name="select_receiver_title">Выберите получателя</string>
+    <string name="search_content_description">Поиск</string>
+    <string name="select_receiver_teachers">Учителя</string>
+    <string name="select_receiver_students">Ученики</string>
+    <string name="select_receiver_change_group">Изменить группу</string>
+    <string name="select_receiver_nobody_found">Никого не найдено</string>
 </resources>

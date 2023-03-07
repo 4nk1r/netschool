@@ -3,6 +3,7 @@ package io.fournkoner.netschool.data.jsoup
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.debugValue
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
+import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 import java.util.*
@@ -77,5 +78,22 @@ internal object MailParser {
             date = date ?: throw RuntimeException("Parsing failed: date is null"),
             attachments = attachments,
         )
+    }
+
+    fun parseMessageReceivers(html: String): List<MailMessageReceiver> {
+        val site = Jsoup.parse(html)
+
+        return site.select("div.row").select("a").map { receiver ->
+            val id = receiver.attr("onclick")
+                .substringAfter('\'')
+                .substringBefore('\'')
+                .toInt()
+            val name = receiver.text()
+
+            MailMessageReceiver(
+                id = id,
+                name = name
+            )
+        }
     }
 }

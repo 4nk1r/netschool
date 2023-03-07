@@ -53,7 +53,8 @@ class AppScreen : AndroidScreen() {
     override fun Content() {
         BottomSheetNavigator(
             sheetElevation = 0.dp,
-            sheetBackgroundColor = Color.Transparent
+            sheetBackgroundColor = Color.Transparent,
+            scrimColor = Color.Black.copy(alpha = 0.4f)
         ) {
             TabNavigator(JournalTab) {
                 Scaffold(
@@ -80,7 +81,7 @@ class AppScreen : AndroidScreen() {
                                         )
                                         .animateContentSize()
                                 ) {
-                                    listOf(JournalTab, ReportsTab, MailTab, ScheduleTab).forEach {
+                                    listOf(JournalTab, ReportsTab, MailTab).forEach {
                                         BottomNavigationItem(
                                             tab = it,
                                             unreadCount = if (it == MailTab) Const.mailUnreadMessages else 0

@@ -17,6 +17,7 @@ import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetMailMessageDetailedUseCase
 import io.fournkoner.netschool.domain.usecases.mail.DeleteMessagesUseCase
 import io.fournkoner.netschool.domain.usecases.mail.GetMailboxUseCase
+import io.fournkoner.netschool.domain.usecases.mail.GetMessageReceiversUseCase
 import io.fournkoner.netschool.domain.usecases.mail.GetUnreadMessagesCountUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
@@ -112,5 +113,11 @@ internal object UseCasesModule {
     @Singleton
     fun provideDeleteMessagesUseCase(repository: MailRepository): DeleteMessagesUseCase {
         return DeleteMessagesUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetMessageReceiversUseCase(repository: MailRepository): GetMessageReceiversUseCase {
+        return GetMessageReceiversUseCase(repository)
     }
 }

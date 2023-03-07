@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
@@ -41,6 +42,7 @@ import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.loading
 import io.fournkoner.netschool.ui.screens.mailbox.MailboxScreen
+import io.fournkoner.netschool.ui.screens.message_receivers.MessageReceiversBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -62,6 +64,7 @@ data class MailMessageScreen(
         }
         val state = rememberLazyListState()
         val navigator = LocalNavigator.currentOrThrow
+        val bottomSheetNavigator = LocalBottomSheetNavigator.current
 
         val message = viewModel.message.collectAsState()
         val showDivider by remember { derivedStateOf { state.firstVisibleItemIndex > 0 } }
@@ -123,7 +126,9 @@ data class MailMessageScreen(
             bottomBar = {
                 BottomButtons(
                     onReply = { /*TODO*/ },
-                    onForward = { /*TODO*/ },
+                    onForward = {
+                        bottomSheetNavigator.show(MessageReceiversBottomSheet())
+                    },
                     isLoading = message.value == null
                 )
             },
@@ -134,7 +139,8 @@ data class MailMessageScreen(
     @Composable
     private fun Subject(title: String?) {
         Text(
-            text = title ?: "placeholder".repeat(5),
+            text = (title ?: "placeholder".repeat(5))
+                .takeIf { it.isNotEmpty() } ?: stringResource(R.string.mail_no_subject),
             style = Typography.h5.copy(
                 color = LocalNetSchoolColors.current.textMain,
                 fontWeight = FontWeight.Medium

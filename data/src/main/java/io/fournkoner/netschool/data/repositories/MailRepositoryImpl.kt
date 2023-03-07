@@ -6,6 +6,8 @@ import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.debugValue
 import io.fournkoner.netschool.data.utils.id
 import io.fournkoner.netschool.data.utils.toFormUrlEncodedString
+import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
+import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.domain.entities.mail.MailMessageShort
 import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.domain.repositories.MailRepository
@@ -25,7 +27,7 @@ internal class MailRepositoryImpl(
                 "AT" to Const.at!!,
                 "VER" to Const.ver!!
             ).toFormUrlEncodedString()
-        ).debugValue()
+        )
         MailParser.getUnreadMessagesCount(html)
     }
 
@@ -70,6 +72,22 @@ internal class MailRepositoryImpl(
                     .plus("&")
                     .plus(ids.joinToString(separator = "&") { "deletedMessages=$it" })
             )
+        }
+    }
+
+    override suspend fun getMessageReceivers(group: MailMessageReceiverGroup): Result<List<MailMessageReceiver>> {
+        return runCatching {
+            val html = mailService.getMessageReceivers(
+                body = mapOf(
+                    "LoginType" to "0",
+                    "AT" to Const.at!!,
+                    "VER" to Const.ver!!,
+                    "A" to "",
+                    "OrgType" to "0",
+                    "FL" to group.id
+                ).toFormUrlEncodedString()
+            )
+            MailParser.parseMessageReceivers(html)
         }
     }
 }

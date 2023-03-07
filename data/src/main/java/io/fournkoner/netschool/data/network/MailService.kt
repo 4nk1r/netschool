@@ -37,4 +37,10 @@ internal interface MailService {
         @Body body: String,
         @Header("Content-Type") contentType: String = ContentType.FORM_URL_ENCODED.string
     )
+
+    @POST("asp/Messages/addrbkleft.asp")
+    suspend fun getMessageReceivers(
+        @Body body: String,
+        @Header("Content-Type") contentType: String = ContentType.FORM_URL_ENCODED.string
+    ): String
 }

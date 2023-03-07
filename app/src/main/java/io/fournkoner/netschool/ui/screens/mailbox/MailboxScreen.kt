@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemsIndexed
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -127,18 +126,19 @@ class MailboxScreen : AndroidScreen() {
                         top = contentPaddingValues.calculateTopPadding(),
                         start = contentPaddingValues.calculateStartPadding(LayoutDirection.Ltr),
                         end = contentPaddingValues.calculateEndPadding(LayoutDirection.Ltr),
-                        bottom = contentPaddingValues.calculateBottomPadding()
+                        bottom = contentPaddingValues.calculateBottomPadding() + /*fab*/ 56.dp
                     ),
                     state = if (!isEmpty) state else LazyListState(),
                     userScrollEnabled = !isEmpty
                 ) {
                     if (!isEmpty) {
-                        itemsIndexed(list, key = { _, item -> item.id }) { index, message ->
-                            if (!deletedMessages.contains(message?.id)) {
+                        for (i in 0 until list.itemCount) {
+                            val message = list[i]
+                            if (!deletedMessages.contains(message?.id)) item(key = message?.id) {
                                 Message(message) {
                                     navigator.push(MailMessageScreen(message!!.id, mailbox))
                                 }
-                                if (index < list.itemCount - 1) {
+                                if (i < list.itemCount - 1) {
                                     Divider(
                                         color = LocalNetSchoolColors.current.divider,
                                         modifier = Modifier.animateItemPlacement()
