@@ -34,8 +34,8 @@ import io.fournkoner.netschool.domain.entities.mail.MailMessageShort
 import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.loading
-import io.fournkoner.netschool.ui.screens.HelloWorldScreen
 import io.fournkoner.netschool.ui.screens.mail_message.MailMessageScreen
+import io.fournkoner.netschool.ui.screens.new_message.NewMessageScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.Const
@@ -91,7 +91,7 @@ class MailboxScreen : AndroidScreen() {
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        navigator.push(HelloWorldScreen())
+                        navigator.push(NewMessageScreen(openMode = NewMessageScreen.OpenMode.NEW))
                     },
                     backgroundColor = LocalNetSchoolColors.current.accentMain,
                     contentColor = LocalNetSchoolColors.current.onAccent

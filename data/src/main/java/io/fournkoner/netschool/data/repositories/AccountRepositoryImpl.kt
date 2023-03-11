@@ -46,6 +46,9 @@ internal class AccountRepositoryImpl(
             val assignmentTypes = authService.getAssignmentTypes()
             Const.assignmentTitles = assignmentTypes.associate { it.id to it.name }
 
+            val fileSizeLimit = authService.getFileSizeLimit()
+            Const.fileSizeLimit = fileSizeLimit.limit
+
             encryptedPreferences.edit {
                 putString(
                     PrefsKeys.ACCOUNT_NAME,

@@ -2,6 +2,8 @@ package io.fournkoner.netschool.data.utils
 
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.domain.entities.mail.Mailbox
+import okhttp3.MediaType
+import okhttp3.RequestBody
 
 internal fun <T> List<T>.bringToFirst(selector: (T) -> Boolean): List<T> {
     val item = firstOrNull(selector) ?: return this
@@ -23,3 +25,5 @@ internal val MailMessageReceiverGroup.id
         MailMessageReceiverGroup.TEACHERS -> "T"
         MailMessageReceiverGroup.STUDENTS -> "D"
     }
+
+internal fun String.toRequestBody() = RequestBody.create(MediaType.parse("text/plain"), this)

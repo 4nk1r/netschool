@@ -42,11 +42,12 @@ import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.loading
 import io.fournkoner.netschool.ui.screens.mailbox.MailboxScreen
-import io.fournkoner.netschool.ui.screens.message_receivers.MessageReceiversBottomSheet
+import io.fournkoner.netschool.ui.screens.new_message.NewMessageScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.formatDate
+import io.fournkoner.netschool.utils.parcelables.toParcelable
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
 import java.util.*
@@ -125,9 +126,21 @@ data class MailMessageScreen(
             },
             bottomBar = {
                 BottomButtons(
-                    onReply = { /*TODO*/ },
+                    onReply = {
+                        navigator.push(
+                            NewMessageScreen(
+                                openMode = NewMessageScreen.OpenMode.REPLY,
+                                receiver = null //TODO
+                            )
+                        )
+                    },
                     onForward = {
-                        bottomSheetNavigator.show(MessageReceiversBottomSheet())
+                        navigator.push(
+                            NewMessageScreen(
+                                openMode = NewMessageScreen.OpenMode.FORWARD,
+                                message = message.value?.toParcelable()
+                            )
+                        )
                     },
                     isLoading = message.value == null
                 )

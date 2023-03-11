@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.navigation
+package io.fournkoner.netschool.utils.parcelables
 
 import android.os.Parcelable
 import io.fournkoner.netschool.domain.entities.journal.Journal

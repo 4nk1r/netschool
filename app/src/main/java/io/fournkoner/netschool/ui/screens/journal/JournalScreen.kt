@@ -34,12 +34,12 @@ import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.components.VSpace
 import io.fournkoner.netschool.ui.components.loading
-import io.fournkoner.netschool.ui.navigation.toParcelable
 import io.fournkoner.netschool.ui.screens.info.AssignmentInfoBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getFormattedTime
 import io.fournkoner.netschool.utils.getGradeColor
+import io.fournkoner.netschool.utils.parcelables.toParcelable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import splitties.collections.forEachWithIndex

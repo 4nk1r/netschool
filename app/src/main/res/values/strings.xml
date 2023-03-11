@@ -99,4 +99,15 @@
     <string name="select_receiver_students">Ученики</string>
     <string name="select_receiver_change_group">Изменить группу</string>
     <string name="select_receiver_nobody_found">Никого не найдено</string>
+    <string name="new_message_receiver">Получатель</string>
+    <string name="new_message_receiver_not_set">Не выбран</string>
+    <string name="new_message_subject">Тема письма</string>
+    <string name="new_message_subject_not_set">Без темы</string>
+    <string name="new_message_title">Новое сообщение</string>
+    <string name="new_message_forwarded">Переслано: %s</string>
+    <string name="new_message_reply">Ответ на \"%s\"</string>
+    <string name="new_message_body_placeholder">Введите текст...</string>
+    <string name="new_message_body">Тело письма</string>
+    <string name="new_message_body_source">Исходное сообщение:\n%s\nАвтор: %s</string>
+    <string name="new_message_file_size_limit">Нельзя прикрепить файл размером больше %d МБ</string>
 </resources>

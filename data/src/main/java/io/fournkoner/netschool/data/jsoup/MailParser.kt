@@ -96,4 +96,10 @@ internal object MailParser {
             )
         }
     }
+
+    fun parseSendMessageData(html: String): Map<String, String> {
+        return Jsoup.parse(html).select("input").associate {
+            it.attr("name") to it.attr("value")
+        }
+    }
 }

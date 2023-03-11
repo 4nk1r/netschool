@@ -41,14 +41,18 @@ import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.ui.components.BottomSheet
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
-import io.fournkoner.netschool.ui.screens.HelloWorldScreen
+import io.fournkoner.netschool.ui.screens.new_message.NewMessageScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.ui.style.mediumDp
+import io.fournkoner.netschool.utils.parcelables.MailMessageParcelable
+import io.fournkoner.netschool.utils.parcelables.toParcelable
 import kotlinx.coroutines.launch
 
-class MessageReceiversBottomSheet : AndroidScreen() {
+data class MessageReceiversBottomSheet(
+    private val forwardMessage: MailMessageParcelable? = null,
+) : AndroidScreen() {
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
@@ -94,8 +98,19 @@ class MessageReceiversBottomSheet : AndroidScreen() {
                             segmentedList = receivers.value,
                             state = state,
                             onClick = {
+                                if (forwardMessage != null) {
+                                    navigator.push(
+                                        NewMessageScreen(
+                                            openMode = NewMessageScreen.OpenMode.FORWARD,
+                                            message = forwardMessage,
+                                            receiver = it.toParcelable()
+                                        )
+                                    )
+                                } else {
+                                    NewMessageScreen.selectedReceiver = it
+                                }
+
                                 bottomSheetNavigator.hide()
-                                navigator.push(HelloWorldScreen())
                             }
                         )
                     } else {

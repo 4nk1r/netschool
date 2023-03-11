@@ -27,6 +27,9 @@ internal interface AuthService {
     @GET("webapi/grade/assignment/types")
     suspend fun getAssignmentTypes(@Query("all") all: Boolean = false): List<AssignmentTypesResponse>
 
+    @GET("webapi/attachments/uploadLimits")
+    suspend fun getFileSizeLimit(): FileSizeLimitResponse
+
     @POST("webapi/auth/logout")
     suspend fun logout()
 }

@@ -13,6 +13,12 @@ import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.domain.repositories.MailRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+import java.net.URLConnection
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,5 +95,52 @@ internal class MailRepositoryImpl(
             )
             MailParser.parseMessageReceivers(html)
         }
+    }
+
+    override fun getMessageFileSizeLimit(): Int {
+        return Const.fileSizeLimit!!
+    }
+
+    override suspend fun sendMessageUseCase(
+        receiver: MailMessageReceiver,
+        subject: String,
+        body: String,
+        attachments: Map<File, String>,
+    ): Result<Boolean> = runCatching {
+        val attachmentIds = attachments.debugValue().map {
+            mailService.uploadFile(
+                filePart = MultipartBody.Part.createFormData(
+                    "fileAttachment",
+                    it.value,
+                    RequestBody.create(
+                        MediaType.parse(URLConnection.guessContentTypeFromName(it.value)),
+                        it.key
+                    )
+                )
+            )
+        }.debugValue()
+
+        val requestBody = MailParser
+            .parseSendMessageData(mailService.getSendMessageData())
+            .mapValues {
+                when(it.key) {
+                    "LTO" -> receiver.id
+                    "ATO" -> URLEncoder.encode(receiver.name, "UTF-8")
+                    "SU" -> URLEncoder.encode(subject, "UTF-8")
+                    "NEEDNOTIFY" -> 1
+                    else -> it.value
+                }
+            }
+            .toFormUrlEncodedString()
+            .plus("&BO=${URLEncoder.encode(body, "UTF-8")}")
+            .plus(
+                if (attachmentIds.isNotEmpty()) {
+                    "&" + attachmentIds.joinToString("&") { "attachment=$it" }
+                } else ""
+            )
+            .debugValue()
+
+        mailService.sendMessage(requestBody)
+        true
     }
 }

@@ -15,10 +15,7 @@ import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUse
 import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetMailMessageDetailedUseCase
-import io.fournkoner.netschool.domain.usecases.mail.DeleteMessagesUseCase
-import io.fournkoner.netschool.domain.usecases.mail.GetMailboxUseCase
-import io.fournkoner.netschool.domain.usecases.mail.GetMessageReceiversUseCase
-import io.fournkoner.netschool.domain.usecases.mail.GetUnreadMessagesCountUseCase
+import io.fournkoner.netschool.domain.usecases.mail.*
 import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
 import javax.inject.Singleton
@@ -119,5 +116,17 @@ internal object UseCasesModule {
     @Singleton
     fun provideGetMessageReceiversUseCase(repository: MailRepository): GetMessageReceiversUseCase {
         return GetMessageReceiversUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetMessageFileSizeLimitUseCase(repository: MailRepository): GetMessageFileSizeLimitUseCase {
+        return GetMessageFileSizeLimitUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSendMessageUseCase(repository: MailRepository): SendMessageUseCase {
+        return SendMessageUseCase(repository)
     }
 }
