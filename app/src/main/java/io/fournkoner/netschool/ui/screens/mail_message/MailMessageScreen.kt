@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
@@ -47,6 +46,7 @@ import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.formatDate
+import io.fournkoner.netschool.utils.parcelables.MailMessageReceiverParcelable
 import io.fournkoner.netschool.utils.parcelables.toParcelable
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
@@ -65,9 +65,9 @@ data class MailMessageScreen(
         }
         val state = rememberLazyListState()
         val navigator = LocalNavigator.currentOrThrow
-        val bottomSheetNavigator = LocalBottomSheetNavigator.current
 
         val message = viewModel.message.collectAsState()
+        val senderId = viewModel.senderId.collectAsState()
         val showDivider by remember { derivedStateOf { state.firstVisibleItemIndex > 0 } }
 
         Scaffold(
@@ -130,7 +130,13 @@ data class MailMessageScreen(
                         navigator.push(
                             NewMessageScreen(
                                 openMode = NewMessageScreen.OpenMode.REPLY,
-                                receiver = null //TODO
+                                receiver = senderId.value?.let {
+                                    MailMessageReceiverParcelable(
+                                        id = it,
+                                        name = message.value!!.sender
+                                    )
+                                },
+                                message = message.value?.toParcelable()
                             )
                         )
                     },

@@ -225,8 +225,8 @@ data class NewMessageScreen(
                     item {
                         Attachments(
                             list = attachments,
-                            onDelete = {
-                                attachments = attachments - attachments[it]!!
+                            onDelete = { uri ->
+                                attachments = attachments.filterKeys { it != uri }
                             }
                         )
                     }
@@ -616,14 +616,14 @@ data class NewMessageScreen(
         } else {
             MediaStore.Images.Thumbnails.getThumbnail(
                 context.contentResolver,
-                toUri().getId(context),
+                toUri().getId(),
                 MediaStore.Images.Thumbnails.MINI_KIND,
                 null
             )
         }
     }
 
-    private fun Uri.getId(context: Context) = lastPathSegment!!.split(':')[1].toLong()
+    private fun Uri.getId() = lastPathSegment!!.split(':')[1].toLong()
 
     enum class OpenMode {
         FORWARD,
