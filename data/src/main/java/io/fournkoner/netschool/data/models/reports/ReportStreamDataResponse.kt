@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 @Keep
-internal data class ShortReportStreamDataResponse(
+internal data class ReportStreamDataResponse(
     @SerializedName("ConnectionId") val connectionId: String,
     @SerializedName("ConnectionToken") val connectionToken: String,
 )

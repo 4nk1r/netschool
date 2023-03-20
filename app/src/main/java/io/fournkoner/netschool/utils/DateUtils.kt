@@ -106,3 +106,5 @@ fun Long.getMessageFormattedDate(): String {
         else -> messageDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
     }
 }
+
+fun Long.toLocalDate() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()

@@ -7,7 +7,6 @@ import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
 import io.fournkoner.netschool.domain.entities.reports.ShortReport
 import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
-import io.fournkoner.netschool.utils.debugValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,6 +27,9 @@ class ShortReportViewModel @Inject constructor(
     private val _report = MutableStateFlow<ShortReport?>(null)
     val report: StateFlow<ShortReport?> get() = _report
 
+    private val _reportEmpty = MutableStateFlow(false)
+    val reportEmpty: StateFlow<Boolean> get() = _reportEmpty
+
     init {
         viewModelScope.launch {
             getShortReportRequestDataUseCase().getOrNull()?.let { reportRequestData ->
@@ -43,11 +45,12 @@ class ShortReportViewModel @Inject constructor(
     fun generate(period: ReportRequestData.Value) {
         if (lastSelectedPeriod == period) return
 
+        _reportEmpty.value = false
         _report.value = null
         lastSelectedPeriod = period
 
         viewModelScope.launch {
-            _report.value = generateShortReportUseCase(
+            generateShortReportUseCase(
                 params = immutableRequestData + listOf(
                     ReportRequestData(
                         id = REQUEST_DATA_ITEM_ID_PERIOD,
@@ -55,7 +58,10 @@ class ShortReportViewModel @Inject constructor(
                         values = listOf(period)
                     )
                 )
-            ).getOrNull().debugValue()
+            ).onSuccess {
+                _report.value = it
+                _reportEmpty.value = it == null
+            }
         }
     }
 

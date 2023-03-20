@@ -59,7 +59,7 @@ class MessageReceiversViewModel @Inject constructor(
     fun updateGroup(group: MailMessageReceiverGroup) {
         _currentGroup.value = group
         _receivers.value = fullReceiversList[_currentGroup.value]
-            ?.filter { it.name.startsWith(searchQuery) }
+            ?.filter { it.name.contains(searchQuery) }
             ?.sortByLetters() ?: emptyMap()
     }
 

@@ -113,7 +113,30 @@ fun NetSchoolTheme(
             shapes = Shapes,
             typography = Typography,
             colors = Colors,
-            content = content
-        )
+        ) {
+            androidx.compose.material3.MaterialTheme(
+                colorScheme = androidx.compose.material3.MaterialTheme.colorScheme.copy(
+                    primary = LocalNetSchoolColors.current.accentMain,
+                    primaryContainer = LocalNetSchoolColors.current.accentMain,
+                    secondary = LocalNetSchoolColors.current.accentMain,
+                    secondaryContainer = LocalNetSchoolColors.current.accentMain,
+                    tertiary = LocalNetSchoolColors.current.accentMain,
+                    tertiaryContainer = LocalNetSchoolColors.current.accentMain,
+                    onPrimary = LocalNetSchoolColors.current.onAccent,
+                    onSecondary = LocalNetSchoolColors.current.onAccent,
+                    onTertiary = LocalNetSchoolColors.current.onAccent,
+                    error = LocalNetSchoolColors.current.gradeBad,
+                    onError = LocalNetSchoolColors.current.backgroundMain,
+                    surface = LocalNetSchoolColors.current.backgroundCard,
+                    background = LocalNetSchoolColors.current.backgroundMain
+                ),
+                androidx.compose.material3.MaterialTheme.shapes.copy(
+                    small = Shapes.small,
+                    medium = Shapes.medium,
+                    large = Shapes.large
+                ),
+                content = content
+            )
+        }
     }
 }

@@ -1,8 +1,9 @@
 package io.fournkoner.netschool.data.network
 
+import io.fournkoner.netschool.data.models.reports.ReportStreamDataResponse
 import io.fournkoner.netschool.data.models.reports.ShortReportParamsResponse
-import io.fournkoner.netschool.data.models.reports.ShortReportStreamDataResponse
 import io.fournkoner.netschool.data.models.reports.ShortReportTaskResponse
+import io.fournkoner.netschool.data.models.reports.SubjectReportParamsResponse
 import io.fournkoner.netschool.data.utils.Accept
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.ContentType
@@ -15,16 +16,16 @@ internal interface ReportsService {
     suspend fun getShortReportParams(): ShortReportParamsResponse
 
     @GET("WebApi/signalr/negotiate")
-    suspend fun getShortReportStreamData(
+    suspend fun getReportStreamData(
         @Query("clientProtocol") clientProtocol: String = "1.5",
         @Query("at") at: String = Const.at!!,
         @Query("connectionData") connectionData: String = "[{\"name\":\"queuehub\"}]",
         @Query("_") huh: Long = System.currentTimeMillis(),
-    ): ShortReportStreamDataResponse
+    ): ReportStreamDataResponse
 
     @GET("WebApi/signalr/connect")
     @Streaming
-    suspend fun getShortReportEventStream(
+    suspend fun getReportEventStream(
         @Query("connectionToken") connectionToken: String,
         @Query("transport") transport: String = "serverSentEvents",
         @Query("clientProtocol") clientProtocol: String = "1.5",
@@ -35,7 +36,7 @@ internal interface ReportsService {
     ): ResponseBody
 
     @GET("WebApi/signalr/start")
-    suspend fun startShortReportQueue(
+    suspend fun startReportQueue(
         @Query("connectionToken") connectionToken: String,
         @Query("transport") transport: String = "serverSentEvents",
         @Query("clientProtocol") clientProtocol: String = "1.5",
@@ -44,8 +45,9 @@ internal interface ReportsService {
         @Query("_") huh: Long = System.currentTimeMillis(),
     )
 
-    @POST("webapi/reports/parentinfoletter/queue")
-    suspend fun getShortReportTaskId(
+    @POST("webapi/reports/{report_name}/queue")
+    suspend fun getReportTaskId(
+        @Path("report_name") reportName: String,
         @Body body: String,
         @Header("Content-Type") contentType: String = ContentType.JSON.string
     ): ShortReportTaskResponse
@@ -62,7 +64,7 @@ internal interface ReportsService {
     )
 
     @POST("WebApi/signalr/abort")
-    suspend fun abortShortReport(
+    suspend fun abortReport(
         @Query("connectionToken") connectionToken: String,
         @Query("transport") transport: String = "serverSentEvents",
         @Query("clientProtocol") clientProtocol: String = "1.5",
@@ -73,4 +75,7 @@ internal interface ReportsService {
 
     @GET("webapi/files/{file}")
     suspend fun getFile(@Path("file") file: String): String
+
+    @GET("webapi/reports/studentgrades")
+    suspend fun getSubjectReportParams(): SubjectReportParamsResponse
 }

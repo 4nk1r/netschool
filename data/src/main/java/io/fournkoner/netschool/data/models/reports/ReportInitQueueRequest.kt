@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 @Keep
-internal data class ShortReportInitQueueRequest(
+internal data class ReportInitQueueRequest(
     @SerializedName("params") val params: List<Param>,
     @SerializedName("selectedData") val selectedData: List<SelectedData>
 ) {

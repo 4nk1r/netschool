@@ -110,4 +110,7 @@
     <string name="new_message_body">Тело письма</string>
     <string name="new_message_body_source">Исходное сообщение:\n%s\nАвтор: %s</string>
     <string name="new_message_file_size_limit">Нельзя прикрепить файл размером больше %d МБ</string>
+    <string name="subject_report_period">Период</string>
+    <string name="subject_report_select_subject">Выберите предмет</string>
+    <string name="reports_no_data_for_period">Нет данных за выбранный период</string>
 </resources>

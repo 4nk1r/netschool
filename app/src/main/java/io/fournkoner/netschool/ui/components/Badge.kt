@@ -10,7 +10,6 @@ import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
-import io.fournkoner.netschool.utils.debugValue
 
 @Composable
 fun BadgedLayout(
@@ -39,9 +38,9 @@ fun BadgedLayout(
 
         val firstBaseline = anchorPlaceable[FirstBaseline]
         val lastBaseline = anchorPlaceable[LastBaseline]
-        val totalWidth = anchorPlaceable.width.debugValue("totalWidth")
+        val totalWidth = anchorPlaceable.width
         val totalHeight = anchorPlaceable.height
-        val badgeWidth = badgePlaceable.width.debugValue("badgeWidth")
+        val badgeWidth = badgePlaceable.width
 
         layout(
             totalWidth,

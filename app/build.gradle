@@ -40,7 +40,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
         coreLibraryDesugaringEnabled true
-
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -74,6 +73,8 @@ dependencies {
     implementation libs.bundles.voyager
     // Accompanist
     implementation libs.bundles.accompanist
+    // Date picker
+    implementation libs.bundles.sheetsComposeDialogs
     // Splitties
     implementation libs.splitties
     // Hilt

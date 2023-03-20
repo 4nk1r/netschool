@@ -25,6 +25,7 @@ import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.screens.HelloWorldScreen
 import io.fournkoner.netschool.ui.screens.short_report.ShortReportScreen
+import io.fournkoner.netschool.ui.screens.subject_report.SubjectReportScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -75,7 +76,7 @@ class ReportsScreen : AndroidScreen() {
                             icon = painterResource(R.drawable.ic_report_subject),
                             name = stringResource(R.string.reports_subject_name),
                             description = stringResource(R.string.reports_subject_description)
-                        ) { navigator.push(HelloWorldScreen()) }
+                        ) { navigator.push(SubjectReportScreen()) }
                     }
                     item {
                         ReportCard(

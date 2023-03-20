@@ -3,6 +3,7 @@ hilt = "2.44.2"
 retrofit = "2.9.0"
 voyager = "1.0.0-rc03"
 accompanist = "0.28.0"
+sheetsComposeDialogs = "1.1.1"
 
 [plugins]
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
@@ -17,6 +18,7 @@ androidxMaterial = "com.google.android.material:material:1.8.0"
 composeBom = "androidx.compose:compose-bom:2022.11.00"
 composeUi = { module = "androidx.compose.ui:ui" }
 composeMaterial = { module = "androidx.compose.material:material" }
+composeMaterial3 = "androidx.compose.material3:material3:1.0.1"
 
 voyagerNavigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyagerBottomSheet = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
@@ -52,9 +54,13 @@ pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha18"
 
 javaDesugar = "com.android.tools:desugar_jdk_libs:2.0.2"
 
+sheetsComposeDialogsCore = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.ref = "sheetsComposeDialogs" }
+sheetsComposeDialogsCalendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "sheetsComposeDialogs" }
+
 [bundles]
 androidx = ["androidxCore", "androidxLyfecycle", "androidxActivity", "androidxMaterial", "androidxSplash"]
-compose = ["composeUi", "composeMaterial"]
+compose = ["composeUi", "composeMaterial", "composeMaterial3"]
 voyager = ["voyagerNavigator", "voyagerBottomSheet", "voyagerTab", "voyagerTransitions", "voyagerAndroidx", "voyagerHilt"]
 accompanist = ["accompanistSystemUi", "accompanistNavAnim", "accompanistNavMaterial", "accompanistPlaceholder"]
 retrofit = ["retrofit", "retrofitScalars", "retrofitGson", "retrofitUrlConnection"]
+sheetsComposeDialogs = ["sheetsComposeDialogsCore", "sheetsComposeDialogsCalendar"]
