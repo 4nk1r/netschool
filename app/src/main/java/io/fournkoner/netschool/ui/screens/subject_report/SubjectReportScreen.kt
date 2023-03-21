@@ -112,8 +112,12 @@ class SubjectReportScreen : AndroidScreen() {
                 AnimatedContent(
                     targetState = selectedSubject.value != null && selectedRange.value != null,
                     transitionSpec = {
-                        fadeIn(tween()) + slideInVertically(tween()) { (it * 0.95f).toInt() } with
-                                fadeOut(tween()) + slideOutVertically(tween()) { (it * -0.95f).toInt() }
+                        fadeIn(tween(500)) +
+                                slideInVertically(tween(500)) { (it * 0.95f).toInt() } +
+                                scaleIn(tween(500), initialScale = 0.9f) with
+                                fadeOut(tween(500)) +
+                                slideOutVertically(tween(500)) { (it * -0.95f).toInt() } +
+                                scaleOut(tween(500), targetScale = 0.9f)
                     }
                 ) { isSubjectChosen ->
                     if (isSubjectChosen) {

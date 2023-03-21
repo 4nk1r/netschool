@@ -3,6 +3,7 @@ package io.fournkoner.netschool.ui.screens.short_report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
 import io.fournkoner.netschool.domain.entities.reports.ShortReport
 import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
@@ -10,12 +11,14 @@ import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 import javax.inject.Inject
 
 @HiltViewModel
 class ShortReportViewModel @Inject constructor(
     private val getShortReportRequestDataUseCase: GetShortReportRequestDataUseCase,
-    private val generateShortReportUseCase: GenerateShortReportUseCase
+    private val generateShortReportUseCase: GenerateShortReportUseCase,
 ) : ViewModel() {
 
     private val immutableRequestData = mutableListOf<ReportRequestData>()
@@ -32,7 +35,12 @@ class ShortReportViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getShortReportRequestDataUseCase().getOrNull()?.let { reportRequestData ->
+            getShortReportRequestDataUseCase().getOrElse {
+                @OptIn(UnreliableToastApi::class)
+                toast(R.string.error_occurred)
+
+                null
+            }?.let { reportRequestData ->
                 reportRequestData.forEach { item ->
                     if (item.id == REQUEST_DATA_ITEM_ID_PERIOD) {
                         _periods.value = item.values
@@ -61,6 +69,9 @@ class ShortReportViewModel @Inject constructor(
             ).onSuccess {
                 _report.value = it
                 _reportEmpty.value = it == null
+            }.onFailure {
+                @OptIn(UnreliableToastApi::class)
+                toast(R.string.error_occurred)
             }
         }
     }

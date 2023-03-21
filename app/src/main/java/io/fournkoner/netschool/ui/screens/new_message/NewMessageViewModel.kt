@@ -7,10 +7,13 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
 import io.fournkoner.netschool.domain.usecases.mail.GetMessageFileSizeLimitUseCase
 import io.fournkoner.netschool.domain.usecases.mail.SendMessageUseCase
 import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -41,6 +44,9 @@ class NewMessageViewModel @Inject constructor(
                 attachments.mapKeys { it.key.toUri().getFile(context) }
             ).onSuccess {
                 onCompleteListener()
+            }.onFailure {
+                @OptIn(UnreliableToastApi::class)
+                toast(R.string.error_occurred)
             }
         }
     }

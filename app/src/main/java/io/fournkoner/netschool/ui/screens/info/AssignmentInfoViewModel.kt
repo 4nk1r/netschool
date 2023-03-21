@@ -7,6 +7,7 @@ import cafe.adriel.voyager.hilt.ScreenModelFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
 import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUseCase
@@ -15,6 +16,8 @@ import io.fournkoner.netschool.utils.debugValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 
 class AssignmentInfoViewModel @AssistedInject constructor(
     @Assisted assigns: List<Journal.Class.Assignment>,
@@ -27,7 +30,12 @@ class AssignmentInfoViewModel @AssistedInject constructor(
 
     init {
         coroutineScope.launch {
-            _assignments.value = getDetailedAssignmentsUseCase(assigns).getOrDefault(emptyList())
+            _assignments.value = getDetailedAssignmentsUseCase(assigns).getOrElse {
+                @OptIn(UnreliableToastApi::class)
+                toast(R.string.error_occurred)
+
+                emptyList()
+            }
         }
     }
 

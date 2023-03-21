@@ -6,6 +6,7 @@
 
     <string name="downloading_started">Загрузка началась</string>
     <string name="reports_no_data_for_period">Нет данных за выбранный период</string>
+    <string name="error_occurred">Произошла ошибка, попробуйте снова</string>
 
     <string name="auth_title">Войдите в свой аккаунт</string>
     <string name="auth_login_placeholder">Логин</string>

@@ -3,6 +3,7 @@ package io.fournkoner.netschool.ui.screens.journal
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import io.fournkoner.netschool.utils.currentWeekEnd
@@ -12,6 +13,8 @@ import io.fournkoner.netschool.utils.getWeekStartFromCurrent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -49,7 +52,12 @@ class JournalViewModel @Inject constructor(
             val wStart = getWeekStartFromCurrent(offset = weekOffset)
             val wEnd = getWeekEndFromCurrent(offset = weekOffset)
 
-            _journal.value = getJournalUseCase(weekStart = wStart, weekEnd = wEnd).getOrNull()
+            _journal.value = getJournalUseCase(weekStart = wStart, weekEnd = wEnd).getOrElse {
+                @OptIn(UnreliableToastApi::class)
+                toast(R.string.error_occurred)
+
+                null
+            }
             _week.value = getWeekString(wStart, wEnd)
         }
     }

@@ -3,12 +3,15 @@ package io.fournkoner.netschool.ui.screens.message_receivers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.domain.usecases.mail.GetMessageReceiversUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 import java.text.RuleBasedCollator
 import javax.inject.Inject
 
@@ -31,7 +34,9 @@ class MessageReceiversViewModel @Inject constructor(
         viewModelScope.launch {
             fullReceiversList[MailMessageReceiverGroup.TEACHERS] =
                 getMessageReceiversUseCase(MailMessageReceiverGroup.TEACHERS).getOrElse {
-                    it.printStackTrace()
+                    @OptIn(UnreliableToastApi::class)
+                    toast(R.string.error_occurred)
+
                     emptyList()
                 }.also {
                     if (_currentGroup.value == MailMessageReceiverGroup.TEACHERS)
@@ -39,7 +44,9 @@ class MessageReceiversViewModel @Inject constructor(
                 }
             fullReceiversList[MailMessageReceiverGroup.STUDENTS] =
                 getMessageReceiversUseCase(MailMessageReceiverGroup.STUDENTS).getOrElse {
-                    it.printStackTrace()
+                    @OptIn(UnreliableToastApi::class)
+                    toast(R.string.error_occurred)
+
                     emptyList()
                 }.also {
                     if (_currentGroup.value == MailMessageReceiverGroup.STUDENTS)

@@ -7,6 +7,7 @@ import cafe.adriel.voyager.hilt.ScreenModelFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.domain.entities.mail.Mailbox
@@ -18,6 +19,8 @@ import io.fournkoner.netschool.utils.debugValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 
 class MailMessageViewModel @AssistedInject constructor(
     @Assisted private val id: Int,
@@ -50,8 +53,14 @@ class MailMessageViewModel @AssistedInject constructor(
                         if (id != null) {
                             _senderId.value = id!!.id
                         }
+                    }.onFailure {
+                        @OptIn(UnreliableToastApi::class)
+                        toast(R.string.error_occurred)
                     }
                 }
+            }.onFailure {
+                @OptIn(UnreliableToastApi::class)
+                toast(R.string.error_occurred)
             }
         }
     }
