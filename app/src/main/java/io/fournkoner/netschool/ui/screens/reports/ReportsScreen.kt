@@ -11,11 +11,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
@@ -24,6 +26,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.screens.HelloWorldScreen
+import io.fournkoner.netschool.ui.screens.full_report.TheMostUsefulScreen
 import io.fournkoner.netschool.ui.screens.short_report.ShortReportScreen
 import io.fournkoner.netschool.ui.screens.subject_report.SubjectReportScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
@@ -68,8 +71,9 @@ class ReportsScreen : AndroidScreen() {
                         ReportCard(
                             icon = painterResource(R.drawable.ic_report_full),
                             name = stringResource(R.string.reports_full_name),
-                            description = stringResource(R.string.reports_full_description)
-                        ) { navigator.push(HelloWorldScreen()) }
+                            description = stringResource(R.string.reports_full_description),
+                            comingSoon = true
+                        ) { navigator.push(TheMostUsefulScreen()) }
                     }
                     item {
                         ReportCard(
@@ -97,7 +101,8 @@ private fun ReportCard(
     icon: Painter,
     name: String,
     description: String,
-    onClick: () -> Unit
+    comingSoon: Boolean = false,
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -116,11 +121,35 @@ private fun ReportCard(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(
-            painter = icon,
-            contentDescription = name,
-            tint = LocalNetSchoolColors.current.accentMain
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = icon,
+                contentDescription = name,
+                tint = LocalNetSchoolColors.current.accentMain
+            )
+            if (comingSoon) Box(
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 24.dp)
+                    .background(
+                        color = LocalNetSchoolColors.current.accentMain.copy(alpha = 0.1f),
+                        shape = Shapes.small
+                    )
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Coming soon", // untranslatable
+                    style = Typography.caption.copy(
+                        color = LocalNetSchoolColors.current.accentMain,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                )
+            }
+        }
         Text(
             text = name,
             style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
