@@ -128,7 +128,9 @@ fun NetSchoolTheme(
                     error = LocalNetSchoolColors.current.gradeBad,
                     onError = LocalNetSchoolColors.current.backgroundMain,
                     surface = LocalNetSchoolColors.current.backgroundCard,
-                    background = LocalNetSchoolColors.current.backgroundMain
+                    background = LocalNetSchoolColors.current.backgroundMain,
+                    onBackground = LocalNetSchoolColors.current.textMain,
+                    onSurface = LocalNetSchoolColors.current.textMain,
                 ),
                 androidx.compose.material3.MaterialTheme.shapes.copy(
                     small = Shapes.small,

@@ -168,7 +168,7 @@ class SubjectReportScreen : AndroidScreen() {
                                     )
                                 )
                             },
-                            onContinue = { viewModel.generate(selectedStart..selectedEnd) }
+                            onContinue = { viewModel.generate(selectedStart..selectedEnd) },
                         )
                     }
                 }
@@ -211,38 +211,40 @@ class SubjectReportScreen : AndroidScreen() {
     ) {
         AnimatedContent(targetState = subjectReport) { report ->
             if (report == null) {
-                if (!reportEmpty) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 16.dp),
-                        state = LazyListState(),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        userScrollEnabled = false
-                    ) {
-                        item { ReportOverallGrades(null) }
-                        items(10) { Task(null) }
-                    }
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(
-                            16.dp,
-                            Alignment.CenterVertically
-                        )
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_nobody_found),
-                            contentDescription = stringResource(R.string.reports_no_data_for_period),
-                            modifier = Modifier.size(48.dp),
-                            tint = LocalNetSchoolColors.current.accentInactive
-                        )
-                        Text(
-                            text = stringResource(R.string.reports_no_data_for_period),
-                            style = Typography.subtitle1.copy(color = LocalNetSchoolColors.current.accentInactive)
-                        )
+                AnimatedContent(targetState = reportEmpty) { isEmpty ->
+                    if (!isEmpty) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 16.dp),
+                            state = LazyListState(),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            userScrollEnabled = false
+                        ) {
+                            item { ReportOverallGrades(null) }
+                            items(10) { Task(null) }
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(
+                                16.dp,
+                                Alignment.CenterVertically
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_nobody_found),
+                                contentDescription = stringResource(R.string.reports_no_data_for_period),
+                                modifier = Modifier.size(48.dp),
+                                tint = LocalNetSchoolColors.current.accentInactive
+                            )
+                            Text(
+                                text = stringResource(R.string.reports_no_data_for_period),
+                                style = Typography.subtitle1.copy(color = LocalNetSchoolColors.current.accentInactive)
+                            )
+                        }
                     }
                 }
             } else {
@@ -482,7 +484,10 @@ class SubjectReportScreen : AndroidScreen() {
                         shape = Shapes.medium
                     )
                     .clip(Shapes.medium)
-                    .clickable(onClick = onExpandSubjectSelection)
+                    .clickable(
+                        enabled = selectedStart != null && selectedEnd != null,
+                        onClick = onExpandSubjectSelection
+                    )
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -490,7 +495,9 @@ class SubjectReportScreen : AndroidScreen() {
                 Icon(
                     painter = painterResource(R.drawable.ic_subject_unknown),
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .loading(selectedStart == null && selectedEnd == null),
                     tint = LocalNetSchoolColors.current.accentMain
                 )
                 Text(
@@ -505,12 +512,16 @@ class SubjectReportScreen : AndroidScreen() {
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .loading(selectedStart == null && selectedEnd == null)
+                        .weight(1f)
                 )
                 Icon(
                     painter = painterResource(R.drawable.ic_expand_collapse),
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier
+                        .size(18.dp)
+                        .loading(selectedStart == null && selectedEnd == null),
                     tint = LocalNetSchoolColors.current.accentMain
                 )
             }
