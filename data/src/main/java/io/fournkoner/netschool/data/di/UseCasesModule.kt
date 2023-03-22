@@ -16,10 +16,7 @@ import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUs
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetMailMessageDetailedUseCase
 import io.fournkoner.netschool.domain.usecases.mail.*
-import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
-import io.fournkoner.netschool.domain.usecases.reports.GenerateSubjectReportUseCase
-import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
-import io.fournkoner.netschool.domain.usecases.reports.GetSubjectReportRequestDataUseCase
+import io.fournkoner.netschool.domain.usecases.reports.*
 import javax.inject.Singleton
 
 @Module
@@ -96,6 +93,12 @@ internal object UseCasesModule {
     @Singleton
     fun provideGenerateSubjectReportUseCase(repository: ReportsRepository): GenerateSubjectReportUseCase {
         return GenerateSubjectReportUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGenerateFinalReportUseCase(repository: ReportsRepository): GenerateFinalReportUseCase {
+        return GenerateFinalReportUseCase(repository)
     }
 
     ////////////////////

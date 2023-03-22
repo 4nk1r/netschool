@@ -1,7 +1,7 @@
 package io.fournkoner.netschool.data.network
 
+import io.fournkoner.netschool.data.models.reports.ReportParamsResponse
 import io.fournkoner.netschool.data.models.reports.ReportStreamDataResponse
-import io.fournkoner.netschool.data.models.reports.ShortReportParamsResponse
 import io.fournkoner.netschool.data.models.reports.ShortReportTaskResponse
 import io.fournkoner.netschool.data.models.reports.SubjectReportParamsResponse
 import io.fournkoner.netschool.data.utils.Accept
@@ -13,7 +13,7 @@ import retrofit2.http.*
 internal interface ReportsService {
 
     @GET("webapi/reports/parentinfoletter")
-    suspend fun getShortReportParams(): ShortReportParamsResponse
+    suspend fun getShortReportParams(): ReportParamsResponse
 
     @GET("WebApi/signalr/negotiate")
     suspend fun getReportStreamData(
@@ -78,4 +78,7 @@ internal interface ReportsService {
 
     @GET("webapi/reports/studentgrades")
     suspend fun getSubjectReportParams(): SubjectReportParamsResponse
+
+    @GET("webapi/reports/studenttotalmarks")
+    suspend fun getFinalReportParams(): ReportParamsResponse
 }

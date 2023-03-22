@@ -4,6 +4,7 @@ retrofit = "2.9.0"
 voyager = "1.0.0-rc03"
 accompanist = "0.28.0"
 sheetsComposeDialogs = "1.1.1"
+compose = "1.4.0-rc01"
 
 [plugins]
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
@@ -16,8 +17,8 @@ androidxSplash = "androidx.core:core-splashscreen:1.0.0-beta02"
 androidxMaterial = "com.google.android.material:material:1.8.0"
 
 composeBom = "androidx.compose:compose-bom:2022.11.00"
-composeUi = { module = "androidx.compose.ui:ui" }
-composeMaterial = { module = "androidx.compose.material:material" }
+composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+composeMaterial = { module = "androidx.compose.material:material", version.ref = "compose" }
 composeMaterial3 = "androidx.compose.material3:material3:1.0.1"
 
 voyagerNavigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }

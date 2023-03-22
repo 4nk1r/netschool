@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 @Keep
-internal data class ShortReportParamsResponse(
+internal data class ReportParamsResponse(
     @SerializedName("filterSources") val filterSources: List<FilterSource>,
 ) {
 

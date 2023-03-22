@@ -6,10 +6,7 @@ import io.fournkoner.netschool.data.models.reports.ReportInitQueueRequest
 import io.fournkoner.netschool.data.network.ReportsService
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.debugValue
-import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
-import io.fournkoner.netschool.domain.entities.reports.ShortReport
-import io.fournkoner.netschool.domain.entities.reports.SubjectReport
-import io.fournkoner.netschool.domain.entities.reports.SubjectReportRequestData
+import io.fournkoner.netschool.domain.entities.reports.*
 import io.fournkoner.netschool.domain.repositories.ReportsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -87,7 +84,7 @@ internal class ReportsRepositoryImpl(
                             LocalDate
                                 .parse(strRange!!.start.substringBefore('T'))
                                 .atStartOfDay(ZoneId.systemDefault())
-                                .toEpochSecond() * 1000L /*ms*/ ..
+                                .toEpochSecond() * 1000L /*ms*/..
                                     LocalDate
                                         .parse(strRange.end.substringBefore('T'))
                                         .atStartOfDay(ZoneId.systemDefault())
@@ -108,9 +105,34 @@ internal class ReportsRepositoryImpl(
         }
     }
 
+    override suspend fun generateFinalReport(): Result<List<FinalReportPeriod>> {
+        return runCatching {
+            val params = reportsService.getFinalReportParams()
+            val fileName = getReportFileName(
+                reportName = "studenttotalmarks",
+                params = params.filterSources
+                    .filter { it.defaultValue != null && it.items != null }
+                    .map { source ->
+                        ReportRequestData(
+                            id = source.id,
+                            defaultValue = source.defaultValue,
+                            values = source.items!!.map { item ->
+                                ReportRequestData.Value(
+                                    name = item.name,
+                                    value = item.value
+                                )
+                            }
+                        )
+                    }
+            )
+            val html = reportsService.getFile(fileName)
+            ReportsParser.parseFinalReport(html).debugValue()
+        }
+    }
+
     private suspend fun getReportFileName(
         reportName: String,
-        params: List<ReportRequestData>
+        params: List<ReportRequestData>,
     ): String {
         val streamData = reportsService.getReportStreamData()
         val eventStream = reportsService.getReportEventStream(streamData.connectionToken)

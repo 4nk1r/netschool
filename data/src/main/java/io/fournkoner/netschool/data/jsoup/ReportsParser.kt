@@ -1,6 +1,7 @@
 package io.fournkoner.netschool.data.jsoup
 
 import io.fournkoner.netschool.data.utils.debugValue
+import io.fournkoner.netschool.domain.entities.reports.FinalReportPeriod
 import io.fournkoner.netschool.domain.entities.reports.ShortReport
 import io.fournkoner.netschool.domain.entities.reports.SubjectReport
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,7 @@ internal object ReportsParser {
 
     suspend fun parseSubjectReport(html: String): SubjectReport? {
         return withContext(Dispatchers.IO) {
-            val site = Jsoup.parse(html.debugValue())
+            val site = Jsoup.parse(html)
             val table = site.select("table.table-print")
                 .also { if (it.isEmpty()) return@withContext null }
 
@@ -91,6 +92,42 @@ internal object ReportsParser {
             )
 
             SubjectReport(total, tasks)
+        }
+    }
+
+    suspend fun parseFinalReport(html: String): List<FinalReportPeriod> {
+        return withContext(Dispatchers.IO) {
+            val site = Jsoup.parse(html)
+            val table = site.select("table.table-print").first()!!.children().first()!!
+            val tableSubjects = table.children().slice(2 until table.children().size)
+
+            val periodCount = table.children()[0].children()[2].attr("colspan").toInt()
+            val periods = mutableListOf<FinalReportPeriod>()
+
+            repeat(periodCount) { periodIndex ->
+                periods += FinalReportPeriod(
+                    name = table.children()[1].children()[periodIndex].text(),
+                    subjects = tableSubjects.map { subj ->
+                        FinalReportPeriod.Subject(
+                            name = subj.children()[1].text(),
+                            grade = subj.children()[2 + periodIndex].text()
+                                .takeIf { it.isNotEmpty() } ?: "-"
+                        )
+                    }
+                )
+            }
+            periods += FinalReportPeriod(
+                name = table.children()[0].children()[3].text(),
+                subjects = tableSubjects.map { subj ->
+                    FinalReportPeriod.Subject(
+                        name = subj.children()[1].text(),
+                        grade = subj.children()[2 + periodCount].text()
+                            .takeIf { it.isNotEmpty() } ?: "-"
+                    )
+                }
+            )
+
+            periods
         }
     }
 }

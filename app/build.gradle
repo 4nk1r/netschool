@@ -67,7 +67,7 @@ dependencies {
     // AndroidX Stuff
     implementation libs.bundles.androidx
     // Jetpack Compose
-    implementation platform(libs.composeBom)
+//    implementation platform(libs.composeBom)
     implementation libs.bundles.compose
     // Voyager
     implementation libs.bundles.voyager

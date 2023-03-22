@@ -25,7 +25,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.SimpleToolbar
-import io.fournkoner.netschool.ui.screens.HelloWorldScreen
+import io.fournkoner.netschool.ui.screens.final_report.FinalReportScreen
 import io.fournkoner.netschool.ui.screens.full_report.TheMostUsefulScreen
 import io.fournkoner.netschool.ui.screens.short_report.ShortReportScreen
 import io.fournkoner.netschool.ui.screens.subject_report.SubjectReportScreen
@@ -87,7 +87,7 @@ class ReportsScreen : AndroidScreen() {
                             icon = painterResource(R.drawable.ic_report_results),
                             name = stringResource(R.string.reports_results_name),
                             description = stringResource(R.string.reports_result_description)
-                        ) { navigator.push(HelloWorldScreen()) }
+                        ) { navigator.push(FinalReportScreen()) }
                     }
                 }
             },

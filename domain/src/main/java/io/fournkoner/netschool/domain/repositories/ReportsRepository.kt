@@ -1,9 +1,6 @@
 package io.fournkoner.netschool.domain.repositories
 
-import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
-import io.fournkoner.netschool.domain.entities.reports.ShortReport
-import io.fournkoner.netschool.domain.entities.reports.SubjectReport
-import io.fournkoner.netschool.domain.entities.reports.SubjectReportRequestData
+import io.fournkoner.netschool.domain.entities.reports.*
 
 interface ReportsRepository {
 
@@ -14,4 +11,6 @@ interface ReportsRepository {
     suspend fun getSubjectReportRequestData(): Result<SubjectReportRequestData>
 
     suspend fun generateSubjectReport(params: List<ReportRequestData>): Result<SubjectReport?>
+
+    suspend fun generateFinalReport(): Result<List<FinalReportPeriod>>
 }
