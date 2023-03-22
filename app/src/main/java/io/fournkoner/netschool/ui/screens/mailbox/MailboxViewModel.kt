@@ -15,14 +15,11 @@ class MailboxViewModel @Inject constructor(
     mailboxPagingSourceFactory: MailboxPagingSource.Factory
 ) : ViewModel() {
 
-    private val inboxMailSource = mailboxPagingSourceFactory.create(Mailbox.INBOX)
-    private val sentMailSource = mailboxPagingSourceFactory.create(Mailbox.SENT)
-
     val inboxMessages = Pager(PagingConfig(pageSize = 15)) {
-        inboxMailSource
+        mailboxPagingSourceFactory.create(Mailbox.INBOX)
     }.flow.cachedIn(viewModelScope)
 
     val sentMessages = Pager(PagingConfig(pageSize = 15)) {
-        sentMailSource
+        mailboxPagingSourceFactory.create(Mailbox.SENT)
     }.flow.cachedIn(viewModelScope)
 }

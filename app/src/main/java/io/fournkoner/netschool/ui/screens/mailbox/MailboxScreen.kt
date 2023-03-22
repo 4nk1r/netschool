@@ -13,6 +13,10 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -23,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
@@ -51,6 +56,7 @@ class MailboxScreen : AndroidScreen() {
         val deletedMessages = mutableListOf<Int>()
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     override fun Content() {
         val viewModel: MailboxViewModel = getViewModel()
@@ -59,13 +65,25 @@ class MailboxScreen : AndroidScreen() {
 
         val inboxMessages = viewModel.inboxMessages.collectAsLazyPagingItems()
         val sentMessages = viewModel.sentMessages.collectAsLazyPagingItems()
+        var current by rememberSaveable { mutableStateOf(Mailbox.INBOX) }
 
         val state = rememberLazyListState()
+        val isRefreshing by remember {
+            derivedStateOf {
+                if (current == Mailbox.INBOX) inboxMessages.loadState.refresh is LoadState.Loading
+                else sentMessages.loadState.refresh is LoadState.Loading
+            }
+        }
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = isRefreshing,
+            onRefresh = {
+                inboxMessages.refresh()
+                sentMessages.refresh()
+            }
+        )
         val showDivider by remember {
             derivedStateOf { state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0 }
         }
-
-        var current by rememberSaveable { mutableStateOf(Mailbox.INBOX) }
 
         Scaffold(
             topBar = {
@@ -85,7 +103,9 @@ class MailboxScreen : AndroidScreen() {
                     inboxMessages = inboxMessages,
                     sentMessages = sentMessages,
                     state = state,
-                    contentPaddingValues = it
+                    contentPaddingValues = it,
+                    pullRefreshState = pullRefreshState,
+                    refreshing = isRefreshing
                 )
             },
             floatingActionButton = {
@@ -106,7 +126,7 @@ class MailboxScreen : AndroidScreen() {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
+    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     @Composable
     private fun MessagesList(
         current: Mailbox,
@@ -114,48 +134,63 @@ class MailboxScreen : AndroidScreen() {
         sentMessages: LazyPagingItems<MailMessageShort>,
         state: LazyListState,
         contentPaddingValues: PaddingValues,
+        pullRefreshState: PullRefreshState,
+        refreshing: Boolean,
     ) {
         val navigator = LocalNavigator.currentOrThrow
 
-        LoadingTransition(targetState = current) { mailbox ->
-            val list = if (mailbox == Mailbox.INBOX) inboxMessages else sentMessages
-            LoadingTransition(targetState = list.itemCount == 0) { isEmpty ->
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        top = contentPaddingValues.calculateTopPadding(),
-                        start = contentPaddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                        end = contentPaddingValues.calculateEndPadding(LayoutDirection.Ltr),
-                        bottom = contentPaddingValues.calculateBottomPadding() + /*fab*/ 56.dp
-                    ),
-                    state = if (!isEmpty) state else LazyListState(),
-                    userScrollEnabled = !isEmpty
-                ) {
-                    if (!isEmpty) {
-                        for (i in 0 until list.itemCount) {
-                            val message = list[i]
-                            if (!deletedMessages.contains(message?.id)) item(key = message?.id) {
-                                Message(message) {
-                                    navigator.push(MailMessageScreen(message!!.id, mailbox))
-                                }
-                                if (i < list.itemCount - 1) {
-                                    Divider(
-                                        color = LocalNetSchoolColors.current.divider,
-                                        modifier = Modifier.animateItemPlacement()
-                                    )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            LoadingTransition(targetState = current) { mailbox ->
+                val list = if (mailbox == Mailbox.INBOX) inboxMessages else sentMessages
+                LoadingTransition(targetState = list.itemCount == 0) { isEmpty ->
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .pullRefresh(pullRefreshState, enabled = !isEmpty),
+                        contentPadding = PaddingValues(
+                            top = contentPaddingValues.calculateTopPadding(),
+                            start = contentPaddingValues.calculateStartPadding(LayoutDirection.Ltr),
+                            end = contentPaddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                            bottom = contentPaddingValues.calculateBottomPadding() + /*fab*/ 56.dp
+                        ),
+                        state = if (!isEmpty) state else LazyListState(),
+                        userScrollEnabled = !isEmpty
+                    ) {
+                        if (!isEmpty) {
+                            for (i in 0 until list.itemCount) {
+                                val message = list[i]
+                                if (!deletedMessages.contains(message?.id)) item(key = message?.id) {
+                                    Message(message) {
+                                        navigator.push(MailMessageScreen(message!!.id, mailbox))
+                                    }
+                                    if (i < list.itemCount - 1) {
+                                        Divider(
+                                            color = LocalNetSchoolColors.current.divider,
+                                            modifier = Modifier.animateItemPlacement()
+                                        )
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        items(20) {
-                            Message(message = null) {}
-                            if (it < 19) {
-                                Divider(color = LocalNetSchoolColors.current.divider)
+                        } else {
+                            items(20) {
+                                Message(message = null) {}
+                                if (it < 19) {
+                                    Divider(color = LocalNetSchoolColors.current.divider)
+                                }
                             }
                         }
                     }
                 }
             }
+            PullRefreshIndicator(
+                refreshing = refreshing,
+                state = pullRefreshState,
+                backgroundColor = LocalNetSchoolColors.current.backgroundMain,
+                contentColor = LocalNetSchoolColors.current.accentMain
+            )
         }
     }
 
