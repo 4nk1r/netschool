@@ -17,6 +17,8 @@ This is just a common Android project, except for a thing: due to my desire to k
 NETSCHOOL_BASE_URL="http://example.com/"
 SCHOOL_NAME="МБОУ СОШ № 1"
 ```
+Though the code above *should* work, I'd also recommend replacing cyrillic letters with unicode escape just in case. Gradle is unpredictable sometimes, you know...
+
 That's it, you're now ready to build the project!
 
 ## Still have questions?
