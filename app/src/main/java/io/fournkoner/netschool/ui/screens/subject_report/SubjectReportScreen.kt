@@ -481,7 +481,7 @@ class SubjectReportScreen : AndroidScreen() {
             )
             VSpace(16.dp)
             Text(
-                text = stringResource(R.string.subject_report_period),
+                text = stringResource(R.string.subject_report_subject),
                 style = Typography.subtitle2.copy(color = LocalNetSchoolColors.current.textMain),
                 modifier = Modifier.padding(horizontal = 8.dp)
             )

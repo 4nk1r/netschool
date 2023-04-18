@@ -65,7 +65,10 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
             onPlus = viewModel::plus
         )
         Divider(color = LocalNetSchoolColors.current.divider)
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = WindowInsets.navigationBars.asPaddingValues()
+        ) {
             items(needed) {
                 NeededGradesCard(
                     grade = it.first,
