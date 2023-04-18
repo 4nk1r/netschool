@@ -334,7 +334,7 @@ class ShortReportScreen : AndroidScreen() {
                             Text(
                                 text = resources.getQuantityString(
                                     R.plurals.short_report_grades_count,
-                                    count % 10,
+                                    count,
                                     count
                                 ),
                                 style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary),

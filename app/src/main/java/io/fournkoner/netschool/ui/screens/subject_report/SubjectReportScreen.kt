@@ -45,6 +45,7 @@ import io.fournkoner.netschool.domain.entities.reports.SubjectReport
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.VSpace
 import io.fournkoner.netschool.ui.components.loading
+import io.fournkoner.netschool.ui.screens.calculator.CalculatorBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -101,7 +102,18 @@ class SubjectReportScreen : AndroidScreen() {
                 Toolbar(
                     subjectName = if (selectedRange.value == null) null else selectedSubject.value?.name,
                     range = selectedRange.value,
+                    isLoaded = subjectReport.value != null && selectedSubject.value != null,
                     showDivider = showDivider,
+                    onOpenCalculator = {
+                        bottomSheetNavigator.show(CalculatorBottomSheet(
+                            grades = mapOf(
+                                5 to subjectReport.value!!.total.greatCount,
+                                4 to subjectReport.value!!.total.goodCount,
+                                3 to subjectReport.value!!.total.satisfactoryCount,
+                                2 to subjectReport.value!!.total.badCount,
+                            )
+                        ))
+                    },
                     onResetChoice = {
                         viewModel.resetChoice()
                         selectedSubjectResult = null
@@ -426,7 +438,7 @@ class SubjectReportScreen : AndroidScreen() {
                     Text(
                         text = resources.getQuantityString(
                             R.plurals.short_report_grades_count,
-                            count % 10,
+                            count,
                             count
                         ),
                         style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary),
@@ -656,8 +668,10 @@ class SubjectReportScreen : AndroidScreen() {
     private fun Toolbar(
         subjectName: String?,
         range: String?,
+        isLoaded: Boolean,
         showDivider: Boolean,
-        onResetChoice: () -> Unit
+        onResetChoice: () -> Unit,
+        onOpenCalculator: () -> Unit
     ) {
         val navigator = LocalNavigator.currentOrThrow
 
@@ -720,6 +734,15 @@ class SubjectReportScreen : AndroidScreen() {
                                 overflow = TextOverflow.Ellipsis,
                             )
                         }
+                    }
+                },
+                actions = {
+                    AnimatedVisibility(isLoaded) {
+                        TopAppBarIcon(
+                            iconPainter = painterResource(R.drawable.ic_calculator),
+                            tint = LocalNetSchoolColors.current.accentMain,
+                            onClick = onOpenCalculator
+                        )
                     }
                 },
                 backgroundColor = LocalNetSchoolColors.current.backgroundMain,

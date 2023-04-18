@@ -122,4 +122,9 @@
 
     <string name="full_report_coming_soon">Появится скоро</string>
     <string name="full_report_coming_soon_desc">Полный отчет об успеваемости и посещаемости временно нельзя сгенерировать в приложении</string>
+
+    <string name="calculator_title">Калькулятор оценок</string>
+    <string name="calculator_needed_grades_beginning">До</string>
+    <string name="calculator_needed_grades_ending">нужно:</string>
+    <string name="calculator_or">или</string>
 </resources>
