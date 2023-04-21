@@ -1,3 +1,5 @@
+[Русская версия](README_RU.md)
+
 ## What's this?
 This is an unofficial Android app for NetSchool electronic school journal created from scratch. The app was created as a school project, so just for educational purposes, and of course it has nothing to do with "ИрТех" and anyone else participating in creating NetSchool.
 
