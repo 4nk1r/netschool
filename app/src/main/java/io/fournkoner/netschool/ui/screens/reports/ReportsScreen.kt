@@ -4,13 +4,24 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,10 +36,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.SimpleToolbar
-import io.fournkoner.netschool.ui.screens.final_report.FinalReportScreen
-import io.fournkoner.netschool.ui.screens.full_report.TheMostUsefulScreen
-import io.fournkoner.netschool.ui.screens.short_report.ShortReportScreen
-import io.fournkoner.netschool.ui.screens.subject_report.SubjectReportScreen
+import io.fournkoner.netschool.ui.screens.reports.full.TheMostUsefulScreen
+import io.fournkoner.netschool.ui.screens.reports.parent.ShortReportScreen
+import io.fournkoner.netschool.ui.screens.reports.subject.SubjectReportScreen
+import io.fournkoner.netschool.ui.screens.reports.total.FinalReportScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -102,7 +113,7 @@ private fun ReportCard(
     name: String,
     description: String,
     comingSoon: Boolean = false,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -131,23 +142,25 @@ private fun ReportCard(
                 contentDescription = name,
                 tint = LocalNetSchoolColors.current.accentMain
             )
-            if (comingSoon) Box(
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 24.dp)
-                    .background(
-                        color = LocalNetSchoolColors.current.accentMain.copy(alpha = 0.1f),
-                        shape = Shapes.small
+            if (comingSoon) {
+                Box(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 24.dp)
+                        .background(
+                            color = LocalNetSchoolColors.current.accentMain.copy(alpha = 0.1f),
+                            shape = Shapes.small
+                        )
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Coming soon", // untranslatable
+                        style = Typography.caption.copy(
+                            color = LocalNetSchoolColors.current.accentMain,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     )
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Coming soon", // untranslatable
-                    style = Typography.caption.copy(
-                        color = LocalNetSchoolColors.current.accentMain,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                )
+                }
             }
         }
         Text(
@@ -158,7 +171,7 @@ private fun ReportCard(
         )
         Text(
             text = description,
-            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
+            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary)
         )
     }
 }

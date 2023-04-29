@@ -6,7 +6,15 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -31,7 +39,7 @@ import io.fournkoner.netschool.ui.style.mediumDp
 fun SimpleToolbar(
     title: String,
     showDivider: Boolean = false,
-    onBack: (() -> Unit)? = null,
+    onBack: (() -> Unit)? = null
 ) {
     BaseToolbar(
         title = title,
@@ -40,7 +48,7 @@ fun SimpleToolbar(
         topPadding = WindowInsets.statusBars
             .asPaddingValues()
             .calculateTopPadding(),
-        onBack = onBack,
+        onBack = onBack
     )
 }
 
@@ -48,14 +56,14 @@ fun SimpleToolbar(
 fun SimpleBottomSheetToolbar(
     title: String,
     showDivider: Boolean = false,
-    onBack: (() -> Unit)? = null,
+    onBack: (() -> Unit)? = null
 ) {
     BaseToolbar(
         title = title,
         navigationIcon = painterResource(R.drawable.ic_close),
         showDivider = showDivider,
         topPadding = Shapes.mediumDp,
-        onBack = onBack,
+        onBack = onBack
     )
 }
 
@@ -65,7 +73,7 @@ private fun BaseToolbar(
     navigationIcon: Painter?,
     showDivider: Boolean,
     topPadding: Dp,
-    onBack: (() -> Unit)?,
+    onBack: (() -> Unit)?
 ) {
     Column {
         TopAppBar(
@@ -82,13 +90,15 @@ private fun BaseToolbar(
                         onClick = onBack
                     )
                 }
-            } else null,
+            } else {
+                null
+            },
             title = {
                 Text(
                     text = title,
                     style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             },
             backgroundColor = LocalNetSchoolColors.current.backgroundMain,
@@ -110,7 +120,7 @@ fun TopAppBarIcon(
     contentDescription: String? = null,
     tint: Color,
     onClick: () -> Unit,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
     Box(
         modifier = Modifier

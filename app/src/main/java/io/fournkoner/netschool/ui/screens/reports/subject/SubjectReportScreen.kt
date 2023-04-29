@@ -1,10 +1,24 @@
-package io.fournkoner.netschool.ui.screens.subject_report
+package io.fournkoner.netschool.ui.screens.reports.subject
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,10 +29,21 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.*
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,15 +70,15 @@ import io.fournkoner.netschool.domain.entities.reports.SubjectReport
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.VSpace
 import io.fournkoner.netschool.ui.components.loading
-import io.fournkoner.netschool.ui.screens.calculator.CalculatorBottomSheet
+import io.fournkoner.netschool.ui.screens.reports.calculator.CalculatorBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.debugValue
 import io.fournkoner.netschool.utils.getGradeColor
 import io.fournkoner.netschool.utils.toLocalDate
+import java.util.Locale
 import kotlinx.coroutines.delay
-import java.util.*
 
 class SubjectReportScreen : AndroidScreen() {
 
@@ -105,14 +130,16 @@ class SubjectReportScreen : AndroidScreen() {
                     isLoaded = subjectReport.value != null && selectedSubject.value != null,
                     showDivider = showDivider,
                     onOpenCalculator = {
-                        bottomSheetNavigator.show(CalculatorBottomSheet(
-                            grades = mapOf(
-                                5 to subjectReport.value!!.total.greatCount,
-                                4 to subjectReport.value!!.total.goodCount,
-                                3 to subjectReport.value!!.total.satisfactoryCount,
-                                2 to subjectReport.value!!.total.badCount,
+                        bottomSheetNavigator.show(
+                            CalculatorBottomSheet(
+                                grades = mapOf(
+                                    5 to subjectReport.value!!.total.greatCount,
+                                    4 to subjectReport.value!!.total.goodCount,
+                                    3 to subjectReport.value!!.total.satisfactoryCount,
+                                    2 to subjectReport.value!!.total.badCount
+                                )
                             )
-                        ))
+                        )
                     },
                     onResetChoice = {
                         viewModel.resetChoice()
@@ -125,11 +152,11 @@ class SubjectReportScreen : AndroidScreen() {
                     targetState = selectedSubject.value != null && selectedRange.value != null,
                     transitionSpec = {
                         fadeIn(tween(500)) +
-                                slideInVertically(tween(500)) { (it * 0.95f).toInt() } +
-                                scaleIn(tween(500), initialScale = 0.9f) with
-                                fadeOut(tween(500)) +
-                                slideOutVertically(tween(500)) { (it * -0.95f).toInt() } +
-                                scaleOut(tween(500), targetScale = 0.9f)
+                            slideInVertically(tween(500)) { (it * 0.95f).toInt() } +
+                            scaleIn(tween(500), initialScale = 0.9f) with
+                            fadeOut(tween(500)) +
+                            slideOutVertically(tween(500)) { (it * -0.95f).toInt() } +
+                            scaleOut(tween(500), targetScale = 0.9f)
                     }
                 ) { isSubjectChosen ->
                     if (isSubjectChosen) {
@@ -152,7 +179,9 @@ class SubjectReportScreen : AndroidScreen() {
                                                 year.toString().takeLast(2)
                                             )
                                         }
-                                } else null
+                                } else {
+                                    null
+                                }
                             },
                             selectedEnd = remember(selectedEnd) {
                                 if (selectedEnd != -1L) {
@@ -166,7 +195,9 @@ class SubjectReportScreen : AndroidScreen() {
                                                 year.toString().takeLast(2)
                                             )
                                         }
-                                } else null
+                                } else {
+                                    null
+                                }
                             },
                             selectedSubject = selectedSubject.value?.name,
                             onExpandStartSelection = {
@@ -184,7 +215,7 @@ class SubjectReportScreen : AndroidScreen() {
                                     )
                                 )
                             },
-                            onContinue = { viewModel.generate(selectedStart..selectedEnd) },
+                            onContinue = { viewModel.generate(selectedStart..selectedEnd) }
                         )
                     }
                 }
@@ -204,14 +235,14 @@ class SubjectReportScreen : AndroidScreen() {
             },
             config = CalendarConfig(
                 locale = Locale("ru"),
-                boundary = (availablePeriodRange.value?.first ?: 0).toLocalDate()..
-                        (availablePeriodRange.value?.last ?: 0).toLocalDate(),
+                boundary = (availablePeriodRange.value?.first ?: 0)
+	                .toLocalDate()..(availablePeriodRange.value?.last ?: 0).toLocalDate(),
                 disabledDates = if (selectStart) {
                     listOf(selectedEnd.toLocalDate())
                 } else {
                     listOf(selectedStart.toLocalDate())
-                },
-            ),
+                }
+            )
         )
         LaunchedEffect(selectedSubjectResult) {
             viewModel.selectSubject(selectedSubjectResult)
@@ -223,7 +254,7 @@ class SubjectReportScreen : AndroidScreen() {
     private fun ReportList(
         subjectReport: SubjectReport?,
         reportEmpty: Boolean,
-        state: LazyListState,
+        state: LazyListState
     ) {
         AnimatedContent(targetState = subjectReport) { report ->
             if (report == null) {
@@ -268,7 +299,7 @@ class SubjectReportScreen : AndroidScreen() {
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(vertical = 16.dp),
                     state = state,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item { ReportOverallGrades(report.total) }
                     items(report.tasks) { Task(it) }
@@ -319,7 +350,7 @@ class SubjectReportScreen : AndroidScreen() {
                 Text(
                     text = task?.date ?: "placeholder",
                     modifier = Modifier.loading(task == null),
-                    style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary),
+                    style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary)
                 )
             }
             Row(
@@ -332,7 +363,7 @@ class SubjectReportScreen : AndroidScreen() {
                     modifier = Modifier
                         .weight(1f)
                         .loading(task == null),
-                    style = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain),
+                    style = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain)
                 )
                 Text(
                     text = task?.grade?.toString() ?: "•",
@@ -407,7 +438,7 @@ class SubjectReportScreen : AndroidScreen() {
                 5 to (grades?.greatCount ?: 1),
                 4 to (grades?.goodCount ?: 1),
                 3 to (grades?.satisfactoryCount ?: 1),
-                2 to (grades?.badCount ?: 1),
+                2 to (grades?.badCount ?: 1)
             ).forEach { (grade, count) ->
                 Column(
                     modifier = Modifier
@@ -459,7 +490,7 @@ class SubjectReportScreen : AndroidScreen() {
         onExpandStartSelection: () -> Unit,
         onExpandEndSelection: () -> Unit,
         onExpandSubjectSelection: () -> Unit,
-        onContinue: () -> Unit,
+        onContinue: () -> Unit
     ) {
         Column(
             modifier = Modifier
@@ -579,7 +610,7 @@ class SubjectReportScreen : AndroidScreen() {
         selectedStart: String?,
         selectedEnd: String?,
         onExpandStartSelection: () -> Unit,
-        onExpandEndSelection: () -> Unit,
+        onExpandEndSelection: () -> Unit
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -588,7 +619,7 @@ class SubjectReportScreen : AndroidScreen() {
             @Composable
             fun Item(
                 text: String?,
-                onClick: () -> Unit,
+                onClick: () -> Unit
             ) {
                 Row(
                     modifier = Modifier
@@ -640,7 +671,7 @@ class SubjectReportScreen : AndroidScreen() {
                     modifier = Modifier
                         .weight(1f)
                         .height(1.dp)
-                        .background(LocalNetSchoolColors.current.divider),
+                        .background(LocalNetSchoolColors.current.divider)
                 )
                 repeat(3) {
                     Box(
@@ -697,8 +728,10 @@ class SubjectReportScreen : AndroidScreen() {
                     AnimatedContent(
                         targetState = subjectName to range,
                         transitionSpec = {
-                            (fadeIn(tween()) + slideInVertically(tween()) { (it * 0.95f).toInt() } with
-                                    fadeOut(tween()) + slideOutVertically(tween()) { (it * -0.95f).toInt() })
+                            (
+                                fadeIn(tween()) + slideInVertically(tween()) { (it * 0.95f).toInt() } with
+                                    fadeOut(tween()) + slideOutVertically(tween()) { (it * -0.95f).toInt() }
+                                )
                                 .using(SizeTransform(clip = false))
                         }
                     ) { pair ->
@@ -717,13 +750,13 @@ class SubjectReportScreen : AndroidScreen() {
                                     text = pair.first!!,
                                     style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
                                     text = pair.second!!,
                                     style = Typography.body2.copy(color = LocalNetSchoolColors.current.textSecondary),
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         } else {
@@ -731,7 +764,7 @@ class SubjectReportScreen : AndroidScreen() {
                                 text = stringResource(R.string.reports_subject_name),
                                 style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }

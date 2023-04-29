@@ -10,17 +10,17 @@ import io.fournkoner.netschool.utils.currentWeekEnd
 import io.fournkoner.netschool.utils.currentWeekStart
 import io.fournkoner.netschool.utils.getWeekEndFromCurrent
 import io.fournkoner.netschool.utils.getWeekStartFromCurrent
+import java.time.LocalDate
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
-import java.time.LocalDate
-import javax.inject.Inject
 
 @HiltViewModel
 class JournalViewModel @Inject constructor(
-    private val getJournalUseCase: GetJournalUseCase,
+    private val getJournalUseCase: GetJournalUseCase
 ) : ViewModel() {
 
     private var weekOffset = 0

@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.message_receivers
+package io.fournkoner.netschool.ui.screens.mail.newmsg.receivers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,17 +7,17 @@ import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.domain.usecases.mail.GetMessageReceiversUseCase
+import java.text.RuleBasedCollator
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
-import java.text.RuleBasedCollator
-import javax.inject.Inject
 
 @HiltViewModel
 class MessageReceiversViewModel @Inject constructor(
-    private val getMessageReceiversUseCase: GetMessageReceiversUseCase,
+    private val getMessageReceiversUseCase: GetMessageReceiversUseCase
 ) : ViewModel() {
 
     private val fullReceiversList =
@@ -39,8 +39,9 @@ class MessageReceiversViewModel @Inject constructor(
 
                     emptyList()
                 }.also {
-                    if (_currentGroup.value == MailMessageReceiverGroup.TEACHERS)
+                    if (_currentGroup.value == MailMessageReceiverGroup.TEACHERS) {
                         _receivers.value = it.sortByLetters()
+                    }
                 }
             fullReceiversList[MailMessageReceiverGroup.STUDENTS] =
                 getMessageReceiversUseCase(MailMessageReceiverGroup.STUDENTS).getOrElse {
@@ -49,8 +50,9 @@ class MessageReceiversViewModel @Inject constructor(
 
                     emptyList()
                 }.also {
-                    if (_currentGroup.value == MailMessageReceiverGroup.STUDENTS)
+                    if (_currentGroup.value == MailMessageReceiverGroup.STUDENTS) {
                         _receivers.value = it.sortByLetters()
+                    }
                 }
         }
     }
@@ -73,9 +75,9 @@ class MessageReceiversViewModel @Inject constructor(
     private fun List<MailMessageReceiver>.sortByLetters(): Map<Char, List<MailMessageReceiver>> {
         val result = mutableMapOf<Char, List<MailMessageReceiver>>()
 
-        val yoRule = "& а < б < в < г < д < е < ё < ж < з < и < й "+
-                "< к < л < м < н < о < п < р < с < т < у < ф "+
-                "< х < ц < ч < ш < щ < ъ < ы < ь < э < ю < я"
+        val yoRule = "& а < б < в < г < д < е < ё < ж < з < и < й " +
+            "< к < л < м < н < о < п < р < с < т < у < ф " +
+            "< х < ц < ч < ш < щ < ъ < ы < ь < э < ю < я"
         val ruleBasedCollator = RuleBasedCollator(yoRule)
         sortedWith { a, b -> ruleBasedCollator.compare(a.name, b.name) }.forEach {
             val letter = it.name[0]

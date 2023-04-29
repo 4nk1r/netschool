@@ -1,21 +1,47 @@
-package io.fournkoner.netschool.ui.screens.calculator
+package io.fournkoner.netschool.ui.screens.reports.calculator
 
 import android.content.res.Configuration
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,7 +66,7 @@ import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getGradeColor
-import java.util.*
+import java.util.Locale
 
 /**
  * @param grades grade to count
@@ -112,7 +138,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                     withStyle(Typography.subtitle1.copy(color = LocalNetSchoolColors.current.textMain).toSpanStyle()) {
                         append(stringResource(R.string.calculator_needed_grades_ending))
                     }
-                },
+                }
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -220,8 +246,10 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                     transitionSpec = {
                         val coefficient = if (oldCount < current) 1 else -1
 
-                        (slideInVertically(spring()) { it * coefficient } + fadeIn(spring()) with
-                                slideOutVertically(spring()) { -it * coefficient } + fadeOut(spring()))
+                        (
+                            slideInVertically(spring()) { it * coefficient } + fadeIn(spring()) with
+                                slideOutVertically(spring()) { -it * coefficient } + fadeOut(spring())
+                            )
                             .using(SizeTransform(clip = false))
                     }
                 ) { c ->
@@ -229,7 +257,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                         text = c.toString(),
                         style = Typography.body2.copy(
                             color = animateColorAsState(current.getGradeColor()).value
-                        ),
+                        )
                     )
                 }
             }
@@ -243,7 +271,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
     private fun Grades(
         added: Map<Int, Int>,
         onMinus: (grade: Int) -> Unit,
-        onPlus: (grade: Int) -> Unit,
+        onPlus: (grade: Int) -> Unit
     ) {
         Row(
             modifier = Modifier
@@ -314,7 +342,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                                 .clickable(
                                     enabled = minusEnabled,
                                     indication = null,
-                                    interactionSource = remember { MutableInteractionSource() },
+                                    interactionSource = remember { MutableInteractionSource() }
                                 ) { onMinus(grade) }
                         )
                         val plusEnabled = added.getOrDefault(grade, 0) <= MAX_ADD_COUNT
@@ -330,7 +358,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                                 .clickable(
                                     enabled = plusEnabled,
                                     indication = null,
-                                    interactionSource = remember { MutableInteractionSource() },
+                                    interactionSource = remember { MutableInteractionSource() }
                                 ) { onPlus(grade) }
                         )
                     }
@@ -367,7 +395,9 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
 
                 for (i in MAX_ADD_COUNT.toString().indices) {
                     val diff = MAX_ADD_COUNT.toString().length - countString.length
-                    val char = if (i < diff) '\u0000' else {
+                    val char = if (i < diff) {
+                        '\u0000'
+                    } else {
                         val oldChar = oldCountString.getOrNull(i - diff)
                         val newChar = countString[i - diff]
                         if (oldChar == newChar) oldCountString[i - diff] else countString[i - diff]
@@ -379,7 +409,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                             val coefficient = if (oldCount < addedCount) 1 else -1
 
                             slideInVertically(spring()) { it * coefficient } + fadeIn(spring()) with
-                                    slideOutVertically(spring()) { -it * coefficient } + fadeOut(spring())
+                                slideOutVertically(spring()) { -it * coefficient } + fadeOut(spring())
                         }
                     ) { c ->
                         Text(
@@ -387,7 +417,7 @@ data class CalculatorBottomSheet(private val grades: Map<Int, Int>) : AndroidScr
                             style = Typography.caption.copy(
                                 color = LocalNetSchoolColors.current.accentMain,
                                 fontWeight = FontWeight.Medium
-                            ),
+                            )
                         )
                     }
                 }

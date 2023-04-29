@@ -1,19 +1,46 @@
-package io.fournkoner.netschool.ui.screens.mail_message
+package io.fournkoner.netschool.ui.screens.mail.message
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,8 +67,8 @@ import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.loading
-import io.fournkoner.netschool.ui.screens.mailbox.MailboxScreen
-import io.fournkoner.netschool.ui.screens.new_message.NewMessageScreen
+import io.fournkoner.netschool.ui.screens.mail.mailbox.MailboxScreen
+import io.fournkoner.netschool.ui.screens.mail.newmsg.NewMessageScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -50,11 +77,10 @@ import io.fournkoner.netschool.utils.parcelables.MailMessageReceiverParcelable
 import io.fournkoner.netschool.utils.parcelables.toParcelable
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
-import java.util.*
 
 data class MailMessageScreen(
     private val id: Int,
-    private val mailbox: Mailbox,
+    private val mailbox: Mailbox
 ) : AndroidScreen() {
 
     @OptIn(UnreliableToastApi::class)
@@ -94,7 +120,7 @@ data class MailMessageScreen(
                             start = 16.dp,
                             top = 16.dp,
                             end = 16.dp,
-                            bottom = 16.dp + it.calculateBottomPadding(),
+                            bottom = 16.dp + it.calculateBottomPadding()
                         )
                     ) {
                         item { Subject(title = msg?.subject) }
@@ -178,9 +204,13 @@ data class MailMessageScreen(
                 modifier = Modifier.loading(body == null)
             )
         }
-        if (body != null) SelectionContainer {
+        if (body != null) {
+            SelectionContainer {
+                Text()
+            }
+        } else {
             Text()
-        } else Text()
+        }
     }
 
     @Composable
@@ -236,10 +266,12 @@ data class MailMessageScreen(
                 val context = LocalContext.current
                 val map = remember(message) {
                     mapOf(
-                        context.getString(R.string.message_when) to (message?.date?.formatDate()
-                            ?: ""),
+                        context.getString(R.string.message_when) to (
+                            message?.date?.formatDate()
+                                ?: ""
+                            ),
                         context.getString(R.string.message_from) to (message?.sender ?: ""),
-                        context.getString(R.string.message_sent) to (message?.receivers ?: ""),
+                        context.getString(R.string.message_sent) to (message?.receivers ?: "")
                     )
                 }
 
@@ -260,7 +292,7 @@ data class MailMessageScreen(
                                 ) { append("$name: ") }
                                 withStyle(
                                     Typography.body2.copy(
-                                        color = LocalNetSchoolColors.current.textSecondary,
+                                        color = LocalNetSchoolColors.current.textSecondary
                                     ).toSpanStyle()
                                 ) { append(value) }
                             }
@@ -275,12 +307,12 @@ data class MailMessageScreen(
     private fun BottomButtons(
         onReply: () -> Unit,
         onForward: () -> Unit,
-        isLoading: Boolean,
+        isLoading: Boolean
     ) {
         @Composable
         fun Button(
             onClick: () -> Unit,
-            content: @Composable RowScope.() -> Unit,
+            content: @Composable RowScope.() -> Unit
         ) {
             val configuration = LocalConfiguration.current
             val width = remember(configuration) { (configuration.screenWidthDp - 48) / 2 }
@@ -319,7 +351,7 @@ data class MailMessageScreen(
                             colors = listOf(
                                 Color.Transparent,
                                 LocalNetSchoolColors.current.backgroundMain,
-                                LocalNetSchoolColors.current.backgroundMain,
+                                LocalNetSchoolColors.current.backgroundMain
                             )
                         )
                     )
@@ -336,7 +368,7 @@ data class MailMessageScreen(
                         text = stringResource(R.string.message_reply),
                         style = Typography.button.copy(color = LocalNetSchoolColors.current.accentInactive),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
                 Button(onClick = onForward) {
@@ -360,7 +392,7 @@ data class MailMessageScreen(
     private fun Toolbar(
         title: String,
         showDivider: Boolean,
-        onDelete: () -> Unit,
+        onDelete: () -> Unit
     ) {
         val navigator = LocalNavigator.currentOrThrow
         val topPadding = WindowInsets.statusBars
@@ -416,7 +448,7 @@ data class MailMessageScreen(
     @Composable
     private fun Files(
         files: List<MailMessageDetailed.Attachment>,
-        download: (MailMessageDetailed.Attachment) -> Unit,
+        download: (MailMessageDetailed.Attachment) -> Unit
     ) {
         Column(
             modifier = Modifier

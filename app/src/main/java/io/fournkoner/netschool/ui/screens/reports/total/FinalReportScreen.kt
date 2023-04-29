@@ -1,20 +1,44 @@
-package io.fournkoner.netschool.ui.screens.final_report
+package io.fournkoner.netschool.ui.screens.reports.total
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.*
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.*
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,7 +99,7 @@ class FinalReportScreen : AndroidScreen() {
                 ) { pageNumber ->
                     SubjectsList(
                         subjects = report.value?.getOrNull(pageNumber)?.subjects,
-                        state = listState,
+                        state = listState
                     )
                 }
             }
@@ -85,13 +109,13 @@ class FinalReportScreen : AndroidScreen() {
     @Composable
     private fun SubjectsList(
         subjects: List<FinalReportPeriod.Subject>?,
-        state: ScrollState,
+        state: ScrollState
     ) {
         LoadingTransition(targetState = subjects) { list ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(state, enabled = subjects != null),
+                    .verticalScroll(state, enabled = subjects != null)
             ) {
                 VSpace(8.dp)
                 (list ?: (0..20).map { null }).forEachWithIndex { index, subject ->
@@ -124,7 +148,7 @@ class FinalReportScreen : AndroidScreen() {
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier
                                 .loading(subject == null)
-                                .weight(1f),
+                                .weight(1f)
                         )
                         Text(
                             text = subject?.grade ?: "??",
@@ -132,9 +156,11 @@ class FinalReportScreen : AndroidScreen() {
                             modifier = Modifier.loading(subject == null)
                         )
                     }
-                    if (index < (list?.size ?: 20) - 1) Divider(
-                        color = LocalNetSchoolColors.current.divider
-                    )
+                    if (index < (list?.size ?: 20) - 1) {
+                        Divider(
+                            color = LocalNetSchoolColors.current.divider
+                        )
+                    }
                 }
                 VSpace(8.dp)
             }
@@ -146,7 +172,7 @@ class FinalReportScreen : AndroidScreen() {
     private fun Toolbar(
         tabs: List<String>?,
         pagerState: PagerState,
-        showDivider: Boolean,
+        showDivider: Boolean
     ) {
         val navigator = LocalNavigator.currentOrThrow
 
@@ -173,7 +199,7 @@ class FinalReportScreen : AndroidScreen() {
                         text = stringResource(R.string.reports_results_name),
                         style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = TextOverflow.Ellipsis
                     )
                 },
                 backgroundColor = LocalNetSchoolColors.current.backgroundMain,
@@ -213,7 +239,7 @@ class FinalReportScreen : AndroidScreen() {
                         Text(
                             text = tab ?: "placeholder",
                             style = Typography.subtitle1.copy(
-                                color = LocalNetSchoolColors.current.accentMain,
+                                color = LocalNetSchoolColors.current.accentMain
                             ),
                             modifier = Modifier
                                 .padding(

@@ -6,15 +6,19 @@ import io.fournkoner.netschool.data.models.reports.ReportInitQueueRequest
 import io.fournkoner.netschool.data.network.ReportsService
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.debugValue
-import io.fournkoner.netschool.domain.entities.reports.*
+import io.fournkoner.netschool.domain.entities.reports.FinalReportPeriod
+import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
+import io.fournkoner.netschool.domain.entities.reports.ShortReport
+import io.fournkoner.netschool.domain.entities.reports.SubjectReport
+import io.fournkoner.netschool.domain.entities.reports.SubjectReportRequestData
 import io.fournkoner.netschool.domain.repositories.ReportsRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class ReportsRepositoryImpl(
-    private val reportsService: ReportsService,
+    private val reportsService: ReportsService
 ) : ReportsRepository {
 
     override suspend fun getShortReportRequestData(): Result<List<ReportRequestData>> {
@@ -72,23 +76,22 @@ internal class ReportsRepositoryImpl(
                             LocalDate
                                 .parse(strDate.substringBefore('T'))
                                 .atStartOfDay(ZoneId.systemDefault())
-                                .toEpochSecond() * 1000L //ms
+                                .toEpochSecond() * 1000L // ms
                         },
                         defaultEnd = it.defaultRange.end.let { strDate ->
                             LocalDate
                                 .parse(strDate.substringBefore('T'))
                                 .atStartOfDay(ZoneId.systemDefault())
-                                .toEpochSecond() * 1000L //ms
+                                .toEpochSecond() * 1000L // ms
                         },
                         availableRange = it.range.let { strRange ->
                             LocalDate
                                 .parse(strRange!!.start.substringBefore('T'))
                                 .atStartOfDay(ZoneId.systemDefault())
-                                .toEpochSecond() * 1000L /*ms*/..
-                                    LocalDate
-                                        .parse(strRange.end.substringBefore('T'))
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toEpochSecond() * 1000L //ms
+                                .toEpochSecond() * 1000L /*ms*/..LocalDate
+                                .parse(strRange.end.substringBefore('T'))
+                                .atStartOfDay(ZoneId.systemDefault())
+                                .toEpochSecond() * 1000L // ms
                         }
                     )
                 }
@@ -132,7 +135,7 @@ internal class ReportsRepositoryImpl(
 
     private suspend fun getReportFileName(
         reportName: String,
-        params: List<ReportRequestData>,
+        params: List<ReportRequestData>
     ): String {
         val streamData = reportsService.getReportStreamData()
         val eventStream = reportsService.getReportEventStream(streamData.connectionToken)
@@ -145,7 +148,7 @@ internal class ReportsRepositoryImpl(
                         ReportInitQueueRequest.SelectedData(
                             filterId = param.id,
                             filterValue = param.values!!.first().value,
-                            filterText = param.values!!.first().name,
+                            filterText = param.values!!.first().name
                         )
                     },
                     params = listOf(

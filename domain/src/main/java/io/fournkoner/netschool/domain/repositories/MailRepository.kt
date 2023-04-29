@@ -1,6 +1,10 @@
 package io.fournkoner.netschool.domain.repositories
 
-import io.fournkoner.netschool.domain.entities.mail.*
+import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
+import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
+import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
+import io.fournkoner.netschool.domain.entities.mail.MailMessageShort
+import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import java.io.File
 
 interface MailRepository {
@@ -21,6 +25,6 @@ interface MailRepository {
         receiver: MailMessageReceiver,
         subject: String,
         body: String,
-        attachments: Map<File, String>,
+        attachments: Map<File, String>
     ): Result<Boolean>
 }

@@ -9,7 +9,7 @@ fun downloadFile(
     name: String,
     link: String,
     downloadHeaders: Map<String, String>,
-    context: Context,
+    context: Context
 ) {
     val downloadManager = context.getSystemService(DownloadManager::class.java)
     downloadManager.enqueue(

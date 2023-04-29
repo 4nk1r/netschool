@@ -33,7 +33,7 @@ internal data class JournalResponse(
 
         @Keep
         data class Grade(
-            @SerializedName("mark") val mark: Int?,
+            @SerializedName("mark") val mark: Int?
         )
     }
 }

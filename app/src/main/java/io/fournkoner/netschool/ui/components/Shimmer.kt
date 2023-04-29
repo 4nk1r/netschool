@@ -12,7 +12,7 @@ import io.fournkoner.netschool.ui.style.Shapes
 
 fun Modifier.loading(
     shown: Boolean,
-    shape: CornerBasedShape = Shapes.medium,
+    shape: CornerBasedShape = Shapes.medium
 ) = composed {
     placeholder(
         visible = shown,
@@ -20,6 +20,6 @@ fun Modifier.loading(
         shape = RoundedCornerShape(shape.topStart),
         highlight = PlaceholderHighlight.shimmer(
             highlightColor = LocalNetSchoolColors.current.backgroundMain
-        ),
+        )
     )
 }

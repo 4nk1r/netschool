@@ -4,9 +4,9 @@ import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.debugValue
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
-import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import org.jsoup.Jsoup
 
 internal object MailParser {
 
@@ -65,7 +65,8 @@ internal object MailParser {
                                 name = name,
                                 file = "${Const.HOST}webapi/attachments/$id"
                             )
-                        })
+                        }
+                    )
                 }
             }
         }
@@ -76,7 +77,7 @@ internal object MailParser {
             sender = sender ?: throw RuntimeException("Parsing failed: sender is null"),
             receivers = receivers ?: throw RuntimeException("Parsing failed: receivers is null"),
             date = date ?: throw RuntimeException("Parsing failed: date is null"),
-            attachments = attachments,
+            attachments = attachments
         )
     }
 

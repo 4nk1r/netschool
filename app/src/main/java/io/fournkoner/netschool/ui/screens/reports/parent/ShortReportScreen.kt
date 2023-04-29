@@ -1,22 +1,52 @@
-package io.fournkoner.netschool.ui.screens.short_report
+package io.fournkoner.netschool.ui.screens.reports.parent
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -63,8 +93,8 @@ class ShortReportScreen : AndroidScreen() {
         var isFullscreen by rememberSaveable { mutableStateOf(true) }
         val showDivider by remember {
             derivedStateOf {
-                (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0)
-                        && report.value != null
+                (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0) &&
+                    report.value != null
             }
         }
 
@@ -98,7 +128,7 @@ class ShortReportScreen : AndroidScreen() {
     private fun ReportList(
         shortReport: ShortReport?,
         reportEmpty: Boolean,
-        state: LazyListState,
+        state: LazyListState
     ) {
         AnimatedContent(targetState = shortReport) { report ->
             if (report == null) {
@@ -143,7 +173,7 @@ class ShortReportScreen : AndroidScreen() {
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = 16.dp),
                     state = state,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item { ReportOverallGrades(report.total) }
                     items(report.subjects) { ReportSubject(subject = it) }
@@ -270,19 +300,19 @@ class ShortReportScreen : AndroidScreen() {
     private fun Grades(
         grades: ShortReport.Grades?,
         extraPadding: Boolean,
-        showAll: Boolean,
+        showAll: Boolean
     ) {
-        if (grades?.greatCount == 0
-            && grades.goodCount == 0
-            && grades.satisfactoryCount == 0
-            && grades.badCount == 0
+        if (grades?.greatCount == 0 &&
+            grades.goodCount == 0 &&
+            grades.satisfactoryCount == 0 &&
+            grades.badCount == 0
         ) {
             Text(
                 text = stringResource(R.string.short_report_no_grades),
                 style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
                 modifier = Modifier
                     .padding(top = 16.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
             )
         } else {
             Row(
@@ -291,7 +321,7 @@ class ShortReportScreen : AndroidScreen() {
                         top = 16.dp,
                         start = if (extraPadding) 0.dp else 16.dp,
                         end = if (extraPadding) 0.dp else 16.dp,
-                        bottom = if (extraPadding) 0.dp else 16.dp,
+                        bottom = if (extraPadding) 0.dp else 16.dp
                     )
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -302,7 +332,7 @@ class ShortReportScreen : AndroidScreen() {
                     5 to (grades?.greatCount ?: 1),
                     4 to (grades?.goodCount ?: 1),
                     3 to (grades?.satisfactoryCount ?: 1),
-                    2 to (grades?.badCount ?: 1),
+                    2 to (grades?.badCount ?: 1)
                 ).forEach { (grade, count) ->
                     if (count > 0 || showAll) {
                         Column(
@@ -354,7 +384,7 @@ class ShortReportScreen : AndroidScreen() {
     private fun PeriodSelection(
         periods: List<ReportRequestData.Value>?,
         isFullscreen: Boolean,
-        onChange: (ReportRequestData.Value) -> Unit,
+        onChange: (ReportRequestData.Value) -> Unit
     ) {
         var selected by rememberSaveable(periods) { mutableStateOf(periods?.first()?.value ?: "") }
         var isExpanded by rememberSaveable { mutableStateOf(true) }
@@ -446,7 +476,7 @@ class ShortReportScreen : AndroidScreen() {
     @Composable
     private fun PeriodSelectionCollapsedContent(
         selected: String,
-        onClick: () -> Unit,
+        onClick: () -> Unit
     ) {
         Row(
             modifier = Modifier
@@ -494,7 +524,7 @@ class ShortReportScreen : AndroidScreen() {
     private fun PeriodSelectionList(
         list: List<ReportRequestData.Value>,
         selected: String,
-        onChange: (ReportRequestData.Value) -> Unit,
+        onChange: (ReportRequestData.Value) -> Unit
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             list.forEachIndexed { index, item ->
@@ -536,7 +566,7 @@ class ShortReportScreen : AndroidScreen() {
     @OptIn(ExperimentalAnimationApi::class)
     private fun PeriodSelectionCard(
         periods: List<ReportRequestData.Value>?,
-        content: @Composable AnimatedVisibilityScope.(List<ReportRequestData.Value>?) -> Unit,
+        content: @Composable AnimatedVisibilityScope.(List<ReportRequestData.Value>?) -> Unit
     ) {
         Box(
             modifier = Modifier
@@ -564,7 +594,7 @@ class ShortReportScreen : AndroidScreen() {
     @Composable
     private fun PeriodSelectionTitle(
         periods: List<ReportRequestData.Value>?,
-        selected: String,
+        selected: String
     ) {
         Text(
             text = buildAnnotatedString {

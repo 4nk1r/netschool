@@ -1,9 +1,24 @@
-package io.fournkoner.netschool.ui.screens.info
+package io.fournkoner.netschool.ui.screens.journal.info
 
 import android.os.Parcelable
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -23,7 +38,11 @@ import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
-import io.fournkoner.netschool.ui.components.*
+import io.fournkoner.netschool.ui.components.BottomSheet
+import io.fournkoner.netschool.ui.components.LoadingTransition
+import io.fournkoner.netschool.ui.components.SimpleBottomSheetToolbar
+import io.fournkoner.netschool.ui.components.VSpace
+import io.fournkoner.netschool.ui.components.loading
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -36,7 +55,7 @@ import splitties.toast.toast
 
 @Parcelize
 data class AssignmentInfoBottomSheet(
-    private val assigns: List<AssignmentParcelable>,
+    private val assigns: List<AssignmentParcelable>
 ) : AndroidScreen(), Parcelable {
 
     @OptIn(UnreliableToastApi::class)
@@ -65,13 +84,13 @@ data class AssignmentInfoBottomSheet(
                         TitledContent(
                             title = assignment?.type,
                             content = assignment?.name,
-                            grade = assignment?.grade,
+                            grade = assignment?.grade
                         )
                         if (assignment?.description != null) {
                             VSpace(12.dp)
                             TitledContent(
                                 title = stringResource(R.string.assignment_description),
-                                content = assignment.description,
+                                content = assignment.description
                             )
                         }
                         if (!assignment?.attachments.isNullOrEmpty()) {
@@ -112,7 +131,7 @@ data class AssignmentInfoBottomSheet(
 @Composable
 private fun TitledFiles(
     attachments: List<AssignmentDetailed.Attachment>,
-    download: (AssignmentDetailed.Attachment) -> Unit,
+    download: (AssignmentDetailed.Attachment) -> Unit
 ) {
     TitleText(stringResource(R.string.assignment_attachments))
     VSpace(12.dp)
@@ -124,7 +143,7 @@ private fun TitledContent(
     title: String?,
     content: String?,
     grade: Int? = null,
-    copyable: Boolean = true,
+    copyable: Boolean = true
 ) {
     TitleText(title)
     VSpace(4.dp)
@@ -159,7 +178,7 @@ private fun TitleText(text: String?) {
 @Composable
 private fun RowScope.ContentText(
     text: String?,
-    copyable: Boolean,
+    copyable: Boolean
 ) {
     @Composable
     fun Text() {
@@ -172,15 +191,19 @@ private fun RowScope.ContentText(
         )
     }
 
-    if (copyable && text != null) SelectionContainer(
-        modifier = Modifier.weight(1f)
-    ) { Text() } else Text()
+    if (copyable && text != null) {
+        SelectionContainer(
+            modifier = Modifier.weight(1f)
+        ) { Text() }
+    } else {
+        Text()
+    }
 }
 
 @Composable
 private fun Files(
     files: List<AssignmentDetailed.Attachment>,
-    download: (AssignmentDetailed.Attachment) -> Unit,
+    download: (AssignmentDetailed.Attachment) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -229,7 +252,7 @@ private fun Files(
 @Composable
 private fun SecondaryTitledContent(
     title: String?,
-    content: String?,
+    content: String?
 ) {
     SecondaryTitleText(title)
     VSpace(2.dp)

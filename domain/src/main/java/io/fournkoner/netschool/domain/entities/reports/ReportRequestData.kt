@@ -6,8 +6,8 @@ data class ReportRequestData(
     val values: List<Value>?
 ) {
 
-     data class Value(
-         val name: String,
-         val value: String
-     )
+    data class Value(
+        val name: String,
+        val value: String
+    )
 }

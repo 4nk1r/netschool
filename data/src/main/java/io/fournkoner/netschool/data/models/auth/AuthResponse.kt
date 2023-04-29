@@ -8,5 +8,5 @@ internal data class AuthResponse(
     @SerializedName("at") val at: String,
     @SerializedName("timeOut") val timeout: Int,
     @SerializedName("accessToken") val accessToken: String,
-    @SerializedName("refreshToken") val refreshToken: String,
+    @SerializedName("refreshToken") val refreshToken: String
 )

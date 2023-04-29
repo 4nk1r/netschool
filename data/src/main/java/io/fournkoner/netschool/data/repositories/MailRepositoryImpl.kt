@@ -11,19 +11,20 @@ import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.domain.entities.mail.MailMessageShort
 import io.fournkoner.netschool.domain.entities.mail.Mailbox
 import io.fournkoner.netschool.domain.repositories.MailRepository
+import java.io.File
+import java.net.URLConnection
+import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Scanner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.io.File
-import java.net.URLConnection
-import java.net.URLEncoder
-import java.text.SimpleDateFormat
-import java.util.*
 
 internal class MailRepositoryImpl(
-    private val mailService: MailService,
+    private val mailService: MailService
 ) : MailRepository {
 
     override suspend fun getUnreadMessagesCount() = runCatching {
@@ -105,7 +106,7 @@ internal class MailRepositoryImpl(
         receiver: MailMessageReceiver,
         subject: String,
         body: String,
-        attachments: Map<File, String>,
+        attachments: Map<File, String>
     ): Result<Boolean> = runCatching {
         val attachmentIds = attachments.debugValue().map {
             mailService.uploadFile(
@@ -123,7 +124,7 @@ internal class MailRepositoryImpl(
         val requestBody = MailParser
             .parseSendMessageData(mailService.getSendMessageData())
             .mapValues {
-                when(it.key) {
+                when (it.key) {
                     "LTO" -> receiver.id
                     "ATO" -> URLEncoder.encode(receiver.name, "UTF-8")
                     "SU" -> URLEncoder.encode(subject, "UTF-8")
@@ -136,7 +137,9 @@ internal class MailRepositoryImpl(
             .plus(
                 if (attachmentIds.isNotEmpty()) {
                     "&" + attachmentIds.joinToString("&") { "attachment=$it" }
-                } else ""
+                } else {
+                    ""
+                }
             )
             .debugValue()
 

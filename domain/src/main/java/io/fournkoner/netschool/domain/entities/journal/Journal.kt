@@ -9,14 +9,14 @@ data class Journal(
 
     data class Day(
         val date: String,
-        val classes: List<Class>,
+        val classes: List<Class>
     )
 
     data class Class(
         val position: Int,
         val name: String,
         val assignments: List<Assignment>,
-        val grades: List<Int?>,
+        val grades: List<Int?>
     ) {
 
         data class Assignment(

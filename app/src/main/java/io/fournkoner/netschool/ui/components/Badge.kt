@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 fun BadgedLayout(
     modifier: Modifier = Modifier,
     badge: @Composable BoxScope.() -> Unit,
-    content: @Composable BoxScope.() -> Unit,
+    content: @Composable BoxScope.() -> Unit
 ) {
     Layout(
         {

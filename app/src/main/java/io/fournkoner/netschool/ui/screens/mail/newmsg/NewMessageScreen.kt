@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.new_message
+package io.fournkoner.netschool.ui.screens.mail.newmsg
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
@@ -15,22 +15,60 @@ import android.webkit.MimeTypeMap
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -55,7 +93,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
-import io.fournkoner.netschool.ui.screens.message_receivers.MessageReceiversBottomSheet
+import io.fournkoner.netschool.ui.screens.mail.newmsg.receivers.MessageReceiversBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -70,7 +108,7 @@ import splitties.toast.toast
 data class NewMessageScreen(
     private val openMode: OpenMode,
     private val message: MailMessageParcelable? = null,
-    private val receiver: MailMessageReceiverParcelable? = null,
+    private val receiver: MailMessageReceiverParcelable? = null
 ) : AndroidScreen(), Parcelable {
 
     companion object {
@@ -114,7 +152,9 @@ data class NewMessageScreen(
                         )
                         else -> message.subject
                     }
-                } else ""
+                } else {
+                    ""
+                }
             )
         }
         var body by rememberSaveable {
@@ -128,7 +168,9 @@ data class NewMessageScreen(
                         )
                         else -> message.body
                     }
-                } else ""
+                } else {
+                    ""
+                }
             )
         }
         var attachments by rememberSaveable {
@@ -158,9 +200,10 @@ data class NewMessageScreen(
 
                     val fileName = when (uri.scheme) {
                         "file" -> uri.lastPathSegment!!
-                        "content" -> cursor
-                            .apply { moveToFirst() }
-                            .getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                        "content" ->
+                            cursor
+                                .apply { moveToFirst() }
+                                .getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                         else -> "Unknown attachment"
                     }
                     attachments = attachments + (uri.toString() to fileName)
@@ -173,9 +216,9 @@ data class NewMessageScreen(
             topBar = {
                 Toolbar(
                     showDivider = showDivider,
-                    sendEnabled = subject.isNotEmpty()
-                            && (selectedReceiver ?: receiver) != null
-                            && (body.isNotEmpty() || attachments.isNotEmpty()),
+                    sendEnabled = subject.isNotEmpty() &&
+                        (selectedReceiver ?: receiver) != null &&
+                        (body.isNotEmpty() || attachments.isNotEmpty()),
                     sendLoading = isSendLoading,
                     onAttach = {
                         attachContract.launch(arrayOf("*/*"))
@@ -213,7 +256,7 @@ data class NewMessageScreen(
                     item {
                         SubjectInput(
                             subject = subject,
-                            onSubjectChange = { subject = it },
+                            onSubjectChange = { subject = it }
                         )
                     }
                     item {
@@ -239,9 +282,11 @@ data class NewMessageScreen(
                             // disable modifying the message
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
+                                indication = null
                             ) {}
-                    } else Modifier
+                    } else {
+                        Modifier
+                    }
                 )
         )
         LaunchedEffect(Unit) {
@@ -261,7 +306,7 @@ data class NewMessageScreen(
         sendLoading: Boolean,
         onAttach: () -> Unit,
         onSend: () -> Unit,
-        onBack: () -> Unit,
+        onBack: () -> Unit
     ) {
         Column {
             TopAppBar(
@@ -286,7 +331,7 @@ data class NewMessageScreen(
                         text = stringResource(R.string.new_message_title),
                         style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = TextOverflow.Ellipsis
                     )
                 },
                 actions = {
@@ -365,7 +410,7 @@ data class NewMessageScreen(
             Icon(
                 painter = painterResource(R.drawable.ic_expand_collapse),
                 contentDescription = stringResource(R.string.new_message_receiver),
-                tint = LocalNetSchoolColors.current.accentMain,
+                tint = LocalNetSchoolColors.current.accentMain
             )
         }
     }
@@ -373,7 +418,7 @@ data class NewMessageScreen(
     @Composable
     private fun SubjectInput(
         subject: String,
-        onSubjectChange: (String) -> Unit,
+        onSubjectChange: (String) -> Unit
     ) {
         TitledRowContent(title = stringResource(R.string.new_message_subject)) {
             Icon(
@@ -413,7 +458,7 @@ data class NewMessageScreen(
     private fun TitledRowContent(
         title: String,
         modifier: Modifier = Modifier,
-        content: @Composable RowScope.() -> Unit,
+        content: @Composable RowScope.() -> Unit
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -423,7 +468,7 @@ data class NewMessageScreen(
                 text = title,
                 style = Typography.subtitle1.copy(color = LocalNetSchoolColors.current.textMain),
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis
             )
             Row(
                 modifier = Modifier
@@ -451,7 +496,7 @@ data class NewMessageScreen(
     @Composable
     private fun Body(
         value: String,
-        onValueChanged: (String) -> Unit,
+        onValueChanged: (String) -> Unit
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -471,7 +516,7 @@ data class NewMessageScreen(
     @Composable
     private fun Attachments(
         list: Map<String, String>, // uri to name
-        onDelete: (String) -> Unit,
+        onDelete: (String) -> Unit
     ) {
         LaunchedEffect(list) { list.debugValue() }
         val context = LocalContext.current
@@ -517,7 +562,9 @@ data class NewMessageScreen(
                             val thumb = remember(uri) {
                                 if (uri.toUri().checkIfImage(context)) {
                                     uri.getThumbnail(context)
-                                } else null
+                                } else {
+                                    null
+                                }
                             }
 
                             if (thumb != null) {
@@ -576,13 +623,13 @@ data class NewMessageScreen(
     @Composable
     private fun BodyTextField(
         value: String,
-        onValueChanged: (String) -> Unit,
+        onValueChanged: (String) -> Unit
     ) {
         BasicTextField(
             value = value,
             onValueChange = onValueChanged,
             cursorBrush = SolidColor(LocalNetSchoolColors.current.accentMain),
-            textStyle = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain),
+            textStyle = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain)
         ) { innerTextField ->
             Box(
                 modifier = Modifier
@@ -614,6 +661,7 @@ data class NewMessageScreen(
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             context.contentResolver.loadThumbnail(toUri(), Size(256, 256), CancellationSignal())
         } else {
+	        @Suppress("deprecation")
             MediaStore.Images.Thumbnails.getThumbnail(
                 context.contentResolver,
                 toUri().getId(),

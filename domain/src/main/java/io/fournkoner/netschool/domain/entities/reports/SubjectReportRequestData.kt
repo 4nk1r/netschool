@@ -8,6 +8,6 @@ data class SubjectReportRequestData(
     data class Period(
         val defaultStart: Long,
         val defaultEnd: Long,
-        val availableRange: LongRange,
+        val availableRange: LongRange
     )
 }

@@ -8,10 +8,10 @@ import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
 import io.fournkoner.netschool.domain.usecases.mail.GetUnreadMessagesCountUseCase
 import io.fournkoner.netschool.utils.Const
 import io.fournkoner.netschool.utils.debugValue
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
@@ -26,7 +26,7 @@ class AuthViewModel @Inject constructor(
     fun login(
         login: String,
         password: String,
-        onResultListener: (Boolean) -> Unit,
+        onResultListener: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
             val result = signInUseCase(login.trim(), password.trim()).getOrDefault(false)
@@ -36,7 +36,9 @@ class AuthViewModel @Inject constructor(
                     0
                 }
                 onResultListener(true)
-            } else onResultListener(false)
+            } else {
+                onResultListener(false)
+            }
         }
     }
 

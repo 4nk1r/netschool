@@ -8,7 +8,13 @@ import io.fournkoner.netschool.data.utils.Accept
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.ContentType
 import okhttp3.ResponseBody
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Streaming
 
 internal interface ReportsService {
 
@@ -20,7 +26,7 @@ internal interface ReportsService {
         @Query("clientProtocol") clientProtocol: String = "1.5",
         @Query("at") at: String = Const.at!!,
         @Query("connectionData") connectionData: String = "[{\"name\":\"queuehub\"}]",
-        @Query("_") huh: Long = System.currentTimeMillis(),
+        @Query("_") huh: Long = System.currentTimeMillis()
     ): ReportStreamDataResponse
 
     @GET("WebApi/signalr/connect")
@@ -32,7 +38,7 @@ internal interface ReportsService {
         @Query("at") at: String = Const.at!!,
         @Query("connectionData") connectionData: String = "[{\"name\":\"queuehub\"}]",
         @Query("tid") tid: Int = 6,
-        @Header("Accept") accept: String = Accept.EVENT_STREAM.string,
+        @Header("Accept") accept: String = Accept.EVENT_STREAM.string
     ): ResponseBody
 
     @GET("WebApi/signalr/start")
@@ -42,7 +48,7 @@ internal interface ReportsService {
         @Query("clientProtocol") clientProtocol: String = "1.5",
         @Query("connectionData") connectionData: String = "[{\"name\":\"queuehub\"}]",
         @Query("at") at: String = Const.at!!,
-        @Query("_") huh: Long = System.currentTimeMillis(),
+        @Query("_") huh: Long = System.currentTimeMillis()
     )
 
     @POST("webapi/reports/{report_name}/queue")

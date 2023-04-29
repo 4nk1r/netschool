@@ -15,8 +15,6 @@ val Int.formattedShortString: String
             in 10_000_000..99_999_000 -> "${str.take(2)}${if (str[2] != '0') str[2] else ""}M"
             in 100_000_000..999_999_000 -> "0,${(str.take(2).toInt() / 10f).roundToInt().coerceAtMost(9)}B"
             in 1_000_000_000..9_999_000_000 -> "${str[0]}${if (str[1] != '0') str[1] else ""}B"
-            in 10_000_000_000..99_999_000_000 -> "${str.take(2)}${if (str[2] != '0') str[2] else ""}B"
-            in 100_000_000_000..999_999_000_000 -> "${str.take(3)}B"
             else -> "WTF"
         }
     }

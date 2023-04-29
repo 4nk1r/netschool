@@ -28,11 +28,6 @@
     <string name="journal_due_date">Срок сдачи: %s</string>
 
     <string name="assignment_title">Информация о задании</string>
-    <string name="assignment_homework">Домашняя работа</string>
-    <string name="assignment_independent_work">Самостоятельная работа</string>
-    <string name="assignment_answer">Ответ на уроке</string>
-    <string name="assignment_practical_word">Практическая работа</string>
-    <string name="assignment_unknown">Задание</string>
     <string name="assignment_description">Подробности от учителя</string>
     <string name="assignment_download">Скачать %s</string>
     <string name="assignment_attachments">Приложенные файлы</string>

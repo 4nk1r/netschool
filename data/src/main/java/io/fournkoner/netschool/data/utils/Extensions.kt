@@ -21,7 +21,7 @@ internal val Mailbox.id
     }
 
 internal val MailMessageReceiverGroup.id
-    get() = when(this) {
+    get() = when (this) {
         MailMessageReceiverGroup.TEACHERS -> "T"
         MailMessageReceiverGroup.STUDENTS -> "D"
     }

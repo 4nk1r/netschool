@@ -1,15 +1,47 @@
 package io.fournkoner.netschool.ui.screens.auth
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.with
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -121,7 +153,6 @@ class AuthScreen : AndroidScreen() {
             }
         }
     }
-
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -129,7 +160,7 @@ class AuthScreen : AndroidScreen() {
 private fun AuthButton(
     isActive: Boolean,
     isLoading: Boolean,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     val shape = RoundedCornerShape(
         topStart = CornerSize(2.dp),
@@ -189,7 +220,7 @@ private fun AuthButton(
 @Composable
 private fun MainCard(
     bottomCornersRadius: CornerSize = Shapes.medium.topEnd,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = RoundedCornerShape(
         topStart = Shapes.medium.topStart,
@@ -226,7 +257,7 @@ private fun EnterDataCardContent(
     passwordShown: Boolean,
     onTogglePasswordVisibility: () -> Unit,
     isLoading: Boolean,
-    onLogin: () -> Unit,
+    onLogin: () -> Unit
 ) {
     Column {
         MainCard(bottomCornersRadius = CornerSize(2.dp)) {
@@ -301,7 +332,7 @@ private fun PasswordTextField(
     passwordFocusRequester: FocusRequester,
     onLogin: () -> Unit,
     onTogglePasswordVisibility: () -> Unit,
-    passwordShown: Boolean,
+    passwordShown: Boolean
 ) {
     AuthTextField(
         value = password,
@@ -363,7 +394,7 @@ private fun LoginTextField(
     login: String,
     onLoginChanged: (String) -> Unit,
     loginFocusRequester: FocusRequester,
-    passwordFocusRequester: FocusRequester,
+    passwordFocusRequester: FocusRequester
 ) {
     AuthTextField(
         value = login,
@@ -412,7 +443,7 @@ private fun AuthTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    autoFillTypes: List<AutofillType> = emptyList(),
+    autoFillTypes: List<AutofillType> = emptyList()
 ) {
     var isFocused by remember { mutableStateOf(false) }
 
@@ -426,7 +457,9 @@ private fun AuthTextField(
             .then(
                 if (autoFillTypes.isNotEmpty()) {
                     Modifier.autofill(autoFillTypes, onValueChanged)
-                } else Modifier
+                } else {
+                    Modifier
+                }
             ),
         singleLine = true,
         shape = RoundedCornerShape(Shapes.medium.topStart),
@@ -437,7 +470,7 @@ private fun AuthTextField(
             focusedLabelColor = LocalNetSchoolColors.current.accentMain,
             unfocusedBorderColor = LocalNetSchoolColors.current.accentInactive,
             unfocusedLabelColor = LocalNetSchoolColors.current.accentInactive,
-            placeholderColor = LocalNetSchoolColors.current.textSecondary,
+            placeholderColor = LocalNetSchoolColors.current.textSecondary
         ),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,

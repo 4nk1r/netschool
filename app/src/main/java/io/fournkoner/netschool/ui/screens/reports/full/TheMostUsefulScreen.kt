@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.full_report
+package io.fournkoner.netschool.ui.screens.reports.full
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement

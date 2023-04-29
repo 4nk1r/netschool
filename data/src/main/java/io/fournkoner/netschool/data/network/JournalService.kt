@@ -6,7 +6,12 @@ import io.fournkoner.netschool.data.models.journal.JournalOverdueClassesResponse
 import io.fournkoner.netschool.data.models.journal.JournalResponse
 import io.fournkoner.netschool.data.utils.Const
 import io.fournkoner.netschool.data.utils.ContentType
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 internal interface JournalService {
 
@@ -32,7 +37,7 @@ internal interface JournalService {
         @Query("weekStart") weekStart: String,
         @Query("weekEnd") weekEnd: String,
         @Query("studentId") studentId: Int = Const.studentId!!,
-        @Query("yearId") yearId: Int = Const.yearId!!,
+        @Query("yearId") yearId: Int = Const.yearId!!
     ): List<JournalOverdueClassesResponse>
 
     @GET("webapi/student/diary/assigns/{id}")

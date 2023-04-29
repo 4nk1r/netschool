@@ -12,24 +12,26 @@ import io.fournkoner.netschool.domain.entities.journal.Journal
 import io.fournkoner.netschool.domain.repositories.JournalRepository
 
 internal class JournalRepositoryImpl(
-    private val journalService: JournalService,
+    private val journalService: JournalService
 ) : JournalRepository {
 
     override suspend fun getJournal(weekStart: String, weekEnd: String): Result<Journal> {
         return runCatching {
             val journalResponse = journalService.getJournal(weekStart, weekEnd).debugValue()
 
-            val assignmentIds = Gson().toJson(JournalAttachmentsRequest(
-                assignmentIds = mutableListOf<Int>().apply {
-                    journalResponse.weekDays.forEach { day ->
-                        day.classes.forEach { clazz ->
-                            clazz.assignments.orEmpty().forEach { assignment ->
-                                add(assignment.id)
+            val assignmentIds = Gson().toJson(
+                JournalAttachmentsRequest(
+                    assignmentIds = mutableListOf<Int>().apply {
+                        journalResponse.weekDays.forEach { day ->
+                            day.classes.forEach { clazz ->
+                                clazz.assignments.orEmpty().forEach { assignment ->
+                                    add(assignment.id)
+                                }
                             }
                         }
                     }
-                }
-            )).debugValue()
+                )
+            ).debugValue()
             val attachmentsResponse = journalService.getAttachments(assignmentIds).debugValue()
 
             val overdueClassesResponse = journalService.getOverdueClasses(weekStart, weekEnd)
@@ -82,7 +84,7 @@ internal class JournalRepositoryImpl(
     }
 
     override suspend fun getDetailedAssignments(
-        assignments: List<Journal.Class.Assignment>,
+        assignments: List<Journal.Class.Assignment>
     ): Result<List<AssignmentDetailed>> {
         return runCatching {
             assignments.map { assignment ->

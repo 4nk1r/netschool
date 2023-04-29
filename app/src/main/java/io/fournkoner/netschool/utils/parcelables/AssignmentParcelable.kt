@@ -16,7 +16,7 @@ data class AssignmentParcelable(
     @Parcelize
     data class Attachment(
         val name: String,
-        val file: String,
+        val file: String
     ) : Parcelable
 
     fun toDomain() = Journal.Class.Assignment(

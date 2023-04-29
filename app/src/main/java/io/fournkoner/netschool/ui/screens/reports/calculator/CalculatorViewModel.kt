@@ -1,12 +1,12 @@
-package io.fournkoner.netschool.ui.screens.calculator
+package io.fournkoner.netschool.ui.screens.reports.calculator
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 /**
  * @param grades grade to count
@@ -125,7 +125,7 @@ class CalculatorViewModel(private val grades: Map<Int, Int>) : ViewModel() {
                 2 to grades.getOrDefault(2, 0),
                 3 to grades.getOrDefault(3, 0),
                 4 to grades.getOrDefault(4, 0),
-                5 to grades.getOrDefault(5, 0),
+                5 to grades.getOrDefault(5, 0)
             )
             return CalculatorViewModel(formattedGrades) as T
         }

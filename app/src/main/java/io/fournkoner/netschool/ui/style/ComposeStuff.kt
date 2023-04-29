@@ -26,11 +26,11 @@ val Shapes.mediumDp get() = 8.dp
 private val interFontFamily = FontFamily(
     Font(R.font.inter_regular, FontWeight.Normal),
     Font(R.font.inter_medium, FontWeight.Medium),
-    Font(R.font.inter_semi_bold, FontWeight.SemiBold),
+    Font(R.font.inter_semi_bold, FontWeight.SemiBold)
 )
 private val manropeFontFamily = FontFamily(
     Font(R.font.manrope_semi_bold, FontWeight.SemiBold),
-    Font(R.font.manrope_bold, FontWeight.Bold),
+    Font(R.font.manrope_bold, FontWeight.Bold)
 )
 val Typography = Typography(
     h4 = TextStyle(
@@ -77,7 +77,7 @@ val Typography = Typography(
         fontSize = 16.sp,
         fontFamily = interFontFamily,
         fontWeight = FontWeight.SemiBold
-    ),
+    )
 )
 
 private val Colors
@@ -100,19 +100,19 @@ private val Colors
 @Composable
 fun NetSchoolTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
         LocalNetSchoolColors provides if (darkTheme) {
             NetSchoolColors.darkPalette
         } else {
             NetSchoolColors.lightPalette
-        },
+        }
     ) {
         MaterialTheme(
             shapes = Shapes,
             typography = Typography,
-            colors = Colors,
+            colors = Colors
         ) {
             androidx.compose.material3.MaterialTheme(
                 colorScheme = androidx.compose.material3.MaterialTheme.colorScheme.copy(
@@ -130,7 +130,7 @@ fun NetSchoolTheme(
                     surface = LocalNetSchoolColors.current.backgroundCard,
                     background = LocalNetSchoolColors.current.backgroundMain,
                     onBackground = LocalNetSchoolColors.current.textMain,
-                    onSurface = LocalNetSchoolColors.current.textMain,
+                    onSurface = LocalNetSchoolColors.current.textMain
                 ),
                 androidx.compose.material3.MaterialTheme.shapes.copy(
                     small = Shapes.small,

@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.short_report
+package io.fournkoner.netschool.ui.screens.reports.parent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,17 +8,17 @@ import io.fournkoner.netschool.domain.entities.reports.ReportRequestData
 import io.fournkoner.netschool.domain.entities.reports.ShortReport
 import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
 import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
-import javax.inject.Inject
 
 @HiltViewModel
 class ShortReportViewModel @Inject constructor(
     private val getShortReportRequestDataUseCase: GetShortReportRequestDataUseCase,
-    private val generateShortReportUseCase: GenerateShortReportUseCase,
+    private val generateShortReportUseCase: GenerateShortReportUseCase
 ) : ViewModel() {
 
     private val immutableRequestData = mutableListOf<ReportRequestData>()
@@ -44,7 +44,9 @@ class ShortReportViewModel @Inject constructor(
                 reportRequestData.forEach { item ->
                     if (item.id == REQUEST_DATA_ITEM_ID_PERIOD) {
                         _periods.value = item.values
-                    } else immutableRequestData += item
+                    } else {
+                        immutableRequestData += item
+                    }
                 }
             }
         }

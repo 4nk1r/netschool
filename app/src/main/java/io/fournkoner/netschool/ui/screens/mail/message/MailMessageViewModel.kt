@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.mail_message
+package io.fournkoner.netschool.ui.screens.mail.message
 
 import android.content.Context
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -28,7 +28,7 @@ class MailMessageViewModel @AssistedInject constructor(
     private val getMailMessageDetailedUseCase: GetMailMessageDetailedUseCase,
     private val getHeadersForDownloaderUseCase: GetHeadersForDownloaderUseCase,
     private val deleteMessagesUseCase: DeleteMessagesUseCase,
-    private val getMessageReceiversUseCase: GetMessageReceiversUseCase,
+    private val getMessageReceiversUseCase: GetMessageReceiversUseCase
 ) : ScreenModel {
 
     private val _message = MutableStateFlow<MailMessageDetailed?>(null)

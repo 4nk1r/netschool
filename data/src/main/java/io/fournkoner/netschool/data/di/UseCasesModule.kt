@@ -15,17 +15,26 @@ import io.fournkoner.netschool.domain.usecases.journal.GetDetailedAssignmentsUse
 import io.fournkoner.netschool.domain.usecases.journal.GetHeadersForDownloaderUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetJournalUseCase
 import io.fournkoner.netschool.domain.usecases.journal.GetMailMessageDetailedUseCase
-import io.fournkoner.netschool.domain.usecases.mail.*
-import io.fournkoner.netschool.domain.usecases.reports.*
+import io.fournkoner.netschool.domain.usecases.mail.DeleteMessagesUseCase
+import io.fournkoner.netschool.domain.usecases.mail.GetMailboxUseCase
+import io.fournkoner.netschool.domain.usecases.mail.GetMessageFileSizeLimitUseCase
+import io.fournkoner.netschool.domain.usecases.mail.GetMessageReceiversUseCase
+import io.fournkoner.netschool.domain.usecases.mail.GetUnreadMessagesCountUseCase
+import io.fournkoner.netschool.domain.usecases.mail.SendMessageUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GenerateFinalReportUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GenerateShortReportUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GenerateSubjectReportUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GetShortReportRequestDataUseCase
+import io.fournkoner.netschool.domain.usecases.reports.GetSubjectReportRequestDataUseCase
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object UseCasesModule {
 
-    ///////////////////////
+    // /////////////////////
     // ACCOUNT USE CASES //
-    ///////////////////////
+    // /////////////////////
 
     @Singleton
     @Provides
@@ -45,9 +54,9 @@ internal object UseCasesModule {
         return GetAccountDataUseCase(repository)
     }
 
-    ///////////////////////
+    // /////////////////////
     // JOURNAL USE CASES //
-    ///////////////////////
+    // /////////////////////
 
     @Provides
     @Singleton
@@ -67,9 +76,9 @@ internal object UseCasesModule {
         return GetHeadersForDownloaderUseCase(repository)
     }
 
-    ///////////////////////
+    // /////////////////////
     // REPORTS USE CASES //
-    ///////////////////////
+    // /////////////////////
 
     @Provides
     @Singleton
@@ -101,9 +110,9 @@ internal object UseCasesModule {
         return GenerateFinalReportUseCase(repository)
     }
 
-    ////////////////////
+    // //////////////////
     // MAIL USE CASES //
-    ////////////////////
+    // //////////////////
 
     @Provides
     @Singleton

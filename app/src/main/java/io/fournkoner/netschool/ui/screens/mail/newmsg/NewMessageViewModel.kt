@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.new_message
+package io.fournkoner.netschool.ui.screens.mail.newmsg
 
 import android.content.Context
 import android.net.Uri
@@ -11,19 +11,19 @@ import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiver
 import io.fournkoner.netschool.domain.usecases.mail.GetMessageFileSizeLimitUseCase
 import io.fournkoner.netschool.domain.usecases.mail.SendMessageUseCase
-import kotlinx.coroutines.launch
-import splitties.toast.UnreliableToastApi
-import splitties.toast.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
+import kotlinx.coroutines.launch
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 
 @HiltViewModel
 class NewMessageViewModel @Inject constructor(
     getMessageFileSizeLimitUseCase: GetMessageFileSizeLimitUseCase,
-    private val sendMessageUseCase: SendMessageUseCase,
+    private val sendMessageUseCase: SendMessageUseCase
 ) : ViewModel() {
 
     val messageFileSizeLimit = getMessageFileSizeLimitUseCase()
@@ -34,7 +34,7 @@ class NewMessageViewModel @Inject constructor(
         body: String,
         attachments: Map<String, String>,
         context: Context,
-        onCompleteListener: () -> Unit,
+        onCompleteListener: () -> Unit
     ) {
         viewModelScope.launch {
             sendMessageUseCase(

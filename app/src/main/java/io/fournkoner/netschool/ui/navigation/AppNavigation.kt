@@ -1,12 +1,37 @@
 package io.fournkoner.netschool.ui.navigation
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +56,9 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.ui.components.BadgedLayout
-import io.fournkoner.netschool.ui.navigation.tabs.*
+import io.fournkoner.netschool.ui.navigation.tabs.JournalTab
+import io.fournkoner.netschool.ui.navigation.tabs.MailTab
+import io.fournkoner.netschool.ui.navigation.tabs.ReportsTab
 import io.fournkoner.netschool.ui.screens.auth.AuthScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.utils.Const
@@ -100,7 +127,7 @@ class AppScreen : AndroidScreen() {
                             CurrentTab()
                         }
                     },
-                    backgroundColor = LocalNetSchoolColors.current.backgroundMain,
+                    backgroundColor = LocalNetSchoolColors.current.backgroundMain
                 )
             }
         }
@@ -110,24 +137,26 @@ class AppScreen : AndroidScreen() {
 @Composable
 private fun RowScope.BottomNavigationItem(
     tab: Tab,
-    unreadCount: Int = 0,
+    unreadCount: Int = 0
 ) {
     val tabNavigator = LocalTabNavigator.current
 
     BadgedLayout(
         badge = {
-            if (unreadCount > 0) Box(
-                modifier = Modifier
-                    .defaultMinSize(minWidth = 18.dp, minHeight = 18.dp)
-                    .background(LocalNetSchoolColors.current.badge, CircleShape)
-                    .padding(horizontal = 5.dp)
-            ) {
-                Text(
-                    text = unreadCount.formattedShortString,
-                    color = LocalNetSchoolColors.current.onBadge,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                )
+            if (unreadCount > 0) {
+                Box(
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = 18.dp, minHeight = 18.dp)
+                        .background(LocalNetSchoolColors.current.badge, CircleShape)
+                        .padding(horizontal = 5.dp)
+                ) {
+                    Text(
+                        text = unreadCount.formattedShortString,
+                        color = LocalNetSchoolColors.current.onBadge,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         },
         modifier = Modifier

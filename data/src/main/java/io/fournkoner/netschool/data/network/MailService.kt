@@ -7,14 +7,21 @@ import io.fournkoner.netschool.data.utils.toRequestBody
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Query
+import retrofit2.http.Streaming
 
 internal interface MailService {
 
     @POST("angular/school/studentdiary")
     suspend fun getUnreadMessagesCount(
         @Body body: String,
-        @Header("Content-Type") contentType: String = ContentType.FORM_URL_ENCODED.string,
+        @Header("Content-Type") contentType: String = ContentType.FORM_URL_ENCODED.string
     ): String
 
     @GET("asp/ajax/GetMessagesAjax.asp")
@@ -23,7 +30,7 @@ internal interface MailService {
         @Query("jtStartIndex") startIndex: Int,
         @Query("jtPageSize") pageSize: Int,
         @Query("AT") at: String = Const.at!!,
-        @Query("jtSorting") sortingMode: String = "Sent DESC",
+        @Query("jtSorting") sortingMode: String = "Sent DESC"
     ): MailboxResponse
 
     @GET("asp/Messages/readmessage.asp")
@@ -52,7 +59,7 @@ internal interface MailService {
     suspend fun uploadFile(
         @Part filePart: MultipartBody.Part,
         @Part("data") dataPart: RequestBody = "{\"MessageId\":0,\"Description\":\"\"}".toRequestBody(),
-        @Part("at") atPart: RequestBody = Const.at!!.toRequestBody(),
+        @Part("at") atPart: RequestBody = Const.at!!.toRequestBody()
     ): Int
 
     @GET("asp/Messages/composemessage.asp")

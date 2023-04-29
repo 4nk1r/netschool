@@ -1,14 +1,39 @@
-package io.fournkoner.netschool.ui.screens.message_receivers
+package io.fournkoner.netschool.ui.screens.mail.newmsg.receivers
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -16,9 +41,24 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -41,7 +81,7 @@ import io.fournkoner.netschool.domain.entities.mail.MailMessageReceiverGroup
 import io.fournkoner.netschool.ui.components.BottomSheet
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
-import io.fournkoner.netschool.ui.screens.new_message.NewMessageScreen
+import io.fournkoner.netschool.ui.screens.mail.newmsg.NewMessageScreen
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
@@ -51,7 +91,7 @@ import io.fournkoner.netschool.utils.parcelables.toParcelable
 import kotlinx.coroutines.launch
 
 data class MessageReceiversBottomSheet(
-    private val forwardMessage: MailMessageParcelable? = null,
+    private val forwardMessage: MailMessageParcelable? = null
 ) : AndroidScreen() {
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -151,7 +191,7 @@ data class MessageReceiversBottomSheet(
     private fun ReceiversList(
         segmentedList: Map<Char, List<MailMessageReceiver>>,
         state: LazyListState,
-        onClick: (MailMessageReceiver) -> Unit,
+        onClick: (MailMessageReceiver) -> Unit
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -171,7 +211,7 @@ data class MessageReceiversBottomSheet(
                             .height(42.dp)
                             .background(LocalNetSchoolColors.current.backgroundMain)
                             .padding(horizontal = 16.dp)
-                            .animateItemPlacement(),
+                            .animateItemPlacement()
                     ) {
                         Text(
                             text = letter.toString(),
@@ -192,7 +232,7 @@ data class MessageReceiversBottomSheet(
                             .background(LocalNetSchoolColors.current.backgroundMain)
                             .clickable { onClick(it) }
                             .padding(horizontal = 16.dp)
-                            .animateItemPlacement(),
+                            .animateItemPlacement()
                     ) {
                         Text(
                             text = it.name,
@@ -215,7 +255,7 @@ data class MessageReceiversBottomSheet(
         currentGroup: MailMessageReceiverGroup,
         currentSearchQuery: String,
         onUpdateGroup: (MailMessageReceiverGroup) -> Unit,
-        onTypeSearch: (String) -> Unit,
+        onTypeSearch: (String) -> Unit
     ) {
         val navigator = LocalBottomSheetNavigator.current
 
@@ -238,7 +278,7 @@ data class MessageReceiversBottomSheet(
                         text = stringResource(R.string.select_receiver_title),
                         style = Typography.h4.copy(color = LocalNetSchoolColors.current.textMain),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = TextOverflow.Ellipsis
                     )
                 },
                 backgroundColor = LocalNetSchoolColors.current.backgroundMain,
@@ -268,7 +308,7 @@ data class MessageReceiversBottomSheet(
     @Composable
     private fun RowScope.SearchTextField(
         value: String,
-        onValueChanged: (String) -> Unit,
+        onValueChanged: (String) -> Unit
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -283,7 +323,7 @@ data class MessageReceiversBottomSheet(
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .height(42.dp)
-                .weight(1f),
+                .weight(1f)
         ) { innerTextField ->
             Row(
                 modifier = Modifier
@@ -320,7 +360,7 @@ data class MessageReceiversBottomSheet(
     @Composable
     private fun GroupSelector(
         value: MailMessageReceiverGroup,
-        onValueChanged: (MailMessageReceiverGroup) -> Unit,
+        onValueChanged: (MailMessageReceiverGroup) -> Unit
     ) {
         var isExpanded by remember { mutableStateOf(false) }
 
@@ -330,15 +370,17 @@ data class MessageReceiversBottomSheet(
                 .widthIn(max = 128.dp)
                 .clickable(
                     indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = remember { MutableInteractionSource() }
                 ) { isExpanded = !isExpanded },
             verticalAlignment = Alignment.CenterVertically
         ) {
             AnimatedContent(
                 targetState = value,
                 transitionSpec = {
-                    (fadeIn(tween()) + slideInVertically(tween()) { (it * -0.95f).toInt() } with
-                            fadeOut(tween()) + slideOutVertically(tween()) { (it * 0.95f).toInt() })
+                    (
+                        fadeIn(tween()) + slideInVertically(tween()) { (it * -0.95f).toInt() } with
+                            fadeOut(tween()) + slideOutVertically(tween()) { (it * 0.95f).toInt() }
+                        )
                         .using(SizeTransform(clip = false))
                 }
             ) {

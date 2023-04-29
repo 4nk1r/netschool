@@ -4,11 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import io.fournkoner.netschool.R
-import io.fournkoner.netschool.ui.screens.HelloWorldScreen
 
 // one day, but not this time
 object ScheduleTab : Tab {
@@ -30,6 +28,6 @@ object ScheduleTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(HelloWorldScreen())
+        TODO()
     }
 }

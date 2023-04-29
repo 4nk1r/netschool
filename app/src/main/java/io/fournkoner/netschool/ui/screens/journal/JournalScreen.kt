@@ -1,15 +1,51 @@
 package io.fournkoner.netschool.ui.screens.journal
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.*
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -34,7 +70,7 @@ import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleToolbar
 import io.fournkoner.netschool.ui.components.VSpace
 import io.fournkoner.netschool.ui.components.loading
-import io.fournkoner.netschool.ui.screens.info.AssignmentInfoBottomSheet
+import io.fournkoner.netschool.ui.screens.journal.info.AssignmentInfoBottomSheet
 import io.fournkoner.netschool.ui.style.LocalNetSchoolColors
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getFormattedTime
@@ -43,7 +79,6 @@ import io.fournkoner.netschool.utils.parcelables.toParcelable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import splitties.collections.forEachWithIndex
-import java.util.*
 
 class JournalScreen : AndroidScreen() {
 
@@ -73,19 +108,25 @@ class JournalScreen : AndroidScreen() {
                             .fillMaxSize(),
                         state = state,
                         userScrollEnabled = journal != null,
-                        contentPadding = PaddingValues(vertical = 16.dp),
+                        contentPadding = PaddingValues(vertical = 16.dp)
                     ) {
-                        if (!journal?.overdueClasses.isNullOrEmpty()) item {
-                            OverdueClasses(classes = journal!!.overdueClasses)
+                        if (!journal?.overdueClasses.isNullOrEmpty()) {
+                            item {
+                                OverdueClasses(classes = journal!!.overdueClasses)
+                            }
                         }
 
                         val list = (journal?.days ?: (0..4).map { null })
                         list.forEachWithIndex { index, day ->
                             Day(day = day) { clazz ->
-                                sheetNavigator.show(AssignmentInfoBottomSheet(clazz.assignments.map { it.toParcelable() }))
+                                sheetNavigator.show(
+                                    AssignmentInfoBottomSheet(clazz.assignments.map { it.toParcelable() })
+                                )
                             }
-                            if (index < list.size - 1) item {
-                                VSpace(16.dp)
+                            if (index < list.size - 1) {
+                                item {
+                                    VSpace(16.dp)
+                                }
                             }
                         }
                     }
@@ -99,42 +140,46 @@ class JournalScreen : AndroidScreen() {
                         state.scrollToItem(0)
                     }
                 }, onNextClick = {
-                    viewModel.nextWeek()
-                    scope.launch {
-                        delay(fadeAnimDuration.toLong())
-                        state.scrollToItem(0)
-                    }
-                })
-            }, backgroundColor = LocalNetSchoolColors.current.backgroundMain
+                        viewModel.nextWeek()
+                        scope.launch {
+                            delay(fadeAnimDuration.toLong())
+                            state.scrollToItem(0)
+                        }
+                    })
+            },
+            backgroundColor = LocalNetSchoolColors.current.backgroundMain
         )
     }
 }
 
 private fun LazyListScope.Day(
     day: Journal.Day?,
-    onClickClass: (Journal.Class) -> Unit,
+    onClickClass: (Journal.Class) -> Unit
 ) {
     item {
         val name by remember(day) { mutableStateOf(day?.date?.getFormattedTime("EEEE")) }
         val date by remember(day) { mutableStateOf(day?.date?.getFormattedTime("d LLL yyyy г.")) }
         DayName(
-            name = name, date = date
+            name = name,
+            date = date
         )
     }
     item { VSpace(8.dp) }
     DayClasses(
-        classes = day?.classes, onClick = onClickClass
+        classes = day?.classes,
+        onClick = onClickClass
     )
 }
 
 private fun LazyListScope.DayClasses(
     classes: List<Journal.Class>?,
-    onClick: (Journal.Class) -> Unit,
+    onClick: (Journal.Class) -> Unit
 ) {
     item { Divider(color = LocalNetSchoolColors.current.divider) }
     itemsIndexed(classes ?: (0..6).map { null }) { index, clazz ->
         Class(
-            clazz = clazz, onClick = onClick
+            clazz = clazz,
+            onClick = onClick
         )
         if (index < (classes?.size ?: 7) - 1) {
             Divider(
@@ -145,21 +190,22 @@ private fun LazyListScope.DayClasses(
         }
     }
     item { Divider(color = LocalNetSchoolColors.current.divider) }
-
 }
 
 @Composable
 private fun Class(
     clazz: Journal.Class?,
-    onClick: (Journal.Class) -> Unit,
+    onClick: (Journal.Class) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 48.dp)
             .background(LocalNetSchoolColors.current.backgroundCard)
-            .clickable(enabled = clazz != null && clazz.assignments.isNotEmpty(),
-                onClick = { onClick(clazz!!) })
+            .clickable(
+                enabled = clazz != null && clazz.assignments.isNotEmpty(),
+                onClick = { onClick(clazz!!) }
+            )
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -214,7 +260,7 @@ private fun Class(
 @Composable
 private fun DayName(
     name: String?,
-    date: String?,
+    date: String?
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -245,7 +291,8 @@ private fun Toolbar(scrollState: LazyListState) {
         }
     }
     SimpleToolbar(
-        title = stringResource(R.string.bn_journal), showDivider = showDivider.value
+        title = stringResource(R.string.bn_journal),
+        showDivider = showDivider.value
     )
 }
 
@@ -254,7 +301,7 @@ private fun Toolbar(scrollState: LazyListState) {
 private fun WeekSelector(
     currentWeek: String,
     onPreviousClicked: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: () -> Unit
 ) {
     var isPreviousLoading by remember(currentWeek) { mutableStateOf(false) }
     var isNextLoading by remember(currentWeek) { mutableStateOf(false) }
@@ -276,7 +323,7 @@ private fun WeekSelector(
                 contentDescription: String,
                 onClick: () -> Unit,
                 isLoading: Boolean,
-                isEnabled: Boolean,
+                isEnabled: Boolean
             ) {
                 val activityIndicator by animateFloatAsState(
                     if (isEnabled) 1f else 0.7f
@@ -300,7 +347,8 @@ private fun WeekSelector(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = rememberRipple(radius = 18.dp),
                                 onClick = onClick
-                            ), contentAlignment = Alignment.Center
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = icon,
@@ -328,11 +376,13 @@ private fun WeekSelector(
                 )
             }
             AnimatedContent(
-                targetState = currentWeek, transitionSpec = {
+                targetState = currentWeek,
+                transitionSpec = {
                     (slideInVertically { -it / 2 } + fadeIn() with slideOutVertically { it / 2 } + fadeOut()).using(
                         SizeTransform(clip = false)
                     )
-                }, modifier = Modifier.weight(1f)
+                },
+                modifier = Modifier.weight(1f)
             ) { week ->
                 Text(
                     text = week,
@@ -429,19 +479,19 @@ private fun OverdueClass(clazz: Journal.OverdueClass) {
             text = clazz.subject,
             style = Typography.h6.copy(color = LocalNetSchoolColors.current.textMain),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
             text = stringResource(
                 R.string.journal_due_date,
                 clazz.due.getFormattedTime("dd.MM.yyyy")
             ),
-            style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary),
+            style = Typography.caption.copy(color = LocalNetSchoolColors.current.textSecondary)
         )
         VSpace(8.dp)
         Text(
             text = clazz.name,
-            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain),
+            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textMain)
         )
     }
 }

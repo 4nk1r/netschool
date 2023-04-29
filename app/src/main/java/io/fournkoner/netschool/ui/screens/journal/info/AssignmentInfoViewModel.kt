@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.info
+package io.fournkoner.netschool.ui.screens.journal.info
 
 import android.content.Context
 import cafe.adriel.voyager.core.model.ScreenModel

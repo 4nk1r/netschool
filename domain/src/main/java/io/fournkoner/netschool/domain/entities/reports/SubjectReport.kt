@@ -2,14 +2,14 @@ package io.fournkoner.netschool.domain.entities.reports
 
 data class SubjectReport(
     val total: Grades,
-    val tasks: List<Task>,
+    val tasks: List<Task>
 ) {
 
     data class Task(
         val name: String,
         val type: String,
         val date: String,
-        val grade: Int?,
+        val grade: Int?
     )
 
     data class Grades(
@@ -17,7 +17,6 @@ data class SubjectReport(
         val goodCount: Int,
         val satisfactoryCount: Int,
         val badCount: Int,
-        val average: Float,
+        val average: Float
     )
 }
-

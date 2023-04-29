@@ -14,7 +14,7 @@ internal data class JournalAssignmentDetailedResponse(
     @SerializedName("teachers")
     val teachers: List<Teacher>,
     @SerializedName("subjectGroup")
-    val subject: Subject,
+    val subject: Subject
 ) {
 
     @Keep
@@ -22,18 +22,18 @@ internal data class JournalAssignmentDetailedResponse(
         @SerializedName("name")
         val name: String,
         @SerializedName("id")
-        val id: Int,
+        val id: Int
     )
 
     @Keep
     data class Teacher(
         @SerializedName("name")
-        val name: String,
+        val name: String
     )
 
     @Keep
     data class Subject(
         @SerializedName("name")
-        val name: String,
+        val name: String
     )
 }

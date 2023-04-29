@@ -11,13 +11,13 @@ data class MailMessageParcelable(
     val sender: String,
     val receivers: String,
     val date: Long,
-    val attachments: List<Attachment>,
+    val attachments: List<Attachment>
 ) : Parcelable {
 
     @Parcelize
     data class Attachment(
         val name: String,
-        val file: String,
+        val file: String
     ) : Parcelable {
 
         fun toDomainObject() = MailMessageDetailed.Attachment(

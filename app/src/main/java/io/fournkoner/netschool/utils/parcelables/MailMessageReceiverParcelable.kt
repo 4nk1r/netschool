@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class MailMessageReceiverParcelable(
     val id: Int,
     val name: String
-): Parcelable {
+) : Parcelable {
 
     fun toDomainObject() = MailMessageReceiver(
         id = id,

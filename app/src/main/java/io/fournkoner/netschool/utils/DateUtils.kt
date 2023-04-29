@@ -8,11 +8,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.fournkoner.netschool.R
 import java.text.SimpleDateFormat
-import java.time.*
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 val currentWeekStart: String
     get() = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString()

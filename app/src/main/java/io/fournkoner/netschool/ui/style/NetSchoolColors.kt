@@ -25,7 +25,7 @@ data class NetSchoolColors(
     val grateGood: Color, // 4
     val gradeSatisfactory: Color, // 3
     val gradeBad: Color, // 2
-    val gradeOnus: Color, // долг
+    val gradeOnus: Color // долг
 ) {
 
     companion object {

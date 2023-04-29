@@ -10,6 +10,6 @@ class SendMessageUseCase(private val repository: MailRepository) {
         receiver: MailMessageReceiver,
         subject: String,
         body: String,
-        attachments: Map<File, String>,
+        attachments: Map<File, String>
     ) = repository.sendMessageUseCase(receiver, subject, body, attachments)
 }

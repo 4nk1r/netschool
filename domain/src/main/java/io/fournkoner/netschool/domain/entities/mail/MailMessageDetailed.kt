@@ -6,11 +6,11 @@ data class MailMessageDetailed(
     val sender: String,
     val receivers: String,
     val date: Long,
-    val attachments: List<Attachment>,
+    val attachments: List<Attachment>
 ) {
 
     data class Attachment(
         val name: String,
-        val file: String,
+        val file: String
     )
 }

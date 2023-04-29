@@ -41,7 +41,7 @@ internal object ReportsParser {
                         goodCount = items[2].text().toIntOrNull() ?: 0,
                         satisfactoryCount = items[3].text().toIntOrNull() ?: 0,
                         badCount = items[4].text().toIntOrNull() ?: 0,
-                        average = items[5].text().replace(',', '.').toFloatOrNull() ?: 0f,
+                        average = items[5].text().replace(',', '.').toFloatOrNull() ?: 0f
                     )
                 )
             }

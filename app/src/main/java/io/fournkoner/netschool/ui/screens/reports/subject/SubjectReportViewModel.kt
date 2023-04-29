@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.subject_report
+package io.fournkoner.netschool.ui.screens.reports.subject
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +9,10 @@ import io.fournkoner.netschool.domain.usecases.reports.GenerateSubjectReportUseC
 import io.fournkoner.netschool.domain.usecases.reports.GetSubjectReportRequestDataUseCase
 import io.fournkoner.netschool.utils.debugValue
 import io.fournkoner.netschool.utils.toLocalDate
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class SubjectReportViewModel @Inject constructor(
@@ -84,14 +84,14 @@ class SubjectReportViewModel @Inject constructor(
                                         "%d-%02d-%02dT00:00:00.000Z",
                                         year,
                                         monthValue,
-                                        dayOfMonth,
+                                        dayOfMonth
                                     )
                                 } + " - " + period.last.toLocalDate().run {
                                     String.format(
                                         "%d-%02d-%02dT00:00:00.000Z",
                                         year,
                                         monthValue,
-                                        dayOfMonth,
+                                        dayOfMonth
                                     )
                                 }
                             )
@@ -115,7 +115,7 @@ class SubjectReportViewModel @Inject constructor(
     }
 
     fun selectSubject(id: String?) {
-        _selectedSubject.value = _subjects.value?.find {it.value == id }
+        _selectedSubject.value = _subjects.value?.find { it.value == id }
     }
 
     companion object {

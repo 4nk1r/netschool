@@ -3,13 +3,17 @@ package io.fournkoner.netschool.data.repositories
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import io.fournkoner.netschool.data.network.AuthService
-import io.fournkoner.netschool.data.utils.*
+import io.fournkoner.netschool.data.utils.Const
+import io.fournkoner.netschool.data.utils.PrefsKeys
+import io.fournkoner.netschool.data.utils.debugValue
+import io.fournkoner.netschool.data.utils.hexMD5
+import io.fournkoner.netschool.data.utils.toFormUrlEncodedString
 import io.fournkoner.netschool.domain.entities.auth.Account
 import io.fournkoner.netschool.domain.repositories.AccountRepository
 
 internal class AccountRepositoryImpl(
     private val authService: AuthService,
-    private val encryptedPreferences: SharedPreferences,
+    private val encryptedPreferences: SharedPreferences
 ) : AccountRepository {
 
     override suspend fun signIn(login: String, password: String): Result<Boolean> {
@@ -18,7 +22,7 @@ internal class AccountRepositoryImpl(
                 .find { it.name == Const.SCHOOL_NAME }
                 ?: throw IllegalArgumentException(
                     "${Const.SCHOOL_NAME} wasn't found on ${Const.HOST}. " +
-                            "Check your private_const.properties file"
+                        "Check your private_const.properties file"
                 )
             Const.fullSchoolName = school.fullName
             val authData = authService.getAuthData()

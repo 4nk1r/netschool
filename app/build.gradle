@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'org.jlleitschuh.gradle.ktlint'
 }
 
 android {
@@ -14,8 +15,8 @@ android {
         applicationId "io.fournkoner.netschool"
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdk
-        versionCode 1
-        versionName "0.1"
+        versionCode 2
+        versionName "0.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -48,7 +49,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.5'
     }
     packagingOptions {
         resources {
@@ -67,7 +68,7 @@ dependencies {
     // AndroidX Stuff
     implementation libs.bundles.androidx
     // Jetpack Compose
-//    implementation platform(libs.composeBom)
+    implementation platform(libs.composeBom)
     implementation libs.bundles.compose
     // Voyager
     implementation libs.bundles.voyager

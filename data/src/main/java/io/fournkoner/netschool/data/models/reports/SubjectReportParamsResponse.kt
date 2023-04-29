@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 internal data class SubjectReportParamsResponse(
-    @SerializedName("filterSources") val filterSources: List<FilterSource>,
+    @SerializedName("filterSources") val filterSources: List<FilterSource>
 ) {
 
     @Keep
@@ -20,13 +20,13 @@ internal data class SubjectReportParamsResponse(
         @Keep
         data class Range(
             @SerializedName("start") val start: String,
-            @SerializedName("end") val end: String,
+            @SerializedName("end") val end: String
         )
 
         @Keep
         data class Item(
             @SerializedName("title") val name: String,
-            @SerializedName("value") val value: String,
+            @SerializedName("value") val value: String
         )
     }
 }

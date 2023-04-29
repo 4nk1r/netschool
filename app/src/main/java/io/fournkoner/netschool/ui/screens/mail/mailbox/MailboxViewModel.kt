@@ -1,4 +1,4 @@
-package io.fournkoner.netschool.ui.screens.mailbox
+package io.fournkoner.netschool.ui.screens.mail.mailbox
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

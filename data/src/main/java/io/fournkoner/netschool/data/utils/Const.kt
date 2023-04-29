@@ -13,7 +13,7 @@ internal object Const {
     var yearId: Int? = null
     var fullSchoolName: String? = null
     var assignmentTitles: Map<Int, String>? = null
-    var fileSizeLimit: Int? = null //kb
+    var fileSizeLimit: Int? = null // kb
     const val serverTimeZone = "5" // TODO
 
     const val MAILBOX_PAGE_SIZE = 50
