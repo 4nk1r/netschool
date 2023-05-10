@@ -4,20 +4,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.fournkoner.netschool.data.network.AuthService
-import io.fournkoner.netschool.data.network.JournalService
-import io.fournkoner.netschool.data.network.MailService
-import io.fournkoner.netschool.data.network.NetSchoolCookieJar
-import io.fournkoner.netschool.data.network.ReportsService
+import io.fournkoner.netschool.data.network.*
 import io.fournkoner.netschool.data.utils.Const
-import io.fournkoner.netschool.data.utils.debugValue
 import io.fournkoner.netschool.data.utils.insertHeaders
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,8 +29,11 @@ internal object NetworkModule {
             .client(
                 OkHttpClient.Builder()
                     .cookieJar(NetSchoolCookieJar)
+                    .callTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
                     .addNetworkInterceptor { chain ->
-                        chain.proceed(chain.request().insertHeaders().debugValue()).debugValue()
+                        chain.proceed(chain.request().insertHeaders())
                     }
                     .build()
             )
