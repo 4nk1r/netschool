@@ -81,7 +81,8 @@ class AppScreen : AndroidScreen() {
         BottomSheetNavigator(
             sheetElevation = 0.dp,
             sheetBackgroundColor = Color.Transparent,
-            scrimColor = Color.Black.copy(alpha = 0.4f)
+            scrimColor = Color.Black.copy(alpha = 0.4f),
+            skipHalfExpanded = true
         ) {
             TabNavigator(JournalTab) {
                 Scaffold(
