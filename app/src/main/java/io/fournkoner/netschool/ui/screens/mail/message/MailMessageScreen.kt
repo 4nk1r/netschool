@@ -54,6 +54,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.mail.MailMessageDetailed
 import io.fournkoner.netschool.domain.entities.mail.Mailbox
+import io.fournkoner.netschool.ui.components.AutoLinkText
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.TopAppBarIcon
 import io.fournkoner.netschool.ui.components.loading
@@ -198,9 +200,13 @@ data class MailMessageScreen(
     private fun Body(body: String?) {
         @Composable
         fun Text() {
-            Text(
+            AutoLinkText(
                 text = body ?: "placeholder".repeat(20),
-                style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
+                textStyle = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
+                linkStyle = Typography.body1.copy(
+                    color = LocalNetSchoolColors.current.accentMain,
+                    textDecoration = TextDecoration.Underline
+                ),
                 modifier = Modifier.loading(body == null)
             )
         }
@@ -267,9 +273,9 @@ data class MailMessageScreen(
                 val map = remember(message) {
                     mapOf(
                         context.getString(R.string.message_when) to (
-                            message?.date?.formatDate()
-                                ?: ""
-                            ),
+                                message?.date?.formatDate()
+                                    ?: ""
+                                ),
                         context.getString(R.string.message_from) to (message?.sender ?: ""),
                         context.getString(R.string.message_sent) to (message?.receivers ?: "")
                     )

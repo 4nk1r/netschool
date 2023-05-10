@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
@@ -38,6 +39,7 @@ import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import io.fournkoner.netschool.R
 import io.fournkoner.netschool.domain.entities.journal.AssignmentDetailed
+import io.fournkoner.netschool.ui.components.AutoLinkText
 import io.fournkoner.netschool.ui.components.BottomSheet
 import io.fournkoner.netschool.ui.components.LoadingTransition
 import io.fournkoner.netschool.ui.components.SimpleBottomSheetToolbar
@@ -126,155 +128,159 @@ data class AssignmentInfoBottomSheet(
             }
         }
     }
-}
 
-@Composable
-private fun TitledFiles(
-    attachments: List<AssignmentDetailed.Attachment>,
-    download: (AssignmentDetailed.Attachment) -> Unit
-) {
-    TitleText(stringResource(R.string.assignment_attachments))
-    VSpace(12.dp)
-    Files(files = attachments, download = download)
-}
-
-@Composable
-private fun TitledContent(
-    title: String?,
-    content: String?,
-    grade: Int? = null,
-    copyable: Boolean = true
-) {
-    TitleText(title)
-    VSpace(4.dp)
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+    @Composable
+    private fun TitledFiles(
+        attachments: List<AssignmentDetailed.Attachment>,
+        download: (AssignmentDetailed.Attachment) -> Unit
     ) {
-        ContentText(text = content, copyable = copyable)
-        if (grade != null) {
-            Text(
-                text = grade.toString(),
-                style = Typography.h4.copy(color = grade.getGradeColor()),
-                modifier = Modifier.defaultMinSize(minWidth = 42.dp),
-                textAlign = TextAlign.Center
-            )
+        TitleText(stringResource(R.string.assignment_attachments))
+        VSpace(12.dp)
+        Files(files = attachments, download = download)
+    }
+
+    @Composable
+    private fun TitledContent(
+        title: String?,
+        content: String?,
+        grade: Int? = null,
+        copyable: Boolean = true
+    ) {
+        TitleText(title)
+        VSpace(4.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ContentText(text = content, copyable = copyable)
+            if (grade != null) {
+                Text(
+                    text = grade.toString(),
+                    style = Typography.h4.copy(color = grade.getGradeColor()),
+                    modifier = Modifier.defaultMinSize(minWidth = 42.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
-}
 
-@Composable
-private fun TitleText(text: String?) {
-    Text(
-        text = text ?: "placeholder",
-        style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.loading(text == null)
-    )
-}
-
-@Composable
-private fun RowScope.ContentText(
-    text: String?,
-    copyable: Boolean
-) {
     @Composable
-    fun Text() {
+    private fun TitleText(text: String?) {
         Text(
             text = text ?: "placeholder",
-            style = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
-            modifier = Modifier
-                .weight(1f)
-                .loading(text == null)
+            style = Typography.h5.copy(color = LocalNetSchoolColors.current.textMain),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.loading(text == null)
         )
     }
 
-    if (copyable && text != null) {
-        SelectionContainer(
-            modifier = Modifier.weight(1f)
-        ) { Text() }
-    } else {
-        Text()
-    }
-}
-
-@Composable
-private fun Files(
-    files: List<AssignmentDetailed.Attachment>,
-    download: (AssignmentDetailed.Attachment) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Shapes.medium)
-            .background(
-                color = LocalNetSchoolColors.current.backgroundCard,
-                shape = Shapes.medium
-            )
-            .border(
-                width = 1.dp,
-                color = LocalNetSchoolColors.current.divider,
-                shape = Shapes.medium
-            )
+    @Composable
+    private fun RowScope.ContentText(
+        text: String?,
+        copyable: Boolean
     ) {
-        files.forEachIndexed { index, file ->
-            Row(
+        @Composable
+        fun Text() {
+            AutoLinkText(
+                text = text ?: "placeholder",
+                textStyle = Typography.body1.copy(color = LocalNetSchoolColors.current.textSecondary),
+                linkStyle = Typography.body1.copy(
+                    color = LocalNetSchoolColors.current.accentMain,
+                    textDecoration = TextDecoration.Underline
+                ),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clickable { download(file) }
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = file.name,
-                    style = Typography.button.copy(color = LocalNetSchoolColors.current.accentMain),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    .weight(1f)
+                    .loading(text == null)
+            )
+        }
+
+        if (copyable && text != null) {
+            SelectionContainer(
+                modifier = Modifier.weight(1f)
+            ) { Text() }
+        } else {
+            Text()
+        }
+    }
+
+    @Composable
+    private fun Files(
+        files: List<AssignmentDetailed.Attachment>,
+        download: (AssignmentDetailed.Attachment) -> Unit
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(Shapes.medium)
+                .background(
+                    color = LocalNetSchoolColors.current.backgroundCard,
+                    shape = Shapes.medium
                 )
-                Icon(
-                    painter = painterResource(R.drawable.ic_download),
-                    contentDescription = stringResource(R.string.assignment_download, file.name),
-                    tint = LocalNetSchoolColors.current.accentMain
+                .border(
+                    width = 1.dp,
+                    color = LocalNetSchoolColors.current.divider,
+                    shape = Shapes.medium
                 )
-            }
-            if (index < files.size - 1) {
-                Divider(color = LocalNetSchoolColors.current.divider)
+        ) {
+            files.forEachIndexed { index, file ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clickable { download(file) }
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = file.name,
+                        style = Typography.button.copy(color = LocalNetSchoolColors.current.accentMain),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_download),
+                        contentDescription = stringResource(R.string.assignment_download, file.name),
+                        tint = LocalNetSchoolColors.current.accentMain
+                    )
+                }
+                if (index < files.size - 1) {
+                    Divider(color = LocalNetSchoolColors.current.divider)
+                }
             }
         }
     }
-}
 
-@Composable
-private fun SecondaryTitledContent(
-    title: String?,
-    content: String?
-) {
-    SecondaryTitleText(title)
-    VSpace(2.dp)
-    SecondaryContentText(content)
-}
+    @Composable
+    private fun SecondaryTitledContent(
+        title: String?,
+        content: String?
+    ) {
+        SecondaryTitleText(title)
+        VSpace(2.dp)
+        SecondaryContentText(content)
+    }
 
-@Composable
-private fun SecondaryTitleText(text: String?) {
-    Text(
-        text = text ?: "placeholder",
-        style = Typography.subtitle1.copy(color = LocalNetSchoolColors.current.textMain),
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.loading(text == null)
-    )
-}
+    @Composable
+    private fun SecondaryTitleText(text: String?) {
+        Text(
+            text = text ?: "placeholder",
+            style = Typography.subtitle1.copy(color = LocalNetSchoolColors.current.textMain),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.loading(text == null)
+        )
+    }
 
-@Composable
-private fun SecondaryContentText(text: String?) {
-    Text(
-        text = text ?: "placeholder",
-        style = Typography.body2.copy(color = LocalNetSchoolColors.current.textSecondary),
-        modifier = Modifier.loading(text == null)
-    )
+    @Composable
+    private fun SecondaryContentText(text: String?) {
+        Text(
+            text = text ?: "placeholder",
+            style = Typography.body2.copy(color = LocalNetSchoolColors.current.textSecondary),
+            modifier = Modifier.loading(text == null)
+        )
+    }
 }
