@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import io.fournkoner.netschool.R
@@ -50,6 +51,7 @@ import io.fournkoner.netschool.ui.style.Shapes
 import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.getGradeColor
 import io.fournkoner.netschool.utils.parcelables.AssignmentParcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import splitties.collections.forEachWithIndex
 import splitties.toast.UnreliableToastApi
@@ -283,4 +285,7 @@ data class AssignmentInfoBottomSheet(
             modifier = Modifier.loading(text == null)
         )
     }
+
+    @IgnoredOnParcel
+    override val key = uniqueScreenKey
 }

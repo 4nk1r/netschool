@@ -31,10 +31,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -57,6 +57,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
@@ -77,8 +78,8 @@ import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.debugValue
 import io.fournkoner.netschool.utils.getGradeColor
 import io.fournkoner.netschool.utils.toLocalDate
-import java.util.Locale
 import kotlinx.coroutines.delay
+import java.util.Locale
 
 class SubjectReportScreen : AndroidScreen() {
 
@@ -794,4 +795,6 @@ class SubjectReportScreen : AndroidScreen() {
             navigator.pop()
         }
     }
+
+    override val key = uniqueScreenKey
 }

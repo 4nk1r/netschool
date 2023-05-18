@@ -86,6 +86,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
@@ -100,6 +101,7 @@ import io.fournkoner.netschool.ui.style.Typography
 import io.fournkoner.netschool.utils.debugValue
 import io.fournkoner.netschool.utils.parcelables.MailMessageParcelable
 import io.fournkoner.netschool.utils.parcelables.MailMessageReceiverParcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
@@ -678,4 +680,7 @@ data class NewMessageScreen(
         REPLY,
         NEW
     }
+
+    @IgnoredOnParcel
+    override val key = uniqueScreenKey
 }

@@ -31,12 +31,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
@@ -49,15 +49,15 @@ dependencies {
     // Retrofit (Networking)
     implementation libs.bundles.retrofit
     // Jsoup (HTML parsing)
-    implementation libs.jsoup
+    implementation 'org.jsoup:jsoup:1.16.1'
     // Gson
     implementation libs.gson
     // Encrypted preferences
-    implementation libs.encryptedPreferences
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
     // Paging
     implementation libs.pagingRuntime
     // Java Desugar
-    coreLibraryDesugaring libs.javaDesugar
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
 
 kapt {

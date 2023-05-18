@@ -8,10 +8,10 @@ import io.fournkoner.netschool.domain.usecases.account.SignInUseCase
 import io.fournkoner.netschool.domain.usecases.mail.GetUnreadMessagesCountUseCase
 import io.fournkoner.netschool.utils.Const
 import io.fournkoner.netschool.utils.debugValue
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
