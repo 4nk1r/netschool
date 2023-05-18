@@ -49,15 +49,15 @@ dependencies {
     // Retrofit (Networking)
     implementation libs.bundles.retrofit
     // Jsoup (HTML parsing)
-    implementation 'org.jsoup:jsoup:1.16.1'
+    implementation libs.jsoup
     // Gson
     implementation libs.gson
     // Encrypted preferences
-    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    implementation libs.encryptedPreferences
     // Paging
     implementation libs.pagingRuntime
     // Java Desugar
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    coreLibraryDesugaring libs.javaDesugar
 }
 
 kapt {
