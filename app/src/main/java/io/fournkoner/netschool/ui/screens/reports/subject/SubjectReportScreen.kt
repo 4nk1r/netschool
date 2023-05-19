@@ -722,7 +722,10 @@ class SubjectReportScreen : AndroidScreen() {
                     TopAppBarIcon(
                         iconPainter = painterResource(R.drawable.ic_arrow_back),
                         tint = LocalNetSchoolColors.current.accentMain,
-                        onClick = { navigator.pop() }
+                        onClick = {
+                            navigator.pop()
+                            selectedSubjectResult = null
+                        }
                     )
                 },
                 title = {

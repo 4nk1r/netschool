@@ -1,7 +1,7 @@
 [versions]
 hilt = "2.44.2"
 retrofit = "2.9.0"
-voyager = "1.0.0-rc06"
+voyager = "1.0.0-rc05"
 accompanist = "0.30.1"
 sheetsComposeDialogs = "1.1.1"
 
