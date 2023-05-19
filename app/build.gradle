@@ -28,8 +28,6 @@ android {
         debug {
             applicationIdSuffix '.debug'
             resValue "string", "app_name", "DaSchool"
-
-            minifyEnabled true
         }
         release {
             resValue "string", "app_name", "NetSchool"
