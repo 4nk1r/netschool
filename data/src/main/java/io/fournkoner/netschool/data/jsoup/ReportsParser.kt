@@ -19,8 +19,10 @@ internal object ReportsParser {
             var totals: ShortReport.Grades? = null
             val subjects = mutableListOf<ShortReport.Subject>()
 
-            for (tr in table.select("tr")) {
+            for (tr in table.select("tr").debugValue("trs")) {
                 val items = tr.select("td")
+
+                tr.debugValue("Processing")
 
                 if (tr.hasClass("totals")) {
                     totals = ShortReport.Grades(
@@ -32,7 +34,7 @@ internal object ReportsParser {
                     )
                     continue
                 }
-                if (tr.children().size != 6) continue
+                if (items.size < 6) continue
 
                 subjects += ShortReport.Subject(
                     name = items[0].text().trim(),
@@ -46,7 +48,7 @@ internal object ReportsParser {
                 )
             }
 
-            ShortReport(total = totals!!, subjects = subjects)
+            ShortReport(total = totals!!, subjects = subjects).debugValue("ShortReport")
         }
     }
 
